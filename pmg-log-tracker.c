@@ -1383,7 +1383,7 @@ parser_new ()
   //return NULL;
   //}
 
-  for (i = 0; i <= MAX_LOGFILES; i++) {
+  for (i = 0; i < MAX_LOGFILES; i++) {
     gettimeofday(&tv, NULL);
     tv.tv_sec -= 3600*24*i;
     ltime = localtime (&tv.tv_sec);
