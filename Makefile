@@ -1,5 +1,5 @@
 LIBS=$(shell pkg-config --libs glib-2.0) -lz
-CFLAGS=$(shell pkg-config --cflags glib-2.0) -O2 -Wall
+CFLAGS=$(shell pkg-config --cflags glib-2.0) -O2 -Wpedantic
 
 all: pmg-log-tracker
 
