@@ -1715,7 +1715,6 @@ main (int argc, char * const argv[])
   char *uniqueid = NULL;
 
   const char *text;
-  const char *prog;
   const char *idx1;
   const char *idx2;
   const char *cpos;
@@ -1937,8 +1936,7 @@ main (int argc, char * const argv[])
       }
 
       //printf ("LINE: %s\n", line);
-
-      prog = cpos;
+      //const char prog = cpos;
 
       csum_prog = 0;
       found = 0; while (*cpos && (*cpos != ':') && (*cpos != '[')) { 
