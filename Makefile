@@ -7,4 +7,10 @@ pmg-log-tracker: pmg-log-tracker.c
 	gcc $< -o $@ ${CFLAGS} ${LIBS}
 
 
+.PHONY: distclean
+distclean: clean
 
+.PHONY: clean
+clean:
+	rm pmg-log-tracker
+	find . -name '*~' -exec rm {} ';'
