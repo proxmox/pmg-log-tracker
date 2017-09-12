@@ -103,7 +103,7 @@ typedef struct {
   GHashTable *qmgr_h;
   GHashTable *filter_h;
   //GHashTable *track_h;
-  gzFile *stream[MAX_LOGFILES];
+  gzFile stream[MAX_LOGFILES];
   char *from;
   char *to;
   time_t year[MAX_LOGFILES];
@@ -1600,7 +1600,7 @@ parser_count_files (LParser *parser)
   time_t start = parser->start;
   char linebuf[linebufsize];
   const char *line;
-  gzFile *stream;
+  gzFile stream;
 
   for (i = 0; i < MAX_LOGFILES; i++) {
     cur_year = parser->year[i];
