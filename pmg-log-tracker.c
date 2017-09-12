@@ -81,7 +81,6 @@ struct _TOList {
 
 // EPool: Entry related memory pools
 
-GMemChunk *mem_chunk_epool;
 
 #ifdef EPOOL_DEBUG
 int ep_allocated;
@@ -90,7 +89,7 @@ int ep_maxalloc;
 
 typedef struct _EPool EPool;
 struct _EPool {
-  SList *blocks;     // allocated usiing mem_chunk_epool
+  SList *blocks;     // allocated usiing g_slice_alloc(EPOOL_BLOCK_SIZE)
   SList *mblocks;    // allocated use g_malloc
   int cpos;
 #ifdef EPOOL_DEBUG
@@ -343,7 +342,7 @@ epool_init (EPool *ep)
   gpointer data;
   SList *blocks;
 
-  data = g_mem_chunk_alloc0 (mem_chunk_epool);
+  data = g_slice_alloc0(EPOOL_BLOCK_SIZE);
   blocks = (SList *)data;
 
 #ifdef EPOOL_DEBUG
@@ -388,7 +387,7 @@ epool_free (EPool *ep)
   while (l) {
     data = l->data;
     l = l->next;
-    g_mem_chunk_free (mem_chunk_epool, data);
+    g_slice_free1(EPOOL_BLOCK_SIZE, data);
   }
 }
 
@@ -430,7 +429,7 @@ epool_alloc (EPool *ep, int size)
   } else {
     SList *blocks = ep->blocks->data + ep->cpos;
 
-    data = g_mem_chunk_alloc0 (mem_chunk_epool);
+    data = g_slice_alloc0 (EPOOL_BLOCK_SIZE);
     blocks->data = data;
     blocks->next = ep->blocks;
 
@@ -524,7 +523,7 @@ sentry_new (int pid)
   SList *blocks;
   int cpos;
 
-  sentry = (SEntry *)g_mem_chunk_alloc0 (mem_chunk_epool);
+  sentry = (SEntry *)g_slice_alloc0(EPOOL_BLOCK_SIZE);
   sentry->pid = pid;
 
 #ifdef EPOOL_DEBUG
@@ -828,7 +827,7 @@ sentry_free_noremove (SEntry *sentry)
   while (l) {
     data = l->data;
     l = l->next;
-    g_mem_chunk_free (mem_chunk_epool, data);
+    g_slice_free1(EPOOL_BLOCK_SIZE, data);
   }
 }
 
@@ -883,7 +882,7 @@ qentry_new (const char *qid)
   int cpos;
   char *qid_cp;
 
-  qentry = (QEntry *)g_mem_chunk_alloc0 (mem_chunk_epool);
+  qentry = (QEntry *)g_slice_alloc0(EPOOL_BLOCK_SIZE);
 
 #ifdef EPOOL_DEBUG
   qentry->ep.allocated += EPOOL_BLOCK_SIZE;
@@ -1173,7 +1172,7 @@ qentry_free_noremove (LParser *parser, QEntry *qentry)
   while (l) {
     data = l->data;
     l = l->next;
-    g_mem_chunk_free (mem_chunk_epool, data);
+    g_slice_free1(EPOOL_BLOCK_SIZE, data);
   }
 }
 
@@ -1226,7 +1225,7 @@ fentry_new (const char *logid)
   int cpos;
   char *logid_cp;
 
-  fentry = (FEntry *)g_mem_chunk_alloc0 (mem_chunk_epool);
+  fentry = (FEntry *)g_slice_alloc0(EPOOL_BLOCK_SIZE);
 
 #ifdef EPOOL_DEBUG
   fentry->ep.allocated += EPOOL_BLOCK_SIZE;
@@ -1333,7 +1332,7 @@ fentry_free_noremove (LParser *parser, FEntry *fentry)
   while (l) {
     data = l->data;
     l = l->next;
-    g_mem_chunk_free (mem_chunk_epool, data);
+    g_slice_free1(EPOOL_BLOCK_SIZE, data);
   }
 }
 
@@ -1741,13 +1740,6 @@ main (int argc, char * const argv[])
   qmgr_debug_free = g_hash_table_new (g_direct_hash, g_direct_equal);
   filter_debug_free = g_hash_table_new (g_direct_hash, g_direct_equal);
 #endif
-
-  if (!(mem_chunk_epool = g_mem_chunk_new ("EPOOL", EPOOL_BLOCK_SIZE, 
-					   1000*EPOOL_BLOCK_SIZE, 
-					   G_ALLOC_AND_FREE))) {
-    fprintf (stderr, "unable to initialize epool\n");
-    exit (-1);    
-  }
 
   if (!(parser = parser_new ())) {
     fprintf (stderr, "unable to alloc parser structure\n");
