@@ -1936,7 +1936,7 @@ main (int argc, char * const argv[])
       }
 
       //printf ("LINE: %s\n", line);
-      //const char prog = cpos;
+      //const char *prog = cpos;
 
       csum_prog = 0;
       found = 0; while (*cpos && (*cpos != ':') && (*cpos != '[')) { 
@@ -1947,7 +1947,7 @@ main (int argc, char * const argv[])
 
       //idx1 = g_strndup (prog, found);
       //printf ("TEST:%s:%08X\n", idx1, csum_prog);
-      //g_free (idx1);
+      //free (idx1);
 
       if (*cpos == '[') {
 	cpos++;
@@ -2178,7 +2178,8 @@ main (int argc, char * const argv[])
 	}
 
       } else if ((csum_prog == 0x736D7470) || //postfix/smtp
-		 (csum_prog == 0x6C6D7470)) {  //postfix/lmtp
+		 (csum_prog == 0x6C6D7470) || //postfix/lmtp
+		 (csum_prog == 0x72726F72)) { //postfix/error
 
 	int lmtp = (csum_prog == 0x6C6D7470);
 
