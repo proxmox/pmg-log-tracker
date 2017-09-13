@@ -1999,7 +1999,7 @@ main (int argc, char * const argv[])
 	strmatch = 1;
       }
 
-      if (csum_prog == 0x70726F78) { // proxprox
+      if (csum_prog == 0x6C746572) { // pmg-smtp-filter
 
 	if ((idx1 = parse_qid (&cpos, qidbuf, ':', 25))) {
 
