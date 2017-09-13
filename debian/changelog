@@ -1,0 +1,10 @@
+pmg-log-tracker (1.0-1) unstable; urgency=medium
+
+   * imported from private repository
+
+   * compile with -Wpedantic
+
+   * create separate debian package
+
+ -- Proxmox Support Team <support@proxmox.com>  Wed, 13 Sep 2017 08:18:15 +0200
+

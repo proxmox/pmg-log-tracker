@@ -1,0 +1,14 @@
+Source: pmg-log-tracker
+Section: admin
+Priority: optional
+Maintainer: Proxmox Support Team <support@proxmox.com>
+Build-Depends: debhelper (>= 9),
+	       libglib2.0-dev (>= 2.42.1-1)
+Standards-Version: 3.9.5
+Homepage: http://www.proxmox.com
+
+Package: pmg-log-tracker
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Proxmox Mailgateway Log Tracker
+ Tools to scan mail logs.
