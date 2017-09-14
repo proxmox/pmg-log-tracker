@@ -2168,6 +2168,7 @@ main (int argc, char * const argv[])
 
       } else if ((csum_prog == 0x736D7470) || //postfix/smtp
 		 (csum_prog == 0x6C6D7470) || //postfix/lmtp
+		 (csum_prog == 0x6F63616C) || //postfix/local
 		 (csum_prog == 0x72726F72)) { //postfix/error
 
 	int lmtp = (csum_prog == 0x6C6D7470);
