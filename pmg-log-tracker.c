@@ -218,7 +218,6 @@ struct _FEntry {
 
 // Prototypes
 void      debug_error (char *msg, const char *line);
-SList    *slist_remove (SList *list, gpointer data);
 
 EPool    *epool_init (EPool *ep);
 void      epool_free (EPool *ep);
@@ -324,31 +323,6 @@ debug_error (char *msg, const char *line)
 
   exit (-1);
 #endif
-}
-
-SList *
-slist_remove (SList *list, gpointer data)
-{
-  SList *p = NULL;
-  SList *l = list;
-
-  while (l) {
-    if (l->data == data) {
-      if (p)
-	p->next = l->next;
-      if (list == l)
-	list = list->next;
-
-      l->next = NULL;
-
-      break;
-    }
-
-    p = l;
-    l = l->next;
-  }
-
-  return list;
 }
 
 EPool *
