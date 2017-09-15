@@ -145,6 +145,7 @@ typedef struct _LogList LogList;
 
 struct _LogEntry {
   const char *text;
+  unsigned long linenr;
   LogEntry *next;
 };
 
@@ -227,7 +228,7 @@ char     *epool_strndup0 (EPool *ep, const char *s, int len);
 char     *epool_strdup (EPool *ep, const char *s);
 
 void      loglist_print (LogList *loglist);
-void      loglist_add (EPool *ep, LogList *loglist, const char *text, int len);
+void      loglist_add (EPool *ep, LogList *loglist, const char *text, int len, unsigned long linenr);
 
 SEntry   *sentry_new (int pid);
 SEntry   *sentry_get (LParser *parser, int pid);
@@ -468,14 +469,14 @@ loglist_print (LogList *loglist)
 {
   LogEntry *log = loglist->log;
   while (log) {
-    printf ("%s", log->text);
+    printf ("L%08X %s", log->linenr, log->text);
     log = log->next;
   }
 }
 
 
 void
-loglist_add (EPool *ep, LogList *loglist, const char *text, int len)
+loglist_add (EPool *ep, LogList *loglist, const char *text, int len, unsigned long linenr)
 {
   LogEntry *log;
 
@@ -492,6 +493,7 @@ loglist_add (EPool *ep, LogList *loglist, const char *text, int len)
   log = epool_alloc (ep, sizeof (LogEntry));
 
   log->text = epool_strndup (ep, text, len);
+  log->linenr = linenr;
   log->next = NULL;
 
   if (loglist->logs_last) {
@@ -1709,7 +1711,7 @@ main (int argc, char * const argv[])
   const char *cpos;
   int found = 0;
   int csum_prog;
-  int lines = 0;
+  unsigned long lines = 0;
   char qidbuf[30];
   int i;
 
@@ -1984,7 +1986,7 @@ main (int argc, char * const argv[])
 	    continue;
 	  }
 
-	  loglist_add (&fe->ep, &fe->loglist, line, len);
+	  loglist_add (&fe->ep, &fe->loglist, line, len, lines);
 
 	  if (strmatch) fe->strmatch = 1;
 
@@ -2106,7 +2108,7 @@ main (int argc, char * const argv[])
 
 		      if (strmatch) se->strmatch = 1;
 
-		      loglist_add (&se->ep, &se->loglist, line, len);
+		      loglist_add (&se->ep, &se->loglist, line, len, lines);
 
 		      sentry_nqlist_add (se, ctime, from, idx1 - from, to, cpos - to, 'N');
 
@@ -2134,7 +2136,7 @@ main (int argc, char * const argv[])
 
 	  qe->cleanup = 1;	
 
-	  loglist_add (&qe->ep, &qe->loglist, line, len);
+	  loglist_add (&qe->ep, &qe->loglist, line, len, lines);
 	
 	  if ((*idx2 == 'f') && !strncmp (idx2, "from=<", 6)) {
 
@@ -2186,7 +2188,7 @@ main (int argc, char * const argv[])
 
 	  qe->cleanup = 1;	
 
-	  loglist_add (&qe->ep, &qe->loglist, line, len);
+	  loglist_add (&qe->ep, &qe->loglist, line, len, lines);
 
 	  if (strncmp (cpos, "to=<", 4)) continue;
 	  cpos += 4;
@@ -2268,7 +2270,7 @@ main (int argc, char * const argv[])
 
 	if (strmatch) se->strmatch = 1;
 
-	loglist_add (&se->ep, &se->loglist, line, len);
+	loglist_add (&se->ep, &se->loglist, line, len, lines);
 
 	if ((*text == 'c') && !strncmp (text, "connect from ", 13)) {
 	
@@ -2371,7 +2373,7 @@ main (int argc, char * const argv[])
 
 	    if (strmatch) qe->strmatch = 1;
 
-	    loglist_add (&qe->ep, &qe->loglist, line, len);
+	    loglist_add (&qe->ep, &qe->loglist, line, len, lines);
 
 	    if ((*idx2 == 'm') && !strncmp (idx2, "message-id=", 11)) {
 
