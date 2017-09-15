@@ -761,7 +761,7 @@ sentry_print (LParser *parser, SEntry *sentry)
     nq = nq->next;
   }
 
-  if (parser->verbose) {
+  if (parser->verbose > 1) {
     printf ("LOGS:\n");
     loglist_print (&sentry->loglist);
     printf ("\n");
@@ -1077,24 +1077,22 @@ qentry_print (LParser *parser, QEntry *qentry)
 
   if (!parser->verbose)  { fflush (stdout); return; }
 
-  if (se) {
+  if (parser->verbose > 1) {
 
-    if (se->loglist.log) {
+    if (se && se->loglist.log) {
       printf ("SMTP:\n");
       loglist_print (&se->loglist);
     }
-  }
 
-  if (fe) {
-    if (fe->loglist.log) {
-       printf ("FILTER: %s\n", fe->logid);
-       loglist_print (&fe->loglist);
-     }
-  }
+    if (fe && fe->loglist.log) {
+      printf ("FILTER: %s\n", fe->logid);
+      loglist_print (&fe->loglist);
+    }
 
-  if (qentry->loglist.log) {
-    printf ("QMGR:\n");
-    loglist_print (&qentry->loglist);
+    if (qentry->loglist.log) {
+      printf ("QMGR:\n");
+      loglist_print (&qentry->loglist);
+    }
   }
 
   printf ("\n");
@@ -1650,7 +1648,8 @@ print_usage (const char *name)
   fprintf (stderr, "\t-q QID         queue ID (exact match)\n");
   fprintf (stderr, "\t-x STRING      search for strings\n");
   fprintf (stderr, "\t-l LIMIT       print max limit entries\n");
-  fprintf (stderr, "\t-v             verbose output\n");
+  fprintf (stderr, "\t-v             verbose output (no logs)\n");
+  fprintf (stderr, "\t-vv            verbose output with logs\n");
 }
 
 
@@ -1742,7 +1741,7 @@ main (int argc, char * const argv[])
     } else if (opt == 't') {
       parser->to = epool_strdup (&parser->ep, optarg);
     } else if (opt == 'v') {
-      parser->verbose = 1;
+      parser->verbose += 1;
     } else if (opt == 'g') {
       parser->exclude_greylist = 1;
     } else if (opt == 'n') {
