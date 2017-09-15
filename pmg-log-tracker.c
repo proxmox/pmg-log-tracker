@@ -275,7 +275,7 @@ void      parser_free (LParser *parser);
 
 //#define LOGPATH "./log/"
 #define LOGPATH "/var/log/"
-//#define LOGPATH "/var/log5/"
+//#define LOGPATH "/root/testlog/"
 
 static const char *logfiles[] = {
   LOGPATH "syslog",
@@ -1973,7 +1973,8 @@ main (int argc, char * const argv[])
 	strmatch = 1;
       }
 
-      if (csum_prog == 0x6C746572) { // pmg-smtp-filter
+      if ((csum_prog == 0x70726F78) ||// proxprox
+	  (csum_prog == 0x6C746572)) { // pmg-smtp-filter
 
 	if ((idx1 = parse_qid (&cpos, qidbuf, ':', 25))) {
 
