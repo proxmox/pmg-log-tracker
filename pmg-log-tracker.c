@@ -800,11 +800,14 @@ sentry_print (LParser *parser, SEntry *sentry)
     nq = nq->next;
   }
 
+  if (!parser->verbose)  { fflush (stdout); return; }
+
   if (parser->verbose > 1) {
     printf ("LOGS:\n");
     loglist_print (&sentry->loglist);
-    printf ("\n");
   }
+
+  printf ("\n");
 
   fflush (stdout);
 }
