@@ -57,7 +57,7 @@
 //#define EPOOL_MAX_SIZE 128
 #define EPOOL_BLOCK_SIZE 2048
 #define EPOOL_MAX_SIZE 128
-#define MAX_LOGFILES 31
+#define MAX_LOGFILES 32
 //#define EPOOL_DEBUG 
 //#define DEBUG
 
@@ -1591,7 +1591,7 @@ parser_count_files (LParser *parser)
   const char *line;
   gzFile stream;
 
-  for (i = 0; i < MAX_LOGFILES; i++) {
+  for (i = 0; i < (MAX_LOGFILES - 1); i++) {
     cur_year = parser->year[i];
     cur_month = 0;
 
