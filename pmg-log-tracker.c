@@ -85,6 +85,18 @@ struct _TOList {
   TOList *next;
 };
 
+#define MatchTypeQID 1
+#define MatchTypeRelLineNr 2
+
+typedef struct _MatchList MatchList;
+struct _MatchList {
+  unsigned int mtype;
+  char *id;
+  time_t ltime;
+  unsigned long rel_line_nr;
+  MatchList *next;
+};
+
 #ifdef DEBUG
   GHashTable *smtpd_debug_alloc;
   GHashTable *qmgr_debug_alloc;
@@ -125,9 +137,9 @@ typedef struct {
   time_t start;
   time_t end;
   time_t ctime;
+  MatchList *match_list;
   char *server;
   char *msgid;
-  char *qid;
   char *strmatch;
   unsigned long limit;
   unsigned long count;
@@ -168,6 +180,10 @@ struct _SEntry {
   NQList *nqlist;
 
   char *connect;
+
+ // time,rel_line_nr is used as cursor/ID
+  time_t ltime;
+  unsigned long rel_line_nr;
 
   //unsigned int external:1;        // not from local host
   unsigned int disconnect:1;
@@ -230,8 +246,8 @@ char     *epool_strdup (EPool *ep, const char *s);
 void      loglist_print (LogList *loglist);
 void      loglist_add (EPool *ep, LogList *loglist, const char *text, int len, unsigned long linenr);
 
-SEntry   *sentry_new (int pid);
-SEntry   *sentry_get (LParser *parser, int pid);
+SEntry   *sentry_new (int pid, time_t ltime, unsigned long rel_line_nr);
+SEntry   *sentry_get (LParser *parser, int pid, time_t ltime, unsigned long rel_line_nr);
 void      sentry_ref_add (SEntry *sentry, QEntry *qentry);
 int       sentry_ref_del (SEntry *sentry, QEntry *qentry);
 void      sentry_ref_finalize (LParser *parser, SEntry *sentry);
@@ -508,7 +524,7 @@ loglist_add (EPool *ep, LogList *loglist, const char *text, int len, unsigned lo
 }
 
 SEntry*
-sentry_new (int pid)
+sentry_new (int pid, time_t ltime, unsigned long rel_line_nr)
 {
   SEntry *sentry;
   SList *blocks;
@@ -516,6 +532,8 @@ sentry_new (int pid)
 
   sentry = (SEntry *)g_slice_alloc0(EPOOL_BLOCK_SIZE);
   sentry->pid = pid;
+  sentry->ltime = ltime;
+  sentry->rel_line_nr = rel_line_nr;
 
 #ifdef EPOOL_DEBUG
   sentry->ep.allocated += EPOOL_BLOCK_SIZE;
@@ -550,7 +568,7 @@ sentry_new (int pid)
 }
 
 SEntry *
-sentry_get (LParser *parser, int pid) 
+sentry_get (LParser *parser, int pid, time_t ltime, unsigned long rel_line_nr)
 {
   SEntry *sentry;
 
@@ -558,7 +576,7 @@ sentry_get (LParser *parser, int pid)
     return sentry;
   } else {
 
-    if ((sentry = sentry_new (pid))) {
+    if ((sentry = sentry_new (pid, ltime, rel_line_nr))) {
       g_hash_table_insert (parser->smtpd_h, &sentry->pid, sentry);
     }
 
@@ -704,11 +722,30 @@ sentry_print (LParser *parser, SEntry *sentry)
 {
   NQList *nq;
 
-  if (parser->msgid || parser->qid) return;
+  if (parser->msgid) return;
 
   if (parser->server) {
     if (!sentry->connect) return;
     if (!strcasestr (sentry->connect, parser->server)) return;
+  }
+
+  MatchList *match = parser->match_list;
+  if (match) {
+    int found = 0;
+    while(match) {
+      if (match->mtype == MatchTypeQID) {
+	return;
+      } else if (match->mtype == MatchTypeRelLineNr) {
+	if (match->ltime == sentry->ltime && match->rel_line_nr == sentry->rel_line_nr) {
+	  found = 1;
+	  break;
+	}
+      } else {
+	g_error("implement me");
+      }
+      match = match->next;
+    }
+    if (!found) return;
   }
 
   if (parser->from || parser->to || 
@@ -755,7 +792,9 @@ sentry_print (LParser *parser, SEntry *sentry)
   nq = sentry->nqlist;
   while (nq) {
     if (nq->from && nq->to && nq->dstatus) {
-      printf ("TO:%08lX:00000000000:%c: from <%s> to <%s>\n", nq->ltime, nq->dstatus, nq->from, nq->to);
+      printf ("TO:%08lX:T%08lXL%08lX:%c: from <%s> to <%s>\n", nq->ltime,
+	      sentry->ltime, sentry->rel_line_nr, nq->dstatus,
+	      nq->from, nq->to);
       parser->count++;
     }
     nq = nq->next;
@@ -981,12 +1020,27 @@ qentry_print (LParser *parser, QEntry *qentry)
     if (strcasecmp (parser->msgid, qentry->msgid)) return;
   }
 
-  if (parser->qid) {
+  MatchList *match = parser->match_list;
+  if (match) {
     int found = 0;
-    if (fe && !strcmp (fe->logid, parser->qid)) found = 1;
-    if (!strcmp (qentry->qid, parser->qid)) found = 1;
-
-    if (!found) return;    
+    while(match) {
+      if (match->mtype == MatchTypeQID) {
+	if ((fe && !strcmp (fe->logid, match->id)) ||
+	    (!strcmp (qentry->qid, match->id))) {
+	  found = 1;
+	  break;
+	}
+      } else if (match->mtype == MatchTypeRelLineNr) {
+	if (se && match->ltime == se->ltime && match->rel_line_nr == se->rel_line_nr) {
+	  found = 1;
+	  break;
+	}
+      } else {
+	g_error("implement me");
+      }
+      match = match->next;
+    }
+    if (!found) return;
   }
 
   if (parser->server) {
@@ -1476,7 +1530,7 @@ parse_time (const char **text, int len)
 
   // parse month
   int csum = (line[0]<<16) + (line[1]<<8) + line[2];
-      
+
   switch (csum) {
   case 4874606: mon = 0; break;
   case 4613474: mon = 1; break;
@@ -1711,12 +1765,13 @@ main (int argc, char * const argv[])
   int found = 0;
   int csum_prog;
   unsigned long lines = 0;
+  unsigned long rel_line_nr = 0;
   char qidbuf[30];
   int i;
 
   struct tm *ltime;
   struct timeval tv;
-  time_t ctime, start, end;
+  time_t ctime, next_ctime, start, end;
 
   LParser *parser;
   int opt;
@@ -1753,7 +1808,21 @@ main (int argc, char * const argv[])
     } else if (opt == 'm') {
       parser->msgid = epool_strdup (&parser->ep, optarg);
     } else if (opt == 'q') {
-      parser->qid = epool_strdup (&parser->ep, optarg);
+      time_t ltime;
+      unsigned long rel_line_nr;
+      MatchList *match = (MatchList *)epool_alloc(&parser->ep, sizeof(MatchList));
+      if (sscanf(optarg, "T%08lXL%08lX", &ltime, &rel_line_nr) == 2) {
+	match->mtype = MatchTypeRelLineNr;
+	match->ltime = ltime;
+	match->rel_line_nr = rel_line_nr;
+	match->next = parser->match_list;
+	parser->match_list = match;
+      } else {
+	match->mtype = MatchTypeQID;
+	match->id = epool_strdup(&parser->ep, optarg);
+	match->next = parser->match_list;
+	parser->match_list = match;
+      }
     } else if (opt == 'x') {
       parser->strmatch = epool_strdup (&parser->ep, optarg);
     } else if (opt == 'l') {
@@ -1851,7 +1920,19 @@ main (int argc, char * const argv[])
   if (parser->to) printf ("# Recipient: %s\n", parser->to);
   if (parser->server) printf ("# Server:    %s\n", parser->server);
   if (parser->msgid) printf ("# MsgID:     %s\n", parser->msgid);
-  if (parser->qid) printf ("# QID:       %s\n", parser->qid);
+
+  MatchList *match = parser->match_list;
+  while (match) {
+    if (match->mtype == MatchTypeQID) {
+      printf ("# QID:       %s\n", match->id);
+    } else if (match->mtype == MatchTypeRelLineNr) {
+      printf ("# QID:       T%08lXL%08lX\n", match->ltime, match->rel_line_nr);
+    } else {
+      g_error("internal error - unknown match type %d\n", match->mtype);
+    }
+    match = match->next;
+  }
+
   if (parser->strmatch) printf ("# Match:     %s\n", parser->strmatch);
 
   strftime (linebuf, 256, "%F %T", gmtime (&parser->start));
@@ -1900,9 +1981,20 @@ main (int argc, char * const argv[])
       int pid = 0;
 
       cpos = line;
-      if (!(ctime = parse_time (&cpos, len))) {
+
+      next_ctime = parse_time (&cpos, len);
+
+      if (!next_ctime) {
 	continue;
-      } 
+      }
+
+      if (next_ctime != ctime) {
+	rel_line_nr = 0;
+      } else {
+	rel_line_nr++;
+      }
+
+      ctime = next_ctime;
 
       if (ctime < start) continue;
       if (ctime > end) break;
@@ -2101,7 +2193,7 @@ main (int argc, char * const argv[])
 	  
 		      if (*cpos != '>') continue;
 
-		      if (!(se = sentry_get (parser, pid))) {
+		      if (!(se = sentry_get (parser, pid, ctime, rel_line_nr))) {
 			      continue;
 		      }
 
@@ -2263,7 +2355,7 @@ main (int argc, char * const argv[])
 	  continue;
 	}
 
-	if (!(se = sentry_get (parser, pid))) {
+	if (!(se = sentry_get (parser, pid, ctime, rel_line_nr))) {
 	  continue;
 	}
 
