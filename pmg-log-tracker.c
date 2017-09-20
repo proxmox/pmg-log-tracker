@@ -780,7 +780,7 @@ sentry_print (LParser *parser, SEntry *sentry)
 
   if (parser->verbose) {
 
-    printf ("SMTPD:\n");
+    printf ("SMTPD: T%08lXL%08lX\n", sentry->ltime, sentry->rel_line_nr);
 
     printf ("CTIME: %08lX\n", parser->ctime);
 
