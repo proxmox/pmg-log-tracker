@@ -784,7 +784,7 @@ sentry_print (LParser *parser, SEntry *sentry)
 
     printf ("CTIME: %08lX\n", parser->ctime);
 
-    if (sentry->connect) { printf ("CONNECT: %s\n", sentry->connect); }
+    if (sentry->connect) { printf ("CLIENT: %s\n", sentry->connect); }
     //printf ("EXTERNAL: %d\n", sentry->external);
 
   }
@@ -1094,7 +1094,7 @@ qentry_print (LParser *parser, QEntry *qentry)
     if (qentry->client) {
       printf ("CLIENT: %s\n", qentry->client);
     } else if (se && se->connect) {
-      printf ("CONNECT: %s\n", se->connect);
+      printf ("CLIENT: %s\n", se->connect);
     }
 
     if (qentry->msgid) { printf ("MSGID: %s\n", qentry->msgid); }
