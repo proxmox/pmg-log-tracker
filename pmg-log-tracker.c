@@ -1091,9 +1091,11 @@ qentry_print (LParser *parser, QEntry *qentry)
     printf ("CTIME: %08lX\n", parser->ctime);
     printf ("SIZE: %u\n", qentry->size);
 
-    if (se && se->connect) { printf ("CONNECT: %s\n", se->connect); }
-
-    if (qentry->client) { printf ("CLIENT: %s\n", qentry->client); }
+    if (qentry->client) {
+      printf ("CLIENT: %s\n", qentry->client);
+    } else if (se && se->connect) {
+      printf ("CONNECT: %s\n", se->connect);
+    }
 
     if (qentry->msgid) { printf ("MSGID: %s\n", qentry->msgid); }
 
