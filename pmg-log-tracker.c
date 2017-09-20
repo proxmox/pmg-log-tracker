@@ -1702,9 +1702,12 @@ print_usage (const char *name)
   fprintf (stderr, "\t-e END         end time (YYYY-MM-DD HH:MM:SS)\n");
   fprintf (stderr, "\t               or seconds since epoch\n");
   fprintf (stderr, "\t-m MSGID       message ID (exact match)\n");
-  fprintf (stderr, "\t-q QID         queue ID (exact match)\n");
+  fprintf (stderr, "\t-q QID         queue ID (exact match), can be\n");
+  fprintf (stderr, "\t               specified multiple times.\n");
   fprintf (stderr, "\t-x STRING      search for strings\n");
   fprintf (stderr, "\t-l LIMIT       print max limit entries\n");
+  fprintf (stderr, "\t-g             exclude greylist entries\n");
+  fprintf (stderr, "\t-n             exclude NDR entries\n");
   fprintf (stderr, "\t-v             verbose output (no logs)\n");
   fprintf (stderr, "\t-vv            verbose output with logs\n");
 }
