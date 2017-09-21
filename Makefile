@@ -30,7 +30,7 @@ dinstall: ${DEB}
 
 .PHONY: upload
 upload: ${DEB} ${DBG_DEB}
-	tar cf - ${DEB} ${DBG_DEB}| ssh repoman@repo.proxmox.com -- upload --product pve --dist stretch --arch ${ARCH}
+	tar cf - ${DEB} ${DBG_DEB}| ssh repoman@repo.proxmox.com -- upload --product pmg --dist stretch --arch ${ARCH}
 
 .PHONY: distclean
 distclean: clean
