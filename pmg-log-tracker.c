@@ -407,7 +407,7 @@ epool_alloc (EPool *ep, int size)
   if (size > EPOOL_MAX_SIZE) {
     SList *blocks;
     if (space >= sizeof (SList)) {
-      blocks = ep->blocks->data + ep->cpos;
+      blocks = (SList *)((char *)ep->blocks->data + ep->cpos);
       ep->cpos += sizeof (SList);
     } else {
       blocks = (SList *)epool_alloc (ep, sizeof (SList));
@@ -427,13 +427,13 @@ epool_alloc (EPool *ep, int size)
     return data;
 
   } else if (space >= rs) {
-    data = ep->blocks->data + ep->cpos;
+    data = (char *)ep->blocks->data + ep->cpos;
     ep->cpos += rs;
 
     return data;
 
   } else {
-    SList *blocks = ep->blocks->data + ep->cpos;
+    SList *blocks = (SList *)((char *)ep->blocks->data + ep->cpos);
 
     data = g_slice_alloc0 (EPOOL_BLOCK_SIZE);
     blocks->data = data;
