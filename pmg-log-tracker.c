@@ -498,7 +498,7 @@ loglist_print (LogList *loglist)
 {
   LogEntry *log = loglist->log;
   while (log) {
-    printf ("L%08X %s", log->linenr, log->text);
+    printf ("L%08lX %s", log->linenr, log->text);
     log = log->next;
   }
 }
@@ -1745,7 +1745,7 @@ print_usage (const char *name)
 
 // gzgets is ways too slow, so we do it our own way
 
-static int
+static char
 mygzgetc (gzFile stream)
 {
   int br;
@@ -1768,7 +1768,7 @@ mygzgetc (gzFile stream)
 static char *
 mygzgets (gzFile stream, char *line, int bufsize)
 {
-  int c=0;
+  char c=0;
   char *cpos;
 
   cpos = line;
