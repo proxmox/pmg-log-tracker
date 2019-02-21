@@ -1492,7 +1492,7 @@ parser_track (LParser *parser, const char *qid, gboolean insert)
 }
 #endif
 
-static const int linebufsize = 8192;
+#define LINEBUFSIZE 8192
 static int cur_year;
 static int cur_month = 0;
 static int cal_mtod[12] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
@@ -1550,7 +1550,7 @@ parse_time (const char **text, int len)
 
   const char *line = *text;
 
-  if (len == (linebufsize - 1)) {
+  if (len == (LINEBUFSIZE - 1)) {
     debug_error ("skipping long line data", line);
     return 0;
   }
@@ -1673,7 +1673,7 @@ parser_count_files (LParser *parser)
 {
   int i;
   time_t start = parser->start;
-  char linebuf[linebufsize];
+  char linebuf[LINEBUFSIZE];
   const char *line;
   gzFile stream;
 
@@ -1682,7 +1682,7 @@ parser_count_files (LParser *parser)
     cur_month = 0;
 
     if ((stream = gzopen (logfiles[i], "r"))) {
-      if ((line = gzgets (stream, linebuf, linebufsize))) {
+      if ((line = gzgets (stream, linebuf, LINEBUFSIZE))) {
 	if (parse_time (&line, strlen (line)) < start) {
 	  break;
 	}
@@ -1789,7 +1789,7 @@ extern int optind, opterr, optopt;
 int 
 main (int argc, char * const argv[])
 {
-  char linebuf[linebufsize];
+  char linebuf[LINEBUFSIZE];
   char *line;
   char *inputfile = NULL;
 
@@ -2010,9 +2010,9 @@ main (int argc, char * const argv[])
       }
 
       if (i <= 1) {
- 	line = fgets (linebuf, linebufsize, (FILE *)stream);
+ 	line = fgets (linebuf, LINEBUFSIZE, (FILE *)stream);
       } else {
-	line = mygzgets ((gzFile)stream, linebuf, linebufsize);
+	line = mygzgets ((gzFile)stream, linebuf, LINEBUFSIZE);
       }
 
       if (!line) break;
