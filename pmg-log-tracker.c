@@ -1766,6 +1766,7 @@ main (int argc, char * const argv[])
 {
   char linebuf[linebufsize];
   char *line;
+  char *inputfile = NULL;
 
   const char *text;
   const char *idx1;
@@ -1799,7 +1800,7 @@ main (int argc, char * const argv[])
     exit (-1);
   }
 
-  while ((opt = getopt (argc, argv, "f:t:s:e:h:m:q:x:l:vgn")) != -1) {
+  while ((opt = getopt (argc, argv, "f:t:s:e:h:m:q:x:i:l:vgn")) != -1) {
     if (opt == 'f') {
       parser->from = epool_strdup (&parser->ep, optarg);
     } else if (opt == 't') {
@@ -1832,6 +1833,8 @@ main (int argc, char * const argv[])
       }
     } else if (opt == 'x') {
       parser->strmatch = epool_strdup (&parser->ep, optarg);
+    } else if (opt == 'i') {
+      inputfile = optarg;
     } else if (opt == 'l') {
       char *l;
       parser->limit = strtoul (optarg, &l, 0);
@@ -1911,7 +1914,9 @@ main (int argc, char * const argv[])
   }
 
   int filecount;
-  if ((filecount = parser_count_files (parser)) <= 0) {
+  if (inputfile) {
+      filecount = 1;
+  } else if ((filecount = parser_count_files (parser)) <= 0) {
     fprintf (stderr, "unable to access log files\n");
     exit (-1);
   }
@@ -1960,7 +1965,14 @@ main (int argc, char * const argv[])
     cur_year = parser->year[i];
 
     if (i <= 1) {
-      if (!(stream = (gpointer) fopen (logfiles[i], "r"))) continue;
+      if (inputfile && strlen(inputfile) == 1 && *inputfile == '-') {
+	stream = (gpointer) stdin;
+      } else if (inputfile) {
+	if (!(stream = (gpointer) fopen (inputfile, "r"))) {
+	  fprintf(stderr, "unable to open log file\n");
+	  exit (-1);
+	}
+      } else if (!(stream = (gpointer) fopen (logfiles[i], "r"))) continue;
     } else {
       if (!(stream = (gpointer) gzopen (logfiles[i], "r"))) continue;
     }
