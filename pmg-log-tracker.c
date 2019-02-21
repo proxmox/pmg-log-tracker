@@ -1766,7 +1766,6 @@ main (int argc, char * const argv[])
 {
   char linebuf[linebufsize];
   char *line;
-  char *uniqueid = NULL;
 
   const char *text;
   const char *idx1;
@@ -1800,7 +1799,7 @@ main (int argc, char * const argv[])
     exit (-1);
   }
 
-  while ((opt = getopt (argc, argv, "f:t:s:e:h:m:q:x:l:I:vgn")) != -1) {
+  while ((opt = getopt (argc, argv, "f:t:s:e:h:m:q:x:l:vgn")) != -1) {
     if (opt == 'f') {
       parser->from = epool_strdup (&parser->ep, optarg);
     } else if (opt == 't') {
@@ -1811,8 +1810,6 @@ main (int argc, char * const argv[])
       parser->exclude_greylist = 1;
     } else if (opt == 'n') {
       parser->exclude_ndrs = 1;
-    } else if (opt == 'I') {
-      uniqueid = optarg;
     } else if (opt == 'h') {
       parser->server = epool_strdup (&parser->ep, optarg);
     } else if (opt == 'm') {
@@ -1919,11 +1916,7 @@ main (int argc, char * const argv[])
     exit (-1);
   }
 
-  if (uniqueid) {
-    printf ("# LogReader: %d %s\n", getpid(), uniqueid);
-  } else {
-    printf ("# LogReader: %d\n", getpid());
-  }
+  printf ("# LogReader: %d\n", getpid());
 
   printf ("# Query options\n");
   if (parser->from) printf ("# Sender:    %s\n", parser->from);
