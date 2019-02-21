@@ -34,6 +34,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <stdint.h>
 #include <zlib.h>
 #include <fnmatch.h>
 
@@ -289,6 +290,18 @@ void      parser_free (LParser *parser);
 //char     *parser_track (LParser *parser, const char *qid, gboolean insert);
 
 // Implementations
+
+// Checksum Macros
+#define PROXPROX		0xE0E4DEF0
+#define PMG_SMTP_FILTER		0x0A85A6B7
+#define POSTFIX_POSTSCREEN	0xD17E2019
+#define POSTFIX_QMGR		0x48465316
+#define POSTFIX_SMTP		0x4A466014
+#define POSTFIX_LMTP		0x43466014
+#define POSTFIX_LOCAL		0x484F05AF
+#define POSTFIX_ERROR		0x4B5E13AE
+#define POSTFIX_SMTPD		0x466014AE
+#define POSTFIX_CLEANUP		0x05A8BAC1
 
 //#define LOGPATH "./log/"
 #define LOGPATH "/var/log/"
@@ -1773,7 +1786,7 @@ main (int argc, char * const argv[])
   const char *idx2;
   const char *cpos;
   int found = 0;
-  int csum_prog;
+  uint32_t csum_prog;
   unsigned long lines = 0;
   unsigned long rel_line_nr = 0;
   char qidbuf[30];
@@ -2037,7 +2050,7 @@ main (int argc, char * const argv[])
 
       csum_prog = 0;
       found = 0; while (*cpos && (*cpos != ':') && (*cpos != '[')) { 
-	csum_prog = (csum_prog <<8) + *cpos;
+	csum_prog = ((csum_prog << 8)|(csum_prog >> 24)) + *cpos;
 	cpos++; 
 	found++; 
       }
@@ -2081,8 +2094,8 @@ main (int argc, char * const argv[])
 	strmatch = 1;
       }
 
-      if ((csum_prog == 0x70726F78) ||// proxprox
-	  (csum_prog == 0x6C746572)) { // pmg-smtp-filter
+      if ((csum_prog == PROXPROX) ||
+	  (csum_prog == PMG_SMTP_FILTER)) {
 
 	if ((idx1 = parse_qid (&cpos, qidbuf, ':', 25))) {
 
@@ -2171,7 +2184,7 @@ main (int argc, char * const argv[])
 
 	}
 
-      } else if (csum_prog == 0x7265656E) { // postfix/postscreen
+      } else if (csum_prog == POSTFIX_POSTSCREEN) {
 
 	      SEntry *se;
 
@@ -2228,7 +2241,7 @@ main (int argc, char * const argv[])
 		      sentry_free (parser, se);
 	      }
 	      
-      } else if (csum_prog == 0x716D6772) { // postfix/qmgr
+      } else if (csum_prog == POSTFIX_QMGR) {
 
 	if ((idx2 = text) && (idx1 = parse_qid (&idx2, qidbuf, ':', 15))) {
 
@@ -2275,12 +2288,12 @@ main (int argc, char * const argv[])
 	  }
 	}
 
-      } else if ((csum_prog == 0x736D7470) || //postfix/smtp
-		 (csum_prog == 0x6C6D7470) || //postfix/lmtp
-		 (csum_prog == 0x6F63616C) || //postfix/local
-		 (csum_prog == 0x72726F72)) { //postfix/error
+      } else if ((csum_prog == POSTFIX_SMTP) ||
+		 (csum_prog == POSTFIX_LMTP) ||
+		 (csum_prog == POSTFIX_LOCAL) ||
+		 (csum_prog == POSTFIX_ERROR)) {
 
-	int lmtp = (csum_prog == 0x6C6D7470);
+	int lmtp = (csum_prog == POSTFIX_LMTP);
 
 	if ((cpos = text) && (idx1 = parse_qid (&cpos, qidbuf, ':', 15))) {
 
@@ -2362,7 +2375,7 @@ main (int argc, char * const argv[])
 	  }
 	}
 
-      } else if (csum_prog == 0x6D747064) { // postfix/smtpd
+      } else if (csum_prog == POSTFIX_SMTPD) {
 	SEntry *se;
 
 	if (!pid) {
@@ -2469,7 +2482,7 @@ main (int argc, char * const argv[])
 
 	}
  
-      } else if (csum_prog == 0x616E7570) { // postfix/cleanup
+      } else if (csum_prog == POSTFIX_CLEANUP) {
 
 	QEntry *qe;
 
