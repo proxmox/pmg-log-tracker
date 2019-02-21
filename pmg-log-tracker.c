@@ -1522,6 +1522,19 @@ mkgmtime (struct tm *tm)
   return res;
 }
 
+#define JAN (('J'<<16)|('a'<<8)|'n')
+#define FEB (('F'<<16)|('e'<<8)|'b')
+#define MAR (('M'<<16)|('a'<<8)|'r')
+#define APR (('A'<<16)|('p'<<8)|'r')
+#define MAY (('M'<<16)|('a'<<8)|'y')
+#define JUN (('J'<<16)|('u'<<8)|'n')
+#define JUL (('J'<<16)|('u'<<8)|'l')
+#define AUG (('A'<<16)|('u'<<8)|'g')
+#define SEP (('S'<<16)|('e'<<8)|'p')
+#define OCT (('O'<<16)|('c'<<8)|'t')
+#define NOV (('N'<<16)|('o'<<8)|'v')
+#define DEC (('D'<<16)|('e'<<8)|'c')
+
 time_t
 parse_time (const char **text, int len)
 {
@@ -1552,19 +1565,19 @@ parse_time (const char **text, int len)
   int csum = (line[0]<<16) + (line[1]<<8) + line[2];
 
   switch (csum) {
-  case 4874606: mon = 0; break;
-  case 4613474: mon = 1; break;
-  case 5071218: mon = 2; break;
-  case 4288626: mon = 3; break;
-  case 5071225: mon = 4; break;
-  case 4879726: mon = 5; break;
-  case 4879724: mon = 6; break;
-  case 4289895: mon = 7; break;
-  case 5465456: mon = 8; break;
-  case 5202804: mon = 9; break;
-  case 5140342: mon = 10; break;
-  case 4482403: mon = 11; break;
-  default: 
+    case JAN: mon = 0; break;
+    case FEB: mon = 1; break;
+    case MAR: mon = 2; break;
+    case APR: mon = 3; break;
+    case MAY: mon = 4; break;
+    case JUN: mon = 5; break;
+    case JUL: mon = 6; break;
+    case AUG: mon = 7; break;
+    case SEP: mon = 8; break;
+    case OCT: mon = 9; break;
+    case NOV: mon = 10; break;
+    case DEC: mon = 11; break;
+  default:
     debug_error ("unable to parse month", line);
     return 0;    
   }
@@ -1591,7 +1604,7 @@ parse_time (const char **text, int len)
     return 0;
   }
 
-  found = 0; while (isdigit (*cpos)) { mday = mday*10 + *cpos - 48; cpos++; found++; }
+  found = 0; while (isdigit (*cpos)) { mday = mday*10 + *cpos - '0'; cpos++; found++; }
   if (found < 1 || found > 2) {
     debug_error ("unable to parse day of month", line);
     return 0;
@@ -1605,7 +1618,7 @@ parse_time (const char **text, int len)
     return 0;
   }
 
-  found = 0; while (isdigit (*cpos)) { hour = hour*10 + *cpos - 48; cpos++; found++; }
+  found = 0; while (isdigit (*cpos)) { hour = hour*10 + *cpos - '0'; cpos++; found++; }
   if (found < 1 || found > 2) {
     debug_error ("unable to parse hour", line);
     return 0;
@@ -1620,7 +1633,7 @@ parse_time (const char **text, int len)
   }
   cpos++;
 
-  found = 0; while (isdigit (*cpos)) { min = min*10 + *cpos - 48; cpos++; found++; }
+  found = 0; while (isdigit (*cpos)) { min = min*10 + *cpos - '0'; cpos++; found++; }
   if (found < 1 || found > 2) {
     debug_error ("unable to parse minute", line);
     return 0;
@@ -1635,7 +1648,7 @@ parse_time (const char **text, int len)
   }
   cpos++;
 
-  found = 0; while (isdigit (*cpos)) { sec = sec*10 + *cpos - 48; cpos++; found++; }
+  found = 0; while (isdigit (*cpos)) { sec = sec*10 + *cpos - '0'; cpos++; found++; }
   if (found < 1 || found > 2) {
     debug_error ("unable to parse second", line);
     return 0;
@@ -2062,7 +2075,7 @@ main (int argc, char * const argv[])
       if (*cpos == '[') {
 	cpos++;
 	found = 0; while (isdigit (*cpos)) { 
-	  pid = pid*10 + *cpos - 48; 
+	  pid = pid*10 + *cpos - '0';
 	  cpos++; 
 	  found++; 
 	}
@@ -2275,7 +2288,7 @@ main (int argc, char * const argv[])
 	      int size = 0;
 	      cpos += 7;
 
-	      while (isdigit (*cpos)) { size = size*10 + *cpos++ - 48; }
+	      while (isdigit (*cpos)) { size = size*10 + *cpos++ - '0'; }
 
 	      qe->size = size;
 	    }
