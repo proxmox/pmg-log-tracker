@@ -39,7 +39,7 @@
 #include <fnmatch.h>
 
 /*
-  We assume the syslog files belong to one host, i.e. we do not 
+  We assume the syslog files belong to one host, i.e. we do not
   consider the hostname at all
 */
 
@@ -59,7 +59,7 @@
 #define EPOOL_BLOCK_SIZE 2048
 #define EPOOL_MAX_SIZE 128
 #define MAX_LOGFILES 32
-//#define EPOOL_DEBUG 
+//#define EPOOL_DEBUG
 //#define DEBUG
 
 typedef struct _SList SList;
@@ -166,7 +166,7 @@ struct _LogList {
   LogEntry *log;
   LogEntry *logs_last; // pointer to last log (speedup add log)
 };
- 
+
 // SEntry: Store SMTPD related logs
 
 struct _SEntry {
@@ -218,7 +218,7 @@ struct _QEntry {
 };
 
 // FEntry: Store filter (proxprox) related logs
- 
+
 struct _FEntry {
 
   EPool ep;
@@ -253,7 +253,7 @@ void      sentry_ref_add (SEntry *sentry, QEntry *qentry);
 int       sentry_ref_del (SEntry *sentry, QEntry *qentry);
 void      sentry_ref_finalize (LParser *parser, SEntry *sentry);
 int       sentry_ref_rem_unneeded (LParser *parser, SEntry *sentry);
-void      sentry_nqlist_add (SEntry *sentry, time_t ltime, const char *from, int from_len, 
+void      sentry_nqlist_add (SEntry *sentry, time_t ltime, const char *from, int from_len,
 			     const char *to, int to_len, char dstatus);
 void      sentry_print (LParser *parser, SEntry *sentry);
 void      sentry_set_connect (SEntry *sentry, const char *connect, int len);
@@ -263,8 +263,8 @@ void      sentry_cleanup_hash (gpointer key, gpointer value, gpointer user_data)
 
 
 QEntry   *qentry_new (const char *qid);
-QEntry   *qentry_get (LParser *parser, const char *qid); 
-void      qentry_tolist_add (QEntry *qentry, time_t ltime, char dstatus, const char *to, 
+QEntry   *qentry_get (LParser *parser, const char *qid);
+void      qentry_tolist_add (QEntry *qentry, time_t ltime, char dstatus, const char *to,
 			     int to_len, const char *relay, int relay_len);
 void      qentry_set_from (QEntry *qentry, const char *from, int len);
 void      qentry_set_msgid (QEntry *qentry, const char *msgid, int len);
@@ -346,8 +346,8 @@ void
 debug_error (char *msg, const char *line)
 {
 #ifdef DEBUG
-  fprintf (stderr, "ERROR: %s\n", msg); 
-  if (line) fprintf (stderr, "LINE: %s\n", line); 
+  fprintf (stderr, "ERROR: %s\n", msg);
+  if (line) fprintf (stderr, "LINE: %s\n", line);
 
   G_BREAKPOINT();
 
@@ -381,7 +381,7 @@ epool_init (EPool *ep)
 }
 
 void
-epool_free (EPool *ep) 
+epool_free (EPool *ep)
 {
   SList *l;
   gpointer data;
@@ -394,7 +394,7 @@ epool_free (EPool *ep)
 #ifdef DEBUG
   return;
 #endif
-  
+
   l = ep->mblocks;
   while (l) {
     data = l->data;
@@ -436,7 +436,7 @@ epool_alloc (EPool *ep, int size)
     blocks->next = ep->mblocks;
 
     ep->mblocks = blocks;
-    
+
     return data;
 
   } else if (space >= rs) {
@@ -462,11 +462,11 @@ epool_alloc (EPool *ep, int size)
 #endif
 
     return data;
-  } 
+  }
 }
 
 char *
-epool_strndup (EPool *ep, const char *s, int len) 
+epool_strndup (EPool *ep, const char *s, int len)
 {
   int l = len + 1;
   char *res = epool_alloc (ep, l);
@@ -475,7 +475,7 @@ epool_strndup (EPool *ep, const char *s, int len)
 }
 
 char *
-epool_strndup0 (EPool *ep, const char *s, int len) 
+epool_strndup0 (EPool *ep, const char *s, int len)
 {
   char *res = epool_alloc (ep, len + 1);
   strncpy (res, s, len);
@@ -485,7 +485,7 @@ epool_strndup0 (EPool *ep, const char *s, int len)
 }
 
 char *
-epool_strdup (EPool *ep, const char *s) 
+epool_strdup (EPool *ep, const char *s)
 {
   int l = strlen (s) + 1;
   char *res = epool_alloc (ep, l);
@@ -511,11 +511,11 @@ loglist_add (EPool *ep, LogList *loglist, const char *text, int len, unsigned lo
 
 #ifdef DEBUG
   if (len != strlen (text)) {
-    debug_error ("string with wrong len", NULL);    
+    debug_error ("string with wrong len", NULL);
   }
 #endif
   if (text[len] != 0) {
-    debug_error ("string is not null terminated", NULL);    
+    debug_error ("string is not null terminated", NULL);
     return;
   }
 
@@ -570,7 +570,7 @@ sentry_new (int pid, time_t ltime, unsigned long rel_line_nr)
   blocks = (SList *)((char *)sentry + cpos);
 
   cpos += sizeof (SList);
-  
+
   blocks->data = sentry;
   blocks->next = NULL;
 
@@ -598,13 +598,13 @@ sentry_get (LParser *parser, int pid, time_t ltime, unsigned long rel_line_nr)
 }
 
 void
-sentry_ref_add (SEntry *sentry, QEntry *qentry) 
+sentry_ref_add (SEntry *sentry, QEntry *qentry)
 {
   SList *l;
 
   if (qentry->smtpd) {
     if (qentry->smtpd != sentry) {
-      debug_error ("qentry ref already set", NULL);    
+      debug_error ("qentry ref already set", NULL);
     }
     return;
   }
@@ -626,13 +626,13 @@ sentry_ref_add (SEntry *sentry, QEntry *qentry)
 }
 
 int
-sentry_ref_del (SEntry *sentry, QEntry *qentry) 
+sentry_ref_del (SEntry *sentry, QEntry *qentry)
 {
   SList *l = sentry->refs;
   int count = 0;
 
   if (!qentry->smtpd) {
-    debug_error ("qentry does not hav a qentry ref", NULL);    
+    debug_error ("qentry does not hav a qentry ref", NULL);
     return 0;
   }
 
@@ -652,7 +652,7 @@ sentry_ref_del (SEntry *sentry, QEntry *qentry)
 }
 
 void
-sentry_ref_finalize (LParser *parser, SEntry *sentry) 
+sentry_ref_finalize (LParser *parser, SEntry *sentry)
 {
   SList *l = sentry->refs;
 
@@ -682,16 +682,16 @@ sentry_ref_finalize (LParser *parser, SEntry *sentry)
     qe->smtpd = NULL;
 
     qentry_free (parser, qe);
- 
+
     if (fe) fentry_free (parser, fe);
-   
+
   }
 
   if (!count) sentry_free_noremove (sentry);
 }
 
 int
-sentry_ref_rem_unneeded (LParser *parser, SEntry *sentry) 
+sentry_ref_rem_unneeded (LParser *parser, SEntry *sentry)
 {
   SList *l = sentry->refs;
   int count = 0;
@@ -716,7 +716,7 @@ sentry_ref_rem_unneeded (LParser *parser, SEntry *sentry)
 }
 
 void
-sentry_nqlist_add (SEntry *sentry, time_t ltime, const char *from, int from_len, 
+sentry_nqlist_add (SEntry *sentry, time_t ltime, const char *from, int from_len,
 		   const char *to, int to_len, char dstatus)
 {
   NQList *nq = (NQList *)epool_alloc (&sentry->ep, sizeof (NQList));
@@ -761,7 +761,7 @@ sentry_print (LParser *parser, SEntry *sentry)
     if (!found) return;
   }
 
-  if (parser->from || parser->to || 
+  if (parser->from || parser->to ||
       parser->exclude_greylist || parser->exclude_ndrs) {
     nq = sentry->nqlist;
     int found = 0;
@@ -840,16 +840,16 @@ sentry_set_connect (SEntry *sentry, const char *connect, int len)
 }
 
 void
-sentry_free_noremove (SEntry *sentry) 
+sentry_free_noremove (SEntry *sentry)
 {
   SList *l;
   gpointer data;
-  
+
 #ifdef EPOOL_DEBUG
   ep_allocated -= sentry->ep.allocated;
   printf ("MEM: %d\n", ep_allocated);
 #endif
-  
+
 #ifdef DEBUG
   {
     SEntry *se;
@@ -878,7 +878,7 @@ sentry_free_noremove (SEntry *sentry)
 }
 
 void
-sentry_free (LParser *parser, SEntry *sentry) 
+sentry_free (LParser *parser, SEntry *sentry)
 {
   g_hash_table_remove (parser->smtpd_h, &sentry->pid);
 
@@ -913,7 +913,7 @@ sentry_debug_alloc (gpointer key,
 
   printf ("FOUND ALLOCATED SENTRY:\n");
   sentry_print (parser, se);
-	  
+
   exit (-1);
 }
 #endif
@@ -952,7 +952,7 @@ qentry_new (const char *qid)
   blocks = (SList *)((char *)qentry + cpos);
 
   cpos += sizeof (SList);
-  
+
   blocks->data = qentry;
   blocks->next = NULL;
 
@@ -978,7 +978,7 @@ qentry_tolist_add (QEntry *qentry, time_t ltime, char dstatus, const char *to, i
   tl->dstatus = dstatus;
   tl->ltime = ltime;
   tl->next = qentry->tolist;
-  
+
   qentry->tolist = tl;
 }
 
@@ -1025,7 +1025,7 @@ qentry_set_client (QEntry *qentry, const char *client, int len)
 }
 
 void
-qentry_print (LParser *parser, QEntry *qentry) 
+qentry_print (LParser *parser, QEntry *qentry)
 {
   TOList *tl, *fl;
   SEntry *se = qentry->smtpd;
@@ -1064,7 +1064,7 @@ qentry_print (LParser *parser, QEntry *qentry)
     if (se && se->connect && strcasestr (se->connect, parser->server)) found = 1;
     if (qentry->client && strcasestr (qentry->client, parser->server)) found = 1;
 
-    if (!found) return;    
+    if (!found) return;
   }
 
   if (parser->from) {
@@ -1089,10 +1089,10 @@ qentry_print (LParser *parser, QEntry *qentry)
       }
       tl = tl->next;
     }
-    if (!found) return;    
+    if (!found) return;
   }
 
-  if (parser->strmatch && 
+  if (parser->strmatch &&
       !(qentry->strmatch || (se && se->strmatch) || (fe && fe->strmatch)))
     return;
 
@@ -1100,7 +1100,7 @@ qentry_print (LParser *parser, QEntry *qentry)
   if (parser->verbose) {
 
     printf ("QENTRY: %s\n", qentry->qid);
- 
+
     printf ("CTIME: %08lX\n", parser->ctime);
     printf ("SIZE: %u\n", qentry->size);
 
@@ -1130,7 +1130,7 @@ qentry_print (LParser *parser, QEntry *qentry)
       char *to;
       char dstatus;
       char *relay;
-      
+
       if (fl) {
 	to = fl->to;
 	dstatus = fl->dstatus;
@@ -1177,7 +1177,7 @@ qentry_print (LParser *parser, QEntry *qentry)
 }
 
 QEntry *
-qentry_get (LParser *parser, const char *qid) 
+qentry_get (LParser *parser, const char *qid)
 {
   QEntry *qentry;
 
@@ -1201,7 +1201,7 @@ qentry_free_noremove (QEntry *qentry)
 
   if ((se = qentry->smtpd)) {
     if (sentry_ref_del (se, qentry) == 0) {
-      if (se->disconnect) { 
+      if (se->disconnect) {
 	sentry_free_noremove (se);
       }
     }
@@ -1223,7 +1223,7 @@ qentry_free_noremove (QEntry *qentry)
   }
   return;
 #endif
-  
+
   l = qentry->ep.mblocks;
   while (l) {
     data = l->data;
@@ -1240,7 +1240,7 @@ qentry_free_noremove (QEntry *qentry)
 }
 
 void
-qentry_free (LParser *parser, QEntry *qentry) 
+qentry_free (LParser *parser, QEntry *qentry)
 {
   g_hash_table_remove (parser->qmgr_h, qentry->qid);
 
@@ -1312,12 +1312,12 @@ fentry_new (const char *logid)
   blocks = (SList *)((char *)fentry + cpos);
 
   cpos += sizeof (SList);
-  
+
   blocks->data = fentry;
   blocks->next = NULL;
 
   fentry->logid = logid_cp = (char *)fentry + cpos;
-  while ((*logid_cp++ = *logid++)) cpos++;  
+  while ((*logid_cp++ = *logid++)) cpos++;
   cpos = (cpos + 4) & ~3;
 
   fentry->ep.blocks = blocks;
@@ -1327,7 +1327,7 @@ fentry_new (const char *logid)
 }
 
 FEntry *
-fentry_get (LParser *parser, const char *logid) 
+fentry_get (LParser *parser, const char *logid)
 {
   FEntry *fentry;
 
@@ -1357,7 +1357,7 @@ fentry_tolist_add (FEntry *fentry, char dstatus, const char *to, int to_len,
   }
   tl->dstatus = dstatus;
   tl->next = fentry->tolist;
-  
+
   fentry->tolist = tl;
 }
 
@@ -1383,7 +1383,7 @@ fentry_free_noremove (FEntry *fentry)
   }
   return;
 #endif
-  
+
   l = fentry->ep.mblocks;
   while (l) {
     data = l->data;
@@ -1400,7 +1400,7 @@ fentry_free_noremove (FEntry *fentry)
 }
 
 void
-fentry_free (LParser *parser, FEntry *fentry) 
+fentry_free (LParser *parser, FEntry *fentry)
 {
   g_hash_table_remove (parser->filter_h, fentry->logid);
 
@@ -1476,7 +1476,7 @@ parser_free (LParser *parser)
 
 #if 0
 char *
-parser_track (LParser *parser, const char *qid, gboolean insert) 
+parser_track (LParser *parser, const char *qid, gboolean insert)
 {
   char *res;
 
@@ -1554,7 +1554,7 @@ parse_time (const char **text, int len)
     debug_error ("skipping long line data", line);
     return 0;
   }
-    
+
   if (len < 15) {
     debug_error ("skipping short line data", line);
     return 0;
@@ -1578,11 +1578,11 @@ parse_time (const char **text, int len)
     case DEC: mon = 11; break;
   default:
     debug_error ("unable to parse month", line);
-    return 0;    
+    return 0;
   }
 
   // year change heuristik
-  if (cur_month == 11 && mon == 0) { 
+  if (cur_month == 11 && mon == 0) {
     year++;
   }
   if (mon > cur_month) cur_month = mon;
@@ -1669,7 +1669,7 @@ parse_time (const char **text, int len)
 
 
 int
-parser_count_files (LParser *parser) 
+parser_count_files (LParser *parser)
 {
   int i;
   time_t start = parser->start;
@@ -1694,12 +1694,12 @@ parser_count_files (LParser *parser)
       return i;
     }
   }
-  
+
   return i + 1;
 }
 
 static char *
-parse_qid (const char **text, char *out, char delim, int maxlen) 
+parse_qid (const char **text, char *out, char delim, int maxlen)
 {
   const char *idx;
   char *copy = out;
@@ -1708,7 +1708,7 @@ parse_qid (const char **text, char *out, char delim, int maxlen)
   idx = *text;
   while (isxdigit (*idx)) { *copy++ = *idx++; found++; if (found > maxlen) break; }
 
-  if (found > 1 && found < maxlen && 
+  if (found > 1 && found < maxlen &&
       ((delim && (*idx == delim)) || (!delim && isspace (*idx)))) {
     *copy = 0;
     idx++;
@@ -1786,7 +1786,7 @@ mygzgets (gzFile stream, char *line, int bufsize)
 extern char *optarg;
 extern int optind, opterr, optopt;
 
-int 
+int
 main (int argc, char * const argv[])
 {
   char linebuf[LINEBUFSIZE];
@@ -1969,9 +1969,9 @@ main (int argc, char * const argv[])
   if (parser->strmatch) printf ("# Match:     %s\n", parser->strmatch);
 
   strftime (linebuf, 256, "%F %T", gmtime (&parser->start));
-  printf ("# Start:     %s (%lu)\n", linebuf, parser->start); 
+  printf ("# Start:     %s (%lu)\n", linebuf, parser->start);
   strftime (linebuf, 256, "%F %T", gmtime (&parser->end));
-  printf ("# END:       %s (%lu)\n", linebuf, parser->end); 
+  printf ("# END:       %s (%lu)\n", linebuf, parser->end);
   printf ("# End Query Options\n\n");
 
   fflush (stdout);
@@ -2061,10 +2061,10 @@ main (int argc, char * const argv[])
       //const char *prog = cpos;
 
       csum_prog = 0;
-      found = 0; while (*cpos && (*cpos != ':') && (*cpos != '[')) { 
+      found = 0; while (*cpos && (*cpos != ':') && (*cpos != '[')) {
 	csum_prog = ((csum_prog << 8)|(csum_prog >> 24)) + *cpos;
-	cpos++; 
-	found++; 
+	cpos++;
+	found++;
       }
 
       //idx1 = g_strndup (prog, found);
@@ -2073,10 +2073,10 @@ main (int argc, char * const argv[])
 
       if (*cpos == '[') {
 	cpos++;
-	found = 0; while (isdigit (*cpos)) { 
+	found = 0; while (isdigit (*cpos)) {
 	  pid = pid*10 + *cpos - '0';
-	  cpos++; 
-	  found++; 
+	  cpos++;
+	  found++;
 	}
 	if (found < 1 || found > 15 || *cpos != ']') {
 	  debug_error ("unable to parse pid", line);
@@ -2084,7 +2084,7 @@ main (int argc, char * const argv[])
 	}
 	cpos++;
       }
-    
+
       if (*cpos++ != ':') {
 	debug_error ("missing collon", line);
 	continue;
@@ -2126,13 +2126,13 @@ main (int argc, char * const argv[])
 	  //fixme: parse spam score
 
 	  if ((*cpos == 'a') && !strncmp (cpos, "accept mail to <", 16)) {
-	  
+
 	    const char *to_s, *to_e;
 
 	    to_s = cpos = cpos + 16;
-	
+
 	    while (*cpos && (*cpos != '>')) { cpos++; }
-	  
+
 	    if (*cpos != '>') continue;
 
 	    to_e = cpos;
@@ -2140,7 +2140,7 @@ main (int argc, char * const argv[])
 	    cpos++;
 
 	    if ((*cpos++ != ' ') || (*cpos++ != '(')) continue;
-	  
+
 	    if (!(idx1 = parse_qid (&cpos, qidbuf, ')', 15))) continue;
 
 	    // parser_track (parser, idx1, 1);
@@ -2151,9 +2151,9 @@ main (int argc, char * const argv[])
 	    const char *to_s, *to_e;
 
 	    to_s = cpos = cpos + 16;
-	
+
 	    while (*cpos && (*cpos != '>')) { cpos++; }
-	  
+
 	    to_e = cpos;
 
 	    if (strncmp (cpos, "> to ", 5)) continue;
@@ -2171,17 +2171,17 @@ main (int argc, char * const argv[])
 	    cpos += 14;
 
 	    if (!(idx1 = parse_qid (&cpos, qidbuf, 0, 25))) continue;
-	  
+
 	    fentry_tolist_add (fe, 'Q', to_s, to_e - to_s, idx1, strlen (idx1));
 
 	  } else if ((*cpos == 'b') && !strncmp (cpos, "block mail to <", 15)) {
-	  
+
 	    const char *to_s;
 
 	    to_s = cpos = cpos + 15;
-	
+
 	    while (*cpos && (*cpos != '>')) { cpos++; }
-	  
+
 	    if (*cpos != '>') continue;
 
 	    fentry_tolist_add (fe, 'B', to_s, cpos - to_s, NULL, 0);
@@ -2230,7 +2230,7 @@ main (int argc, char * const argv[])
 		      const char *to = cpos = cpos + 7;
 
 		      while (*cpos && (*cpos != '>')) { cpos++; }
-	  
+
 		      if (*cpos != '>') continue;
 
 		      if (!(se = sentry_get (parser, pid, ctime, rel_line_nr))) {
@@ -2252,7 +2252,7 @@ main (int argc, char * const argv[])
 		      sentry_print (parser, se);
 		      sentry_free (parser, se);
 	      }
-	      
+
       } else if (csum_prog == POSTFIX_QMGR) {
 
 	if ((idx2 = text) && (idx1 = parse_qid (&idx2, qidbuf, ':', 15))) {
@@ -2265,10 +2265,10 @@ main (int argc, char * const argv[])
 
 	  if (strmatch) qe->strmatch = 1;
 
-	  qe->cleanup = 1;	
+	  qe->cleanup = 1;
 
 	  loglist_add (&qe->ep, &qe->loglist, line, len, lines);
-	
+
 	  if ((*idx2 == 'f') && !strncmp (idx2, "from=<", 6)) {
 
 	    cpos = idx2 = idx2 + 6;
@@ -2291,7 +2291,7 @@ main (int argc, char * const argv[])
 
 	      qe->size = size;
 	    }
-	  
+
 	  } else if ((*idx2 == 'r') && !strncmp (idx2, "removed\n", 8)) {
 
 	    qe->removed = 1;
@@ -2317,7 +2317,7 @@ main (int argc, char * const argv[])
 
 	  if (strmatch) qe->strmatch = 1;
 
-	  qe->cleanup = 1;	
+	  qe->cleanup = 1;
 
 	  loglist_add (&qe->ep, &qe->loglist, line, len, lines);
 
@@ -2327,15 +2327,15 @@ main (int argc, char * const argv[])
 	  const char *to_s, *to_e;
 
 	  to_s = cpos;
-	
+
 	  while (*cpos && (*cpos != '>')) { cpos++; }
-	  
+
 	  if (*cpos != '>') continue;
 
 	  to_e = cpos;
 
 	  cpos ++;
-	  
+
 	  if (!(cpos = strstr (cpos, ", relay="))) continue;
 	  cpos += 8;
 
@@ -2344,7 +2344,7 @@ main (int argc, char * const argv[])
 	  relay_s = cpos;
 
 	  while (*cpos && (*cpos != ',')) { cpos++; }
-	  
+
 	  if (*cpos != ',') continue;
 
 	  relay_e = cpos;
@@ -2357,7 +2357,7 @@ main (int argc, char * const argv[])
 
 	  char dstatus = *cpos;
 
-	  qentry_tolist_add (qe, ctime, dstatus, to_s, to_e - to_s, 
+	  qentry_tolist_add (qe, ctime, dstatus, to_s, to_e - to_s,
 			     relay_s, relay_e - relay_s);
 
 	  if (!lmtp) continue; // filter always uses lmtp
@@ -2374,7 +2374,7 @@ main (int argc, char * const argv[])
 	  } else {
 	    continue;
 	  }
-	    
+
 	  if (!(idx1 = parse_qid (&cpos, qidbuf, ')', 25)))
 	    continue;
 
@@ -2383,7 +2383,7 @@ main (int argc, char * const argv[])
 	  qe->filtered = 1;
 
 	  if ((fe = g_hash_table_lookup (parser->filter_h, idx1))) {
-	    qe->filter = fe;	  
+	    qe->filter = fe;
 	  }
 	}
 
@@ -2404,7 +2404,7 @@ main (int argc, char * const argv[])
 	loglist_add (&se->ep, &se->loglist, line, len, lines);
 
 	if ((*text == 'c') && !strncmp (text, "connect from ", 13)) {
-	
+
 	  cpos = idx1 = text + 13;
 
 	  while (*idx1 && !isspace (*idx1)) { idx1++; }
@@ -2429,7 +2429,7 @@ main (int argc, char * const argv[])
 	  } else {
 	    sentry_ref_finalize (parser, se);
 	  }
-	
+
 	} else if ((*text == 'N') && !strncmp (text, "NOQUEUE:", 8)) {
 
 	  cpos = text + 8;
@@ -2468,7 +2468,7 @@ main (int argc, char * const argv[])
 	  const char *to = cpos = cpos + 6;
 
 	  while (*cpos && (*cpos != '>')) { cpos++; }
-	  
+
 	  if (*cpos != '>') continue;
 
 	  sentry_nqlist_add (se, ctime, from, idx1 - from, to, cpos - to, dstatus);
@@ -2493,8 +2493,8 @@ main (int argc, char * const argv[])
 	  }
 
 	}
- 
-      } else if (csum_prog == POSTFIX_CLEANUP) {
+
+      } else if (csum_prog == POSTFIX_CLEANUP) { // postfix/cleanup
 
 	QEntry *qe;
 
@@ -2516,7 +2516,7 @@ main (int argc, char * const argv[])
 
 	      qe->cleanup = 1;
 	    }
-	  } 
+	  }
 	}
       }
     }
@@ -2537,43 +2537,43 @@ main (int argc, char * const argv[])
   printf ("MEM QMGR   entries: %d\n", g_hash_table_size (parser->qmgr_h));
   printf ("MEM FILTER entries: %d\n", g_hash_table_size (parser->filter_h));
 
-  printf ("MEMDEB SMTPD entries: %d %d\n", 
+  printf ("MEMDEB SMTPD entries: %d %d\n",
 	  g_hash_table_size (smtpd_debug_alloc),
 	  g_hash_table_size (smtpd_debug_free));
-  printf ("MEMDEB QMGR  entries: %d %d\n", 
+  printf ("MEMDEB QMGR  entries: %d %d\n",
 	  g_hash_table_size (qmgr_debug_alloc),
 	  g_hash_table_size (qmgr_debug_free));
-  printf ("MEMDEB FILTER  entries: %d %d\n", 
+  printf ("MEMDEB FILTER  entries: %d %d\n",
 	  g_hash_table_size (filter_debug_alloc),
 	  g_hash_table_size (filter_debug_free));
 #endif
 
-  g_hash_table_foreach (parser->qmgr_h, qentry_cleanup_hash, parser); 
-  g_hash_table_foreach (parser->smtpd_h, sentry_cleanup_hash, parser); 
-  g_hash_table_foreach (parser->filter_h, fentry_cleanup_hash, parser); 
+  g_hash_table_foreach (parser->qmgr_h, qentry_cleanup_hash, parser);
+  g_hash_table_foreach (parser->smtpd_h, sentry_cleanup_hash, parser);
+  g_hash_table_foreach (parser->filter_h, fentry_cleanup_hash, parser);
 
 #ifdef DEBUG
-  printf ("MEMDEB SMTPD entries: %d %d\n", 
+  printf ("MEMDEB SMTPD entries: %d %d\n",
 	  g_hash_table_size (smtpd_debug_alloc),
 	  g_hash_table_size (smtpd_debug_free));
-  printf ("MEMDEB QMGR  entries: %d %d\n", 
+  printf ("MEMDEB QMGR  entries: %d %d\n",
 	  g_hash_table_size (qmgr_debug_alloc),
 	  g_hash_table_size (qmgr_debug_free));
-  printf ("MEMDEB FILTER  entries: %d %d\n", 
+  printf ("MEMDEB FILTER  entries: %d %d\n",
 	  g_hash_table_size (filter_debug_alloc),
 	  g_hash_table_size (filter_debug_free));
 
-  g_hash_table_foreach (smtpd_debug_alloc, sentry_debug_alloc, parser); 
+  g_hash_table_foreach (smtpd_debug_alloc, sentry_debug_alloc, parser);
 
 #endif
 
 
 #ifdef EPOOL_DEBUG
-  printf ("MEMMAX %d\n", ep_maxalloc); 
+  printf ("MEMMAX %d\n", ep_maxalloc);
 #endif
 
   parser_free (parser);
-  
+
   fclose (stdout);
 
   exit (0);
