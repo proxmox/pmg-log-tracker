@@ -271,7 +271,7 @@ void      qentry_set_msgid (QEntry *qentry, const char *msgid, int len);
 void      qentry_set_client (QEntry *qentry, const char *client, int len);
 void      qentry_print (LParser *parser, QEntry *qentry);
 void      qentry_finalize (LParser *parser, QEntry *qentry);
-void      qentry_free_noremove (LParser *parser, QEntry *qentry);
+void      qentry_free_noremove (QEntry *qentry);
 void      qentry_free (LParser *parser, QEntry *qentry);
 void      qentry_cleanup_hash (gpointer key, gpointer value, gpointer user_data);
 
@@ -280,7 +280,7 @@ FEntry   *fentry_new (const char *logid);
 FEntry   *fentry_get (LParser *parser, const char *logid);
 void      fentry_tolist_add (FEntry *fentry, char dstatus, const char *to,
 			     int to_len, const char *qid, int qid_len);
-void      fentry_free_noremove (LParser *parser, FEntry *fentry);
+void      fentry_free_noremove (FEntry *fentry);
 void      fentry_free (LParser *parser, FEntry *fentry);
 void      fentry_cleanup_hash (gpointer key, gpointer value, gpointer user_data);
 
@@ -1193,7 +1193,7 @@ qentry_get (LParser *parser, const char *qid)
 }
 
 void
-qentry_free_noremove (LParser *parser, QEntry *qentry) 
+qentry_free_noremove (QEntry *qentry)
 {
   SList *l;
   gpointer data;
@@ -1244,7 +1244,7 @@ qentry_free (LParser *parser, QEntry *qentry)
 {
   g_hash_table_remove (parser->qmgr_h, qentry->qid);
 
-  qentry_free_noremove (parser, qentry);
+  qentry_free_noremove (qentry);
 }
 
 void
@@ -1256,7 +1256,7 @@ qentry_cleanup_hash (gpointer key,
   LParser *parser = (LParser *)user_data;
 
   qentry_print (parser, qe);
-  qentry_free_noremove (parser, qe);
+  qentry_free_noremove (qe);
 }
 
 void
@@ -1362,7 +1362,7 @@ fentry_tolist_add (FEntry *fentry, char dstatus, const char *to, int to_len,
 }
 
 void
-fentry_free_noremove (LParser *parser, FEntry *fentry) 
+fentry_free_noremove (FEntry *fentry)
 {
   SList *l;
   gpointer data;
@@ -1404,7 +1404,7 @@ fentry_free (LParser *parser, FEntry *fentry)
 {
   g_hash_table_remove (parser->filter_h, fentry->logid);
 
-  fentry_free_noremove (parser, fentry);
+  fentry_free_noremove (fentry);
 }
 
 void
@@ -1413,9 +1413,8 @@ fentry_cleanup_hash (gpointer key,
 		     gpointer user_data)
 {
   FEntry *fe = value;
-  LParser *parser = (LParser *)user_data;
 
-  fentry_free_noremove (parser, fe);
+  fentry_free_noremove (fe);
 }
 
 // Parser
