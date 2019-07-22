@@ -1,28 +1,33 @@
+include /usr/share/dpkg/pkg-info.mk
+include /usr/share/dpkg/architecture.mk
+
 PACKAGE=pmg-log-tracker
-PKGVER=1.0
-PKGREL=1
+BUILDDIR ?= ${PACKAGE}-${DEB_VERSION_UPSTREAM}
 
-ARCH:=$(shell dpkg-architecture -qDEB_BUILD_ARCH)
-GITVERSION:=$(shell cat .git/refs/heads/master)
+GITVERSION:=$(shell git rev-parse HEAD)
 
-DEB=${PACKAGE}_${PKGVER}-${PKGREL}_${ARCH}.deb
-
-LIBS=$(shell pkg-config --libs glib-2.0) -lz
-CFLAGS=$(shell pkg-config --cflags glib-2.0) -O2 -Wpedantic
+DEB=${PACKAGE}_${DEB_VERSION_UPSTREAM_REVISION}_${DEB_BUILD_ARCH}.deb
+DSC=${PACKAGE}_${DEB_VERSION_UPSTREAM_REVISION}.dsc
 
 all: ${DEB}
 
-pmg-log-tracker: pmg-log-tracker.c
-	gcc $< -o $@ ${CFLAGS} ${LIBS}
+.PHONY: ${BUILDDIR}
+${BUILDDIR}: src
+	rm -rf ${BUILDDIR} ${BUILDDIR}.tmp
+	cp -a src ${BUILDDIR}.tmp
+	cp -a debian ${BUILDDIR}.tmp/debian
+	echo "git clone git://git.proxmox.com/git/pmg-log-tracker.git\\ngit checkout ${GITVERSION}" > ${BUILDDIR}.tmp/debian/SOURCE
+	mv ${BUILDDIR}.tmp ${BUILDDIR}
 
 .PHONY: deb
-deb ${DEB}: pmg-log-tracker
-	rm -f *.deb
-	rm -rf build
-	install -D -m 0755 pmg-log-tracker build/usr/bin/pmg-log-tracker
-	cp -a debian build/debian
-	cd build; dpkg-buildpackage -rfakeroot -b -us -uc
+deb ${DEB}: ${BUILDDIR}
+	cd ${BUILDDIR}; dpkg-buildpackage -rfakeroot -b -us -uc
 	lintian ${DEB}
+
+.PHONY: dsc
+dsc ${DSC}: ${BUILDDIR}
+	cd ${BUILDDIR}; dpkg-buildpackage -rfakeroot -S -us -uc -d
+	lintian ${DSC}
 
 .PHONY: dinstall
 dinstall: ${DEB}
@@ -30,12 +35,12 @@ dinstall: ${DEB}
 
 .PHONY: upload
 upload: ${DEB} ${DBG_DEB}
-	tar cf - ${DEB} ${DBG_DEB}| ssh repoman@repo.proxmox.com -- upload --product pmg --dist stretch --arch ${ARCH}
+	tar cf - ${DEB} ${DBG_DEB}| ssh repoman@repo.proxmox.com -- upload --product pmg --dist stretch --arch ${DEB_BUILD_ARCH}
 
 .PHONY: distclean
 distclean: clean
 
 .PHONY: clean
 clean:
-	rm -rf build *.deb pmg-log-tracker *.buildinfo *.changes
+	rm -rf *.deb ${PACKAGE}-* *.buildinfo *.changes *.dsc ${PACKAGE}_*.tar.gz
 	find . -name '*~' -exec rm {} ';'

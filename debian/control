@@ -2,9 +2,9 @@ Source: pmg-log-tracker
 Section: admin
 Priority: optional
 Maintainer: Proxmox Support Team <support@proxmox.com>
-Build-Depends: debhelper (>= 9),
-	       libglib2.0-dev (>= 2.42.1-1)
-Standards-Version: 3.9.5
+Build-Depends: debhelper (>= 10~),
+               libglib2.0-dev (>= 2.42.1)
+Standards-Version: 3.9.8
 Homepage: http://www.proxmox.com
 
 Package: pmg-log-tracker
