@@ -1,3 +1,15 @@
+pmg-log-tracker (1.0-2) unstable; urgency=medium
+
+  * fix csum calculation and update checksums
+
+  * add -i option for specifying an external file
+
+  * remove unused -I
+
+  * other minor code improvements
+
+ -- Proxmox Support Team <support@proxmox.com>  Mon, 22 Jul 2019 08:32:30 +0200
+
 pmg-log-tracker (1.0-1) unstable; urgency=medium
 
    * imported from private repository
