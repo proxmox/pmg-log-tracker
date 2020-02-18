@@ -20,3 +20,21 @@ The typical flow of a mail (after-queue):
 7. smtpd ('disconnected from')
 
 Both 6 and 7 are required before the mail can be printed completely.
+6 and 7 can be logged in arbitrary order.
+
+The typical flow of a mail (before-queue):
+
+1. postscreen (NOQUEUE -> mail finished)
+2. smtpd 1 (pid matching)
+3. pmg-smtp-filter (rule system, accept/block, long (Q)ID matching)
+  - on accept match the QID
+4. smtpd 2 (pid matching)
+5. (optional, only on 'accept') cleanup -> qmgr (mail in queue, QID matching)
+6. (optional, only on 'accept') smtp (QID matching)
+7. (optional, only on 'accept') qmgr ('removed')
+8. smtpd 2 ('disconnect from')
+9. smtpd 1 (proxy-accept/proxy-reject, filter (Q)ID matching)
+10. smtpd 1 ('disconnect from')
+
+7, 8 and 10 are required before the mail can be printed completely.
+7, 8 and 10 can be logged in arbitrary order.
