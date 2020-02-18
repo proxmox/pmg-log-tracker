@@ -1,0 +1,93 @@
+Dec 18 15:00:00 pmg something[12345]: BEFORE QUEUE LOGS START
+Dec 18 15:04:15 pmg postfix/smtpd[21842]: connect from pmg.localhost[192.168.22.40]
+Dec 18 15:04:15 pmg postfix/smtpd[21842]: NOQUEUE: client=pmg.localhost[192.168.22.40]
+Dec 18 15:04:15 pmg pmg-smtp-filter[1565]: 2019/12/18-15:04:15 CONNECT TCP Peer: "[127.0.0.1]:47958" Local: "[127.0.0.1]:10023"
+Dec 18 15:04:15 pmg pmg-smtp-filter[1565]: 381C4E5DFA31DF9E90F: new mail message-id=<xyz>
+Dec 18 15:04:15 pmg pmg-smtp-filter[1565]: 381C4E5DFA31DF9E90F: block mail to <pmgtest@localhost.localdomain> (rule: block all)
+Dec 18 15:04:15 pmg pmg-smtp-filter[1565]: 381C4E5DFA31DF9E90F: processing time: 0.034 seconds (0, 0.021, 0)
+Dec 18 15:04:15 pmg postfix/smtpd[21842]: proxy-reject: END-OF-MESSAGE: 554 5.7.1 Rejected for policy reasons (381C4E5DFA31DF9E90F); from=<mailtestsender2@localhost.localdomain> to=<pmgtest@localhost.localdomain> proto=ESMTP helo=<localhost.localdomain>
+Dec 18 15:04:15 pmg postfix/smtpd[21842]: disconnect from pmg.localhost[192.168.22.40] ehlo=1 mail=1 rcpt=1 data=0/1 commands=3/4
+Dec 18 15:06:26 pmg postfix/smtpd[21949]: connect from pmg.localhost[192.168.22.40]
+Dec 18 15:06:26 pmg postfix/smtpd[21949]: NOQUEUE: client=pmg.localhost[192.168.22.40]
+Dec 18 15:06:26 pmg pmg-smtp-filter[1564]: 2019/12/18-15:06:26 CONNECT TCP Peer: "[127.0.0.1]:47968" Local: "[127.0.0.1]:10023"
+Dec 18 15:06:26 pmg pmg-smtp-filter[1564]: reloading configuration Proxmox_ruledb
+Dec 18 15:06:26 pmg pmg-smtp-filter[1564]: 381C4E5DFA32622BFC4: new mail message-id=<xyz>
+Dec 18 15:06:26 pmg pmg-smtp-filter[1564]: 381C4E5DFA32622BFC4: moved mail for <pmgtest@localhost.localdomain> to spam quarantine - 381C675DFA32622FD56 (rule: quarantine all)
+Dec 18 15:06:26 pmg pmg-smtp-filter[1564]: 381C4E5DFA32622BFC4: processing time: 0.029 seconds (0, 0.009, 0)
+Dec 18 15:06:26 pmg postfix/smtpd[21949]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (381C4E5DFA32622BFC4); from=<mailtestsender2@localhost.localdomain> to=<pmgtest@localhost.localdomain> proto=ESMTP helo=<localhost.localdomain>
+Dec 18 15:06:26 pmg postfix/smtpd[21949]: disconnect from pmg.localhost[192.168.22.40] ehlo=1 mail=1 rcpt=1 data=1 commands=4
+Dec 18 15:36:32 proxmox-new postfix/smtpd[29902]: connect from test.localdomain[192.168.22.40]
+Dec 18 15:36:33 proxmox-new postfix/smtpd[29902]: NOQUEUE: client=test.localdomain[192.168.22.40]
+Dec 18 15:36:33 proxmox-new pmg-smtp-filter[30046]: 436445DD3BD7D71595: new mail message-id=<xyz>#012
+Dec 18 15:36:37 proxmox-new pmg-smtp-filter[30046]: 436445DD3BD7D71595: SA score=0/5 time=3.611 bayes=undefined autolearn=disabled hits=DKIMWL_WL_HIGH(-0.001),DKIM_SIGNED(0.1),DKIM_VALID(-0.1),DKIM_VALID_AU(-0.1),DKIM_VALID_EF(-0.1),MAILING_LIST_MULTI(-1),RCVD_IN_DNSWL_HI(-5),SPF_HELO_NONE(0.001),SPF_NONE(0.001)
+Dec 18 15:36:37 proxmox-new postfix/smtpd[29713]: connect from localhost.localdomain[127.0.0.1]
+Dec 18 15:36:37 proxmox-new postfix/smtpd[29713]: 1C6B541C5D: client=localhost.localdomain[127.0.0.1], orig_client=test.localdomain[192.168.22.40]
+Dec 18 15:36:37 proxmox-new postfix/cleanup[29714]: 1C6B541C5D: message-id=<xyz>
+Dec 18 15:36:37 proxmox-new postfix/qmgr[6194]: 1C6B541C5D: from=<test@test.localdomain>, size=7298, nrcpt=4 (queue active)
+Dec 18 15:36:37 proxmox-new pmg-smtp-filter[30046]: 436445DD3BD7D71595: accept mail to <test2@localhost> (1C6B541C5D) (rule: default-accept)
+Dec 18 15:36:37 proxmox-new pmg-smtp-filter[30046]: 436445DD3BD7D71595: accept mail to <test3@localhost> (1C6B541C5D) (rule: default-accept)
+Dec 18 15:36:37 proxmox-new pmg-smtp-filter[30046]: 436445DD3BD7D71595: accept mail to <test4@localhost> (1C6B541C5D) (rule: default-accept)
+Dec 18 15:36:37 proxmox-new pmg-smtp-filter[30046]: 436445DD3BD7D71595: accept mail to <test1@localhost> (1C6B541C5D) (rule: default-accept)
+Dec 18 15:36:37 proxmox-new postfix/smtpd[29713]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=4 data=1 commands=8
+Dec 18 15:36:37 proxmox-new pmg-smtp-filter[30046]: 436445DD3BD7D71595: processing time: 3.701 seconds (3.611, 0.021, 0)
+Dec 18 15:36:37 proxmox-new postfix/smtpd[29902]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (436445DD3BD7D71595); from=<test@test.localdomain> to=<test2@localhost> proto=ESMTP helo=<vger.kernel.org>
+Dec 18 15:36:37 proxmox-new postfix/smtp[29913]: 1C6B541C5D: to=<test1@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.05/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C19A3F62578)
+Dec 18 15:36:37 proxmox-new postfix/smtp[29913]: 1C6B541C5D: to=<test2@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.05/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C19A3F62578)
+Dec 18 15:36:37 proxmox-new postfix/smtp[29913]: 1C6B541C5D: to=<test3@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.05/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C19A3F62578)
+Dec 18 15:36:37 proxmox-new postfix/smtp[29913]: 1C6B541C5D: to=<test4@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.05/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C19A3F62578)
+Dec 18 15:36:37 proxmox-new postfix/qmgr[6194]: 1C6B541C5D: removed
+Dec 18 15:39:37 proxmox-new postfix/smtpd[29902]: disconnect from test.localdomain[192.168.22.40] ehlo=1 mail=1 rcpt=4 bdat=1 quit=1 commands=8
+Dec 18 15:39:50 proxmox-new postfix/postscreen[32700]: NOQUEUE: reject: RCPT from [10.0.0.1]:34453: 550 5.7.1 Service unavailable; client [10.0.0.1] blocked using zen.spamhaus.org; from=<rbl_reject_test@localhost.localdomain>, to=<test@reject.localhost.localdomain>, proto=ESMTP, helo=<localhost.localdomain>
+Dec 18 15:40:00 pmg something[12345]: AFTER QUEUE LOGS START
+Dec 18 15:46:00 pmg postfix/smtpd[24784]: connect from pmg.localhost[192.168.22.40]
+Dec 18 15:46:00 pmg postfix/smtpd[24784]: 21BCE3807B6: client=pmg.localhost[192.168.22.40]
+Dec 18 15:46:00 pmg postfix/cleanup[24787]: 21BCE3807B6: message-id=<xyz>
+Dec 18 15:46:00 pmg postfix/qmgr[24651]: 21BCE3807B6: from=<mailtestsender2@localhost.localdomain>, size=2053, nrcpt=1 (queue active)
+Dec 18 15:46:00 pmg postfix/smtpd[24784]: disconnect from pmg.localhost[192.168.22.40] ehlo=1 mail=1 rcpt=1 data=1 commands=4
+Dec 18 15:46:00 pmg pmg-smtp-filter[1565]: 3807BE5DFA39502AEF1: new mail message-id=<xyz>
+Dec 18 15:46:00 pmg pmg-smtp-filter[1565]: 3807BE5DFA39502AEF1: moved mail for <pmgtest@localhost> to spam quarantine - 381C6F5DFA39502F470 (rule: quarantine all)
+Dec 18 15:46:00 pmg pmg-smtp-filter[1565]: 3807BE5DFA39502AEF1: processing time: 0.033 seconds (0, 0.012, 0)
+Dec 18 15:46:00 pmg postfix/lmtp[24788]: 21BCE3807B6: to=<pmgtest@localhost>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.09, delays=0.02/0.01/0.02/0.04, dsn=2.5.0, status=sent (250 2.5.0 OK (3807BE5DFA39502AEF1))
+Dec 18 15:46:00 pmg postfix/qmgr[24651]: 21BCE3807B6: removed
+Dec 18 15:50:34 proxmox-new postfix/smtpd[13169]: connect from test.localdomain[192.168.22.40]
+Dec 18 15:50:34 proxmox-new postfix/smtpd[13169]: CFC5F42740: client=test.localdomain[192.168.22.40]
+Dec 18 15:50:35 proxmox-new postfix/cleanup[13173]: CFC5F42740: message-id=<xyz>
+Dec 18 15:50:35 proxmox-new postfix/qmgr[18171]: CFC5F42740: from=<test@test.localdomain>, size=7102, nrcpt=4 (queue active)
+Dec 18 15:50:35 proxmox-new pmg-smtp-filter[12979]: 2019/11/18-15:40:35 CONNECT TCP Peer: "[127.0.0.1]:53648" Local: "[127.0.0.1]:10024"
+Dec 18 15:50:35 proxmox-new pmg-smtp-filter[12979]: 4246C5DD1D1130AF87: new mail message-id=<xyz>#012
+Dec 18 15:50:35 proxmox-new postfix/smtpd[13169]: disconnect from test.localdomain[192.168.22.40] ehlo=1 mail=1 rcpt=4 bdat=1 quit=1 commands=8
+Dec 18 15:50:38 proxmox-new pmg-smtp-filter[12979]: 4246C5DD1D1130AF87: SA score=0/5 time=3.478 bayes=undefined autolearn=disabled hits=DKIM_SIGNED(0.1),DKIM_VALID(-0.1),HEADER_FROM_DIFFERENT_DOMAINS(0.25),KAM_INFOUSMEBIZ(0.75),MAILING_LIST_MULTI(-1),RCVD_IN_DNSWL_HI(-5),SPF_HELO_NONE(0.001),SPF_NONE(0.001)
+Dec 18 15:50:38 proxmox-new postfix/smtpd[13179]: connect from localhost.localdomain[127.0.0.1]
+Dec 18 15:50:38 proxmox-new postfix/smtpd[13179]: 88F2E42667: client=localhost.localdomain[127.0.0.1], orig_client=test.localdomain[192.168.22.40]
+Dec 18 15:50:38 proxmox-new postfix/cleanup[13173]: 88F2E42667: message-id=<xyz>
+Dec 18 15:50:38 proxmox-new postfix/qmgr[18171]: 88F2E42667: from=<test@test.localdomain>, size=8037, nrcpt=4 (queue active)
+Dec 18 15:50:38 proxmox-new postfix/smtpd[13179]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=4 data=1 commands=8
+Dec 18 15:50:38 proxmox-new pmg-smtp-filter[12979]: 4246C5DD1D1130AF87: accept mail to <test1@localhost> (88F2E42667) (rule: default-accept)
+Dec 18 15:50:38 proxmox-new pmg-smtp-filter[12979]: 4246C5DD1D1130AF87: accept mail to <test2@localhost> (88F2E42667) (rule: default-accept)
+Dec 18 15:50:38 proxmox-new pmg-smtp-filter[12979]: 4246C5DD1D1130AF87: accept mail to <test3@localhost> (88F2E42667) (rule: default-accept)
+Dec 18 15:50:38 proxmox-new pmg-smtp-filter[12979]: 4246C5DD1D1130AF87: accept mail to <test4@localhost> (88F2E42667) (rule: default-accept)
+Dec 18 15:50:38 proxmox-new postfix/smtp[13180]: Untrusted TLS connection established to 192.168.22.40[192.168.22.40]:25: TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)
+Dec 18 15:50:38 proxmox-new pmg-smtp-filter[12979]: 4246C5DD1D1130AF87: processing time: 3.567 seconds (3.478, 0.019, 0)
+Dec 18 15:50:38 proxmox-new postfix/lmtp[13174]: CFC5F42740: to=<test1@localhost>, relay=127.0.0.1[127.0.0.1]:10024, delay=3.8, delays=0.19/0/0/3.6, dsn=2.5.0, status=sent (250 2.5.0 OK (4246C5DD1D1130AF87))
+Dec 18 15:50:38 proxmox-new postfix/lmtp[13174]: CFC5F42740: to=<test2@localhost>, relay=127.0.0.1[127.0.0.1]:10024, delay=3.8, delays=0.19/0/0/3.6, dsn=2.5.0, status=sent (250 2.5.0 OK (4246C5DD1D1130AF87))
+Dec 18 15:50:38 proxmox-new postfix/lmtp[13174]: CFC5F42740: to=<test3@localhost>, relay=127.0.0.1[127.0.0.1]:10024, delay=3.8, delays=0.19/0/0/3.6, dsn=2.5.0, status=sent (250 2.5.0 OK (4246C5DD1D1130AF87))
+Dec 18 15:50:38 proxmox-new postfix/lmtp[13174]: CFC5F42740: to=<test4@localhost>, relay=127.0.0.1[127.0.0.1]:10024, delay=3.8, delays=0.19/0/0/3.6, dsn=2.5.0, status=sent (250 2.5.0 OK (4246C5DD1D1130AF87))
+Dec 18 15:50:38 proxmox-new postfix/qmgr[18171]: CFC5F42740: removed
+Dec 18 15:50:38 proxmox-new postfix/smtp[13180]: 88F2E42667: to=<test1@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.04/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C928BF624F6)
+Dec 18 15:50:38 proxmox-new postfix/smtp[13180]: 88F2E42667: to=<test2@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.04/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C928BF624F6)
+Dec 18 15:50:38 proxmox-new postfix/smtp[13180]: 88F2E42667: to=<test3@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.04/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C928BF624F6)
+Dec 18 15:50:38 proxmox-new postfix/smtp[13180]: 88F2E42667: to=<test4@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.04/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C928BF624F6)
+Dec 18 15:50:38 proxmox-new postfix/qmgr[18171]: 88F2E42667: removed
+Dec 18 15:50:50 proxmox-new postfix/postscreen[32700]: NOQUEUE: reject: RCPT from [10.0.0.1]:34453: 550 5.7.1 Service unavailable; client [10.0.0.1] blocked using zen.spamhaus.org; from=<rbl_reject_test@localhost.localdomain>, to=<test@reject.localhost.localdomain>, proto=ESMTP, helo=<localhost.localdomain>
+Dec 18 15:55:43 pmg postfix/smtpd[29323]: connect from pmg.localhost[192.168.22.40]
+Dec 18 15:55:44 pmg postfix/smtpd[29323]: 0022C3801B5: client=pmg.localhost[192.168.22.40]
+Dec 18 15:55:44 pmg postfix/cleanup[29326]: 0022C3801B5: message-id=<dc730f87-0b1d-3ecf-b9a5-5b4d910be95f@localhost>
+Dec 18 15:55:44 pmg postfix/qmgr[24651]: 0022C3801B5: from=<mailtestsender2@localhost.localdomain>, size=2053, nrcpt=1 (queue active)
+Dec 18 15:55:44 pmg postfix/smtpd[29323]: disconnect from pmg.localhost[192.168.22.40] ehlo=1 mail=1 rcpt=1 data=1 commands=4
+Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: 2019/12/18-15:55:44 CONNECT TCP Peer: "[127.0.0.1]:48020" Local: "[127.0.0.1]:10023"
+Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: reloading configuration Proxmox_ruledb
+Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: 3802E45DFA503808B06: new mail message-id=<dc730f87-0b1d-3ecf-b9a5-5b4d910be95f@localhost>
+Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: 3802E45DFA503808B06: block mail to <pmgtest@localhost> (rule: block all)
+Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: 3802E45DFA503808B06: processing time: 0.015 seconds (0, 0.011, 0)
+Dec 18 15:55:44 pmg postfix/lmtp[29327]: 0022C3801B5: to=<pmgtest@localhost>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.02/0.01/0.02/0.02, dsn=2.7.0, status=sent (250 2.7.0 BLOCKED (3802E45DFA503808B06))
+Dec 18 15:55:44 pmg postfix/qmgr[24651]: 0022C3801B5: removed

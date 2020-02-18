@@ -1,0 +1,27 @@
+# LogReader: 6013
+# Query options
+# QID:       0022C3801B5
+# Start:     2020-12-18 15:40:00 (1608306000)
+# END:       2020-12-18 16:00:00 (1608307200)
+# End Query Options
+
+QENTRY: 0022C3801B5
+CTIME: 5FDCD100
+SIZE: 2053
+CLIENT: pmg.localhost[192.168.22.40]
+MSGID: <dc730f87-0b1d-3ecf-b9a5-5b4d910be95f@localhost>
+TO:5FDCD100:0022C3801B5:B: from <mailtestsender2@localhost.localdomain> to <pmgtest@localhost> (none)
+SMTP:
+L0000002A Dec 18 15:55:43 pmg postfix/smtpd[29323]: connect from pmg.localhost[192.168.22.40]
+L0000002B Dec 18 15:55:44 pmg postfix/smtpd[29323]: 0022C3801B5: client=pmg.localhost[192.168.22.40]
+L0000002E Dec 18 15:55:44 pmg postfix/smtpd[29323]: disconnect from pmg.localhost[192.168.22.40] ehlo=1 mail=1 rcpt=1 data=1 commands=4
+FILTER: 3802E45DFA503808B06
+L00000031 Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: 3802E45DFA503808B06: new mail message-id=<dc730f87-0b1d-3ecf-b9a5-5b4d910be95f@localhost>
+L00000032 Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: 3802E45DFA503808B06: block mail to <pmgtest@localhost> (rule: block all)
+L00000033 Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: 3802E45DFA503808B06: processing time: 0.015 seconds (0, 0.011, 0)
+QMGR:
+L0000002C Dec 18 15:55:44 pmg postfix/cleanup[29326]: 0022C3801B5: message-id=<dc730f87-0b1d-3ecf-b9a5-5b4d910be95f@localhost>
+L0000002D Dec 18 15:55:44 pmg postfix/qmgr[24651]: 0022C3801B5: from=<mailtestsender2@localhost.localdomain>, size=2053, nrcpt=1 (queue active)
+L00000034 Dec 18 15:55:44 pmg postfix/lmtp[29327]: 0022C3801B5: to=<pmgtest@localhost>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.02/0.01/0.02/0.02, dsn=2.7.0, status=sent (250 2.7.0 BLOCKED (3802E45DFA503808B06))
+L00000035 Dec 18 15:55:44 pmg postfix/qmgr[24651]: 0022C3801B5: removed
+
