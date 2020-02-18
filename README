@@ -1,0 +1,22 @@
+The pmg-log-tracker extracts information out of the syslog to match all entries
+related to a single mail. It does so by using the PID of 'smtpd' entries in the
+log as key for the SEntry structs. The QID, an ID consisting of at least 2 all
+upper case hex digits, is used for both QEntry structs and FEntry structs.
+
+As a rule of thumb, SEntrys are used wherever the services 'postscreen' and
+'smtpd' are involved. QEntrys on the other hand are only used when a queue is
+involved (e.g. after-queue filtering passing the postscreen checks,
+before-queue filtering when the mail is 'accepted'). FEntrys are used whenever
+the filter (pmg-smtp-filter) is involved.
+
+The typical flow of a mail (after-queue):
+
+1. postscreen (NOQUEUE -> mail finished)
+2. smtpd (pid matching)
+3. cleanup -> qmgr (mail in queue, QID matching)
+4. pmg-smtp-filter (rule system, accept/block, long (Q)ID matching)
+5. lmtp/smtp/local/error (QID matching, filter ID matching in lmtp)
+6. qmgr ('removed')
+7. smtpd ('disconnected from')
+
+Both 6 and 7 are required before the mail can be printed completely.

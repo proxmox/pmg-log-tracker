@@ -2,13 +2,24 @@ Source: pmg-log-tracker
 Section: admin
 Priority: optional
 Maintainer: Proxmox Support Team <support@proxmox.com>
-Build-Depends: debhelper (>= 10~),
-               libglib2.0-dev (>= 2.42.1)
+Build-Depends: cargo:native,
+               debhelper (>= 11),
+               dh-cargo (>= 10),
+               librust-clap-dev,
+               librust-failure-dev,
+               librust-flate2-dev,
+               librust-libc-dev,
+               librust-time-dev,
+               libstd-rust-dev,
+               rustc:native
 Standards-Version: 3.9.8
 Homepage: http://www.proxmox.com
 
 Package: pmg-log-tracker
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Built-Using: ${cargo:Built-Using}
+XB-X-Cargo-Built-Using: ${cargo:X-Cargo-Built-Using}
 Description: Proxmox Mailgateway Log Tracker
  Tools to scan mail logs.

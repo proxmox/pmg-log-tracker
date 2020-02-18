@@ -14,7 +14,9 @@ all: ${DEB}
 .PHONY: ${BUILDDIR}
 ${BUILDDIR}: src
 	rm -rf ${BUILDDIR} ${BUILDDIR}.tmp
-	cp -a src ${BUILDDIR}.tmp
+	mkdir ${BUILDDIR}.tmp
+	cp -a src ${BUILDDIR}.tmp/src
+	cp Cargo.toml ${BUILDDIR}.tmp/
 	cp -a debian ${BUILDDIR}.tmp/debian
 	echo "git clone git://git.proxmox.com/git/pmg-log-tracker.git\\ngit checkout ${GITVERSION}" > ${BUILDDIR}.tmp/debian/SOURCE
 	mv ${BUILDDIR}.tmp ${BUILDDIR}
