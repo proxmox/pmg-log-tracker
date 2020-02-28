@@ -3,6 +3,11 @@ name = "pmg-log-tracker"
 version = "2.1.0"
 authors = ["Mira Limbeck <m.limbeck@proxmox.com>", "Dietmar Maurer <dietmar@proxmox.com>"]
 edition = "2018"
+license = "AGPL-3"
+description = "Proxmox Mailgateway Log Tracker. Tool to scan mail logs."
+homepage = "https://www.proxmox.com"
+
+exclude = [ "build", "debian" ]
 
 [dependencies]
 clap = "2.32.0"
