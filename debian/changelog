@@ -1,3 +1,9 @@
+rust-pmg-log-tracker (2.1.0-1) unstable; urgency=medium
+
+  * switch to rust implementation for better code-maintainability
+
+ -- Proxmox Support Team <support@proxmox.com>  Fri, 28 Feb 2020 09:31:23 +0100
+
 pmg-log-tracker (2.0-1) unstable; urgency=medium
 
   * bump version for Proxmox Mailgateway 6 based on Debian Buster
