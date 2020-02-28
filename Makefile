@@ -2,34 +2,50 @@ include /usr/share/dpkg/pkg-info.mk
 include /usr/share/dpkg/architecture.mk
 
 PACKAGE=pmg-log-tracker
-BUILDDIR ?= ${PACKAGE}-${DEB_VERSION_UPSTREAM}
 
 GITVERSION:=$(shell git rev-parse HEAD)
 
 DEB=${PACKAGE}_${DEB_VERSION_UPSTREAM_REVISION}_${DEB_BUILD_ARCH}.deb
 DSC=${PACKAGE}_${DEB_VERSION_UPSTREAM_REVISION}.dsc
 
-all: ${DEB}
+ifeq ($(BUILD_MODE), release)
+CARGO_BUILD_ARGS += --release
+COMPILEDIR := target/release
+else
+COMPILEDIR := target/debug
+endif
 
-.PHONY: ${BUILDDIR}
-${BUILDDIR}: src
-	rm -rf ${BUILDDIR} ${BUILDDIR}.tmp
-	mkdir ${BUILDDIR}.tmp
-	cp -a src ${BUILDDIR}.tmp/src
-	cp Cargo.toml ${BUILDDIR}.tmp/
-	cp -a debian ${BUILDDIR}.tmp/debian
-	echo "git clone git://git.proxmox.com/git/pmg-log-tracker.git\\ngit checkout ${GITVERSION}" > ${BUILDDIR}.tmp/debian/SOURCE
-	mv ${BUILDDIR}.tmp ${BUILDDIR}
+all: cargo-build $(SUBDIRS)
+
+.PHONY: cargo-build
+cargo-build:
+	cargo build $(CARGO_BUILD_ARGS)
+
+.PHONY: build
+build:
+	rm -rf build
+	debcargo package \
+	  --config debian/debcargo.toml \
+	  --changelog-ready \
+	  --no-overlay-write-back \
+	  --directory build \
+	  $(PACKAGE) \
+	  $(shell dpkg-parsechangelog -l debian/changelog -SVersion | sed -e 's/-.*//')
+	rm build/Cargo.lock
+	find build/debian -name "*.hint" -delete
+	echo system >build/rust-toolchain
 
 .PHONY: deb
-deb ${DEB}: ${BUILDDIR}
-	cd ${BUILDDIR}; dpkg-buildpackage -rfakeroot -b -us -uc
-	lintian ${DEB}
+deb: $(DEB)
+$(DEB): build
+	cd build; dpkg-buildpackage -b -us -uc --no-pre-clean --build-profiles=nodoc
+	lintian $(DEB)
 
 .PHONY: dsc
-dsc ${DSC}: ${BUILDDIR}
-	cd ${BUILDDIR}; dpkg-buildpackage -rfakeroot -S -us -uc -d
-	lintian ${DSC}
+dsc: $(DSC)
+$(DSC): build
+	cd build; dpkg-buildpackage -S -us -uc -d -nc
+	lintian $(DSC)
 
 .PHONY: dinstall
 dinstall: ${DEB}
