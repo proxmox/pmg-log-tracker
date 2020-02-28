@@ -5,7 +5,7 @@ mod utils;
 
 #[test]
 fn before_queue_start_end_time_string() {
-    let output = Command::new("./target/debug/pmg-log-tracker")
+    let output = Command::new(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("2020-12-18 15:00:00")
@@ -26,7 +26,7 @@ fn before_queue_start_end_time_string() {
 
 #[test]
 fn before_queue_start_end_timestamp() {
-    let output = Command::new("./target/debug/pmg-log-tracker")
+    let output = Command::new(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -47,7 +47,7 @@ fn before_queue_start_end_timestamp() {
 
 #[test]
 fn before_queue_qid() {
-    let output = Command::new("./target/debug/pmg-log-tracker")
+    let output = Command::new(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -70,7 +70,7 @@ fn before_queue_qid() {
 
 #[test]
 fn before_queue_host() {
-    let output = Command::new("./target/debug/pmg-log-tracker")
+    let output = Command::new(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -93,7 +93,7 @@ fn before_queue_host() {
 
 #[test]
 fn before_queue_search_string() {
-    let output = Command::new("./target/debug/pmg-log-tracker")
+    let output = Command::new(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
