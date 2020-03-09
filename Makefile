@@ -33,7 +33,6 @@ build:
 	  $(shell dpkg-parsechangelog -l debian/changelog -SVersion | sed -e 's/-.*//')
 	rm build/Cargo.lock
 	find build/debian -name "*.hint" -delete
-	echo system >build/rust-toolchain
 
 .PHONY: deb
 deb: $(DEB)
