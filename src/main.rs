@@ -827,6 +827,72 @@ impl SEntry {
         }
     }
 
+    // if either 'from' or 'to' are set, check if it matches, if not, set
+    // the status of the noqueue entry to Invalid
+    // if exclude_greylist or exclude_ndr are set, check if it matches
+    // and if so, set the status to Invalid so they are no longer included
+    // don't print if any Invalid entry is found
+    fn filter_matches(&mut self, parser: &Parser) -> bool {
+        if !parser.options.from.is_empty()
+            || !parser.options.to.is_empty()
+            || parser.options.exclude_greylist
+            || parser.options.exclude_ndr
+        {
+            let mut found = false;
+            for nq in self.nq_entries.iter_mut().rev() {
+                if (!parser.options.from.is_empty()
+                    && find_lowercase(&nq.from, parser.options.from.as_bytes()).is_none())
+                    || (parser.options.exclude_greylist && nq.dstatus == DStatus::Greylist)
+                    || (parser.options.exclude_ndr && nq.from.is_empty())
+                    || (!parser.options.to.is_empty()
+                        && !nq.to.is_empty()
+                        && find_lowercase(&nq.to, parser.options.to.as_bytes()).is_none())
+                {
+                    nq.dstatus = DStatus::Invalid;
+                }
+
+                if nq.dstatus != DStatus::Invalid {
+                    found = true;
+                }
+            }
+
+            // self.filter only contains an object in the before-queue case
+            // as we have the FEntry referenced in the SEntry when there's no
+            // queue involved, we can't just check the Noqueue entries, but
+            // have to check for a filter and if it exists, we have to check
+            // them for matching 'from' and 'to' if either of those options
+            // are set.
+            // if neither of them is filtered, we can skip this check
+            if let Some(fe) = &self.filter() {
+                let is_filtered = !parser.options.from.is_empty() || !parser.options.to.is_empty();
+                let from_match = !parser.options.from.is_empty()
+                    && find_lowercase(&self.bq_from, parser.options.from.as_bytes()).is_some();
+                let to_option_set = !parser.options.to.is_empty();
+                if !is_filtered && fe.borrow().is_bq && !fe.borrow().is_accepted {
+                    for to in fe.borrow().to_entries.iter() {
+                        if from_match
+                            || (to_option_set
+                                && find_lowercase(&to.to, parser.options.to.as_bytes()).is_some())
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if !found && is_filtered {
+                        return false;
+                    }
+                }
+            }
+
+            // we can early exit the printing if there's no valid Noqueue entry
+            // and we're in the after-queue case
+            if !found && self.filter.is_none() {
+                return false;
+            }
+        }
+        true
+    }
+
     fn print(&mut self, parser: &mut Parser) {
         // don't print if the output is filtered by the message-id
         // the message-id is only available in a QEntry
@@ -865,37 +931,8 @@ impl SEntry {
             }
         }
 
-        // if either ;from' or 'to' are set, check if it matches, if not, set
-        // the status of the noqueue entry to Invalid
-        // if exclude_greylist or exclude_ndr are set, check if it matches
-        // and if so, set the status to Invalid so they are no longer included
-        // don't print if any Invalid entry is found
-        if !parser.options.from.is_empty()
-            || !parser.options.to.is_empty()
-            || parser.options.exclude_greylist
-            || parser.options.exclude_ndr
-        {
-            let mut found = false;
-            for nq in self.nq_entries.iter_mut().rev() {
-                if (!parser.options.from.is_empty()
-                    && find_lowercase(&nq.from, parser.options.from.as_bytes()).is_none())
-                    || (parser.options.exclude_greylist && nq.dstatus == DStatus::Greylist)
-                    || (parser.options.exclude_ndr && nq.from.is_empty())
-                    || (!parser.options.to.is_empty()
-                        && !nq.to.is_empty()
-                        && find_lowercase(&nq.to, parser.options.to.as_bytes()).is_none())
-                {
-                    nq.dstatus = DStatus::Invalid;
-                }
-
-                if nq.dstatus != DStatus::Invalid {
-                    found = true;
-                }
-            }
-
-            if !found {
-                return;
-            }
+        if !self.filter_matches(parser) {
+            return;
         }
 
         // don't print if there's a string match specified, but none of the
