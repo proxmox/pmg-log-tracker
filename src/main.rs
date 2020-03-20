@@ -463,18 +463,18 @@ fn handle_lmtp_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
         // qentry matches this one
         if let Some(fe) = parser.fentries.get(qid) {
             qe.borrow_mut().filter = Some(Rc::clone(fe));
-            let q = fe.borrow().qentry.clone();
+            // if we use fe.borrow().qentry() directly we run into a borrow
+            // issue at runtime
+            let q = fe.borrow().qentry();
             if let Some(q) = q {
-                if let Some(q) = q.upgrade() {
-                    if !Rc::ptr_eq(&q, &qe) {
-                        // QEntries don't match, set all flags to false and
-                        // remove the referenced FEntry
-                        q.borrow_mut().filtered = false;
-                        q.borrow_mut().bq_filtered = false;
-                        q.borrow_mut().filter = None;
-                        // update FEntry's QEntry reference to the new one
-                        fe.borrow_mut().qentry = Some(Rc::downgrade(&qe));
-                    }
+                if !Rc::ptr_eq(&q, &qe) {
+                    // QEntries don't match, set all flags to false and
+                    // remove the referenced FEntry
+                    q.borrow_mut().filtered = false;
+                    q.borrow_mut().bq_filtered = false;
+                    q.borrow_mut().filter = None;
+                    // update FEntry's QEntry reference to the new one
+                    fe.borrow_mut().qentry = Some(Rc::downgrade(&qe));
                 }
             }
         }
@@ -513,10 +513,8 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
             // no QEntries referenced in SEntry so just print the SEntry
             se.borrow_mut().print(parser);
             // free the referenced FEntry (only happens with before-queue)
-            if let Some(f) = &se.borrow().filter {
-                if let Some(f) = f.upgrade() {
-                    parser.free_fentry(&f.borrow().logid);
-                }
+            if let Some(f) = &se.borrow().filter() {
+                parser.free_fentry(&f.borrow().logid);
             }
             parser.free_sentry(se.borrow().pid);
         } else {
@@ -611,13 +609,11 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
                     // by PMG/API2/MailTracker.pm
                     se.borrow_mut().bq_from = from.into();
                 }
-            } else if let Some(qe) = &fe.borrow().qentry {
+            } else if let Some(qe) = &fe.borrow().qentry() {
                 // mail is 'accepted', add a reference to the QEntry to the
                 // SEntry so we can wait for all to be finished before printing
-                if let Some(qe) = qe.upgrade() {
-                    qe.borrow_mut().bq_sentry = Some(Rc::clone(&se));
-                    SEntry::add_ref(&se, &qe, true);
-                }
+                qe.borrow_mut().bq_sentry = Some(Rc::clone(&se));
+                SEntry::add_ref(&se, &qe, true);
             }
             // specify that before queue filtering is used and the mail was
             // accepted, but not necessarily by an 'accept' rule
@@ -966,15 +962,13 @@ impl SEntry {
             };
 
         // only true in before queue filtering case
-        if let Some(fe) = &self.filter {
-            if let Some(fe) = fe.upgrade() {
-                // limited to !fe.is_accepted because otherwise we would have
-                // a QEntry with all required information instead
-                if fe.borrow().is_bq && !fe.borrow().is_accepted && self.is_bq_accepted {
-                    print_filter_to_entries_fn(&fe, parser, self, None);
-                } else if fe.borrow().is_bq && !fe.borrow().is_accepted && self.is_bq_rejected {
-                    print_filter_to_entries_fn(&fe, parser, self, Some(DStatus::Noqueue));
-                }
+        if let Some(fe) = &self.filter() {
+            // limited to !fe.is_accepted because otherwise we would have
+            // a QEntry with all required information instead
+            if fe.borrow().is_bq && !fe.borrow().is_accepted && self.is_bq_accepted {
+                print_filter_to_entries_fn(&fe, parser, self, None);
+            } else if fe.borrow().is_bq && !fe.borrow().is_accepted && self.is_bq_rejected {
+                print_filter_to_entries_fn(&fe, parser, self, Some(DStatus::Noqueue));
             }
         }
 
@@ -990,13 +984,11 @@ impl SEntry {
         if parser.options.verbose > 1 {
             parser.write_all_ok(b"LOGS:\n");
             let mut logs = self.log.clone();
-            if let Some(f) = &self.filter {
-                if let Some(f) = f.upgrade() {
-                    logs.append(&mut f.borrow().log.clone());
-                    // as the logs come from 1 SEntry and 1 FEntry,
-                    // interleave them via sort based on line number
-                    logs.sort_by(|a, b| a.1.cmp(&b.1));
-                }
+            if let Some(f) = &self.filter() {
+                logs.append(&mut f.borrow().log.clone());
+                // as the logs come from 1 SEntry and 1 FEntry,
+                // interleave them via sort based on line number
+                logs.sort_by(|a, b| a.1.cmp(&b.1));
             }
 
             print_log(parser, &logs);
@@ -1117,6 +1109,10 @@ impl SEntry {
         if !bq {
             qentry.borrow_mut().smtpd = Some(Rc::clone(sentry));
         }
+    }
+
+    fn filter(&self) -> Option<Rc<RefCell<FEntry>>> {
+        self.filter.clone().and_then(|f| f.upgrade())
     }
 }
 
@@ -1550,6 +1546,10 @@ impl FEntry {
     fn set_processing_time(&mut self, time: &[u8]) {
         self.processing_time = time.into();
         self.finished = true;
+    }
+
+    fn qentry(&self) -> Option<Rc<RefCell<QEntry>>> {
+        self.qentry.clone().and_then(|q| q.upgrade())
     }
 }
 
