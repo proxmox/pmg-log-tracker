@@ -868,7 +868,7 @@ impl SEntry {
                 let from_match = !parser.options.from.is_empty()
                     && find_lowercase(&self.bq_from, parser.options.from.as_bytes()).is_some();
                 let to_option_set = !parser.options.to.is_empty();
-                if !is_filtered && fe.borrow().is_bq && !fe.borrow().is_accepted {
+                if is_filtered && fe.borrow().is_bq && !fe.borrow().is_accepted {
                     for to in fe.borrow().to_entries.iter() {
                         if from_match
                             || (to_option_set
@@ -878,7 +878,7 @@ impl SEntry {
                             break;
                         }
                     }
-                    if !found && is_filtered {
+                    if !found {
                         return false;
                     }
                 }
