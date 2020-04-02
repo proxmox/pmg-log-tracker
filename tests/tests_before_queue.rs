@@ -21,7 +21,7 @@ fn before_queue_start_end_time_string() {
 
     let expected_output = BufReader::new(&expected_file);
     let output_reader = BufReader::new(&output.stdout[..]);
-    utils::compare_output(expected_output, output_reader);
+    utils::compare_output(output_reader, expected_output);
 }
 
 #[test]
@@ -42,7 +42,7 @@ fn before_queue_start_end_timestamp() {
 
     let expected_output = BufReader::new(&expected_file);
     let output_reader = BufReader::new(&output.stdout[..]);
-    utils::compare_output(expected_output, output_reader);
+    utils::compare_output(output_reader, expected_output);
 }
 
 #[test]
@@ -88,7 +88,7 @@ fn before_queue_host() {
 
     let expected_output = BufReader::new(&expected_file);
     let output_reader = BufReader::new(&output.stdout[..]);
-    utils::compare_output(expected_output, output_reader);
+    utils::compare_output(output_reader, expected_output);
 }
 
 #[test]
@@ -111,7 +111,7 @@ fn before_queue_search_string() {
 
     let expected_output = BufReader::new(&expected_file);
     let output_reader = BufReader::new(&output.stdout[..]);
-    utils::compare_output(expected_output, output_reader);
+    utils::compare_output(output_reader, expected_output);
 }
 
 #[test]
@@ -134,5 +134,5 @@ fn before_queue_exclude_greylist_ndr() {
 
     let expected_output = BufReader::new(&expected_file);
     let output_reader = BufReader::new(&output.stdout[..]);
-    utils::compare_output(expected_output, output_reader);
+    utils::compare_output(output_reader, expected_output);
 }
