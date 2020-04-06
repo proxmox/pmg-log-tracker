@@ -52,7 +52,7 @@ dinstall: ${DEB}
 
 .PHONY: upload
 upload: ${DEB} ${DBG_DEB}
-	tar cf - ${DEB} ${DBG_DEB}| ssh repoman@repo.proxmox.com -- upload --product pmg --dist stretch --arch ${DEB_BUILD_ARCH}
+	tar cf - ${DEB} ${DBG_DEB}| ssh -X repoman@repo.proxmox.com -- upload --product pmg --dist stretch --arch ${DEB_BUILD_ARCH}
 
 .PHONY: distclean
 distclean: clean
