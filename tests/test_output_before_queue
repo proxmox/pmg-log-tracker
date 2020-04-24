@@ -7,7 +7,7 @@
 SMTPD: T5FDCC4EFL00000000
 CTIME: 5FDCC4EF
 CLIENT: pmg.localhost[192.168.22.40]
-TO:5FDCC4EF:T5FDCC4EFL00000000:N: from <mailtestsender2@localhost.localdomain> to <pmgtest@localhost.localdomain>
+TO:5FDCC4EF:T5FDCC4EFL00000000:B: from <mailtestsender2@localhost.localdomain> to <pmgtest@localhost.localdomain>
 LOGS:
 L00000002 Dec 18 15:04:15 pmg postfix/smtpd[21842]: connect from pmg.localhost[192.168.22.40]
 L00000003 Dec 18 15:04:15 pmg postfix/smtpd[21842]: NOQUEUE: client=pmg.localhost[192.168.22.40]

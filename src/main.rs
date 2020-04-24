@@ -976,19 +976,11 @@ impl SEntry {
         let print_filter_to_entries_fn =
             |fe: &Rc<RefCell<FEntry>>,
              parser: &mut Parser,
-             se: &SEntry,
-             dstatus: Option<DStatus>| {
-                let mut dstatus = match dstatus {
-                    Some(d) => d,
-                    None => DStatus::Invalid,
-                };
+             se: &SEntry| {
                 for to in fe.borrow().to_entries.iter().rev() {
-                    if dstatus == DStatus::Invalid {
-                        dstatus = to.dstatus;
-                    }
                     parser.write_all_ok(format!(
                         "TO:{:X}:T{:08X}L{:08X}:{}: from <",
-                        to.timestamp as i32, se.timestamp as i32, se.rel_line_nr, dstatus,
+                        to.timestamp as i32, se.timestamp as i32, se.rel_line_nr, to.dstatus,
                     ));
                     parser.write_all_ok(&se.bq_from);
                     parser.write_all_ok(b"> to <");
@@ -1002,10 +994,8 @@ impl SEntry {
         if let Some(fe) = &self.filter() {
             // limited to !fe.is_accepted because otherwise we would have
             // a QEntry with all required information instead
-            if fe.borrow().is_bq && !fe.borrow().is_accepted && self.is_bq_accepted {
-                print_filter_to_entries_fn(&fe, parser, self, None);
-            } else if fe.borrow().is_bq && !fe.borrow().is_accepted && self.is_bq_rejected {
-                print_filter_to_entries_fn(&fe, parser, self, Some(DStatus::Noqueue));
+            if fe.borrow().is_bq && !fe.borrow().is_accepted && (self.is_bq_accepted || self.is_bq_rejected) {
+                print_filter_to_entries_fn(&fe, parser, self);
             }
         }
 
