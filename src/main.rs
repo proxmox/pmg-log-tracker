@@ -856,6 +856,12 @@ impl SEntry {
                 }
             }
 
+            // we can early exit the printing if there's no valid Noqueue entry
+            // and we're in the after-queue case
+            if !found && self.filter.is_none() {
+                return false;
+            }
+
             // self.filter only contains an object in the before-queue case
             // as we have the FEntry referenced in the SEntry when there's no
             // queue involved, we can't just check the Noqueue entries, but
@@ -864,30 +870,22 @@ impl SEntry {
             // are set.
             // if neither of them is filtered, we can skip this check
             if let Some(fe) = &self.filter() {
-                let is_filtered = !parser.options.from.is_empty() || !parser.options.to.is_empty();
-                let from_match = !parser.options.from.is_empty()
-                    && find_lowercase(&self.bq_from, parser.options.from.as_bytes()).is_some();
+                if !parser.options.from.is_empty() && find_lowercase(&self.bq_from, parser.options.from.as_bytes()).is_none() {
+                        return false;
+                }
                 let to_option_set = !parser.options.to.is_empty();
-                if is_filtered && fe.borrow().is_bq && !fe.borrow().is_accepted {
-                    for to in fe.borrow().to_entries.iter() {
-                        if from_match
-                            || (to_option_set
-                                && find_lowercase(&to.to, parser.options.to.as_bytes()).is_some())
-                        {
+                if to_option_set && fe.borrow().is_bq && !fe.borrow().is_accepted {
+                    fe.borrow_mut().to_entries.retain(|to| {
+                        if find_lowercase(&to.to, parser.options.to.as_bytes()).is_some() {
                             found = true;
-                            break;
+                            return true;
                         }
-                    }
+                        false
+                    });
                     if !found {
                         return false;
                     }
                 }
-            }
-
-            // we can early exit the printing if there's no valid Noqueue entry
-            // and we're in the after-queue case
-            if !found && self.filter.is_none() {
-                return false;
             }
         }
         true
@@ -973,28 +971,30 @@ impl SEntry {
             }
         }
 
-        let print_filter_to_entries_fn =
-            |fe: &Rc<RefCell<FEntry>>,
-             parser: &mut Parser,
-             se: &SEntry| {
-                for to in fe.borrow().to_entries.iter().rev() {
-                    parser.write_all_ok(format!(
-                        "TO:{:X}:T{:08X}L{:08X}:{}: from <",
-                        to.timestamp as i32, se.timestamp as i32, se.rel_line_nr, to.dstatus,
-                    ));
-                    parser.write_all_ok(&se.bq_from);
-                    parser.write_all_ok(b"> to <");
-                    parser.write_all_ok(&to.to);
-                    parser.write_all_ok(b">\n");
-                    parser.count += 1;
-                }
-            };
+        let print_filter_to_entries_fn = |fe: &Rc<RefCell<FEntry>>,
+                                          parser: &mut Parser,
+                                          se: &SEntry| {
+            for to in fe.borrow().to_entries.iter().rev() {
+                parser.write_all_ok(format!(
+                    "TO:{:X}:T{:08X}L{:08X}:{}: from <",
+                    to.timestamp as i32, se.timestamp as i32, se.rel_line_nr, to.dstatus,
+                ));
+                parser.write_all_ok(&se.bq_from);
+                parser.write_all_ok(b"> to <");
+                parser.write_all_ok(&to.to);
+                parser.write_all_ok(b">\n");
+                parser.count += 1;
+            }
+        };
 
         // only true in before queue filtering case
         if let Some(fe) = &self.filter() {
             // limited to !fe.is_accepted because otherwise we would have
             // a QEntry with all required information instead
-            if fe.borrow().is_bq && !fe.borrow().is_accepted && (self.is_bq_accepted || self.is_bq_rejected) {
+            if fe.borrow().is_bq
+                && !fe.borrow().is_accepted
+                && (self.is_bq_accepted || self.is_bq_rejected)
+            {
                 print_filter_to_entries_fn(&fe, parser, self);
             }
         }
