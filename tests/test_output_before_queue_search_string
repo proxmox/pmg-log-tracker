@@ -23,5 +23,5 @@ CTIME: 5FDCCD46
 CLIENT: 10.0.0.1
 TO:5FDCCD46:T5FDCCD46L00000000:N: from <rbl_reject_test@localhost.localdomain> to <test@reject.localhost.localdomain>
 LOGS:
-L00000031 Dec 18 15:39:50 proxmox-new postfix/postscreen[32700]: NOQUEUE: reject: RCPT from [10.0.0.1]:34453: 550 5.7.1 Service unavailable; client [10.0.0.1] blocked using zen.spamhaus.org; from=<rbl_reject_test@localhost.localdomain>, to=<test@reject.localhost.localdomain>, proto=ESMTP, helo=<localhost.localdomain>
+L0000003A Dec 18 15:39:50 proxmox-new postfix/postscreen[32700]: NOQUEUE: reject: RCPT from [10.0.0.1]:34453: 550 5.7.1 Service unavailable; client [10.0.0.1] blocked using zen.spamhaus.org; from=<rbl_reject_test@localhost.localdomain>, to=<test@reject.localhost.localdomain>, proto=ESMTP, helo=<localhost.localdomain>
 

@@ -25,6 +25,15 @@ Dec 18 15:08:26 pmg pmg-smtp-filter[1564]: 381C4E5DFA32622BFC4: moved mail for <
 Dec 18 15:08:26 pmg pmg-smtp-filter[1564]: 381C4E5DFA32622BFC4: processing time: 0.029 seconds (0, 0.009, 0)
 Dec 18 15:08:26 pmg postfix/smtpd[21949]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (381C4E5DFA32622BFC4); from=<mailtestsender3@localhost.localdomain> to=<pmgtes2@localhost.localdomain> proto=ESMTP helo=<localhost.localdomain>
 Dec 18 15:08:26 pmg postfix/smtpd[21949]: disconnect from pmg.localhost[192.168.22.40] ehlo=1 mail=1 rcpt=1 data=1 commands=4
+Dec 18 15:10:26 pmg postfix/smtpd[21949]: connect from pmg.localhost[192.168.22.40]
+Dec 18 15:10:26 pmg postfix/smtpd[21949]: NOQUEUE: client=pmg.localhost[192.168.22.40]
+Dec 18 15:10:26 pmg pmg-smtp-filter[1564]: 2019/12/18-15:06:26 CONNECT TCP Peer: "[127.0.0.1]:47968" Local: "[127.0.0.1]:10023"
+Dec 18 15:10:26 pmg pmg-smtp-filter[1564]: reloading configuration Proxmox_ruledb
+Dec 18 15:10:26 pmg pmg-smtp-filter[1564]: 381C4E5DFA32622BFC4: new mail message-id=<xyz>
+Dec 18 15:10:26 pmg pmg-smtp-filter[1564]: 381C4E5DFA32622BFC4: moved mail for <pmgtest@localhost.localdomain> to spam quarantine - 381C675DFA32622FD56 (rule: quarantine all)
+Dec 18 15:10:26 pmg pmg-smtp-filter[1564]: 381C4E5DFA32622BFC4: processing time: 0.029 seconds (0, 0.009, 0)
+Dec 18 15:10:26 pmg postfix/smtpd[21949]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (381C4E5DFA32622BFC4); from=<mailtestsender3@localhost.localdomain> to=<pmgtest@localhost.localdomain> proto=ESMTP helo=<localhost.localdomain>
+Dec 18 15:10:26 pmg postfix/smtpd[21949]: disconnect from pmg.localhost[192.168.22.40] ehlo=1 mail=1 rcpt=1 data=1 commands=4
 Dec 18 15:36:32 proxmox-new postfix/smtpd[29902]: connect from test.localdomain[192.168.22.40]
 Dec 18 15:36:33 proxmox-new postfix/smtpd[29902]: NOQUEUE: client=test.localdomain[192.168.22.40]
 Dec 18 15:36:33 proxmox-new pmg-smtp-filter[30046]: 436445DD3BD7D71595: new mail message-id=<xyz>#012
