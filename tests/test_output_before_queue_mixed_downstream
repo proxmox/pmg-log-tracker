@@ -1,0 +1,21 @@
+# LogReader: 28404
+# Query options
+# Start: 2020-12-18 16:00:00 (1608307200)
+# End: 2020-12-18 16:10:00 (1608307800)
+# End Query Options
+
+QENTRY: E2487636D9
+CTIME: 5FDCD233
+SIZE: 3628
+MSGID: <20200428171350.E2487636D9@pmg6.rosa.proxmox.com>
+TO:5FDCD233:E2487636D9:2: from <> to <sender@test.localdomain> (test.localdomain[192.0.2.0.70]:25)
+
+QENTRY: B8010636D6
+CTIME: 5FDCD233
+SIZE: 1436
+CLIENT: localhost[127.0.0.1],
+MSGID: <20200428171349.GC5963@test.localdomain>
+TO:5FDCD232:B8010636D6:P: from <sender@test.localdomain> to <discard@test.recipient.example> (192.0.2.0.69[192.0.2.0.69]:25)
+TO:5FDCD232:B8010636D6:R: from <sender@test.localdomain> to <reject@test.recipient.example> (192.0.2.0.69[192.0.2.0.69]:25)
+TO:5FDCD232:B8010636D6:D: from <sender@test.localdomain> to <defer@test.recipient.example> (192.0.2.0.69[192.0.2.0.69]:25)
+

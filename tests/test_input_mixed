@@ -100,3 +100,35 @@ Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: 3802E45DFA503808B06: block mail to <p
 Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: 3802E45DFA503808B06: processing time: 0.015 seconds (0, 0.011, 0)
 Dec 18 15:55:44 pmg postfix/lmtp[29327]: 0022C3801B5: to=<pmgtest@localhost>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.02/0.01/0.02/0.02, dsn=2.7.0, status=sent (250 2.7.0 BLOCKED (3802E45DFA503808B06))
 Dec 18 15:55:44 pmg postfix/qmgr[24651]: 0022C3801B5: removed
+Dec 18 16:00:00 pmg something[12345]: BEFORE QUEUE LOGS2 START
+Dec 18 16:00:50 pmg postfix/postscreen[26369]: CONNECT from [2001:DB8:1:12::75]:38768 to [2001:DB8:1:12::66]:25
+Dec 18 16:00:50 pmg postfix/postscreen[26369]: WHITELISTED [2001:DB8:1:12::75]:38768
+Dec 18 16:00:50 pmg postfix/smtpd[26419]: connect from unknown[2001:DB8:1:12::75]
+Dec 18 16:00:50 pmg postfix/smtpd[26419]: Anonymous TLS connection established from unknown[2001:DB8:1:12::75]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits)
+Dec 18 16:00:50 pmg postfix/smtpd[26419]: NOQUEUE: client=unknown[2001:DB8:1:12::75]
+Dec 18 16:00:50 pmg pmg-smtp-filter[26453]: 2020/04/28-19:13:50 CONNECT TCP Peer: "[127.0.0.1]:33692" Local: "[127.0.0.1]:10024"
+Dec 18 16:00:50 pmg pmg-smtp-filter[26453]: 636D55EA8644E0FE2B: new mail message-id=<20200428171349.GC5963@test.localdomain>
+Dec 18 16:00:50 pmg pmg-smtp-filter[26443]: starting database maintainance
+Dec 18 16:00:50 pmg pmg-smtp-filter[26443]: end database maintainance (21 ms)
+Dec 18 16:00:50 pmg pmg-smtp-filter[26453]: 636D55EA8644E0FE2B: SA score=1/5 time=0.674 bayes=undefined autolearn=disabled hits=BODY_SINGLE_WORD(0.001),KAM_DMARC_STATUS(0.01),RDNS_NONE(1.274),SPF_HELO_PASS(-0.001),SPF_PASS(-0.001)
+Dec 18 16:00:50 pmg postfix/smtpd[26461]: connect from localhost[127.0.0.1]
+Dec 18 16:00:50 pmg postfix/smtpd[26461]: B8010636D6: client=localhost[127.0.0.1], orig_client=unknown[2001:DB8:1:12::75]
+Dec 18 16:00:50 pmg postfix/cleanup[26374]: B8010636D6: message-id=<20200428171349.GC5963@test.localdomain>
+Dec 18 16:00:50 pmg postfix/qmgr[23452]: B8010636D6: from=<sender@test.localdomain>, size=1436, nrcpt=3 (queue active)
+Dec 18 16:00:50 pmg postfix/smtpd[26461]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=3 data=1 commands=7
+Dec 18 16:00:50 pmg pmg-smtp-filter[26453]: 636D55EA8644E0FE2B: accept mail to <defer@test.recipient.example> (B8010636D6) (rule: default-accept)
+Dec 18 16:00:50 pmg pmg-smtp-filter[26453]: 636D55EA8644E0FE2B: accept mail to <discard@test.recipient.example> (B8010636D6) (rule: default-accept)
+Dec 18 16:00:50 pmg pmg-smtp-filter[26453]: 636D55EA8644E0FE2B: accept mail to <reject@test.recipient.example> (B8010636D6) (rule: default-accept)
+Dec 18 16:00:50 pmg postfix/smtp[26376]: Untrusted TLS connection established to 192.0.2.0.69[192.0.2.0.69]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits)
+Dec 18 16:00:50 pmg pmg-smtp-filter[26453]: 636D55EA8644E0FE2B: processing time: 0.701 seconds (0.674, 0.007, 0)
+Dec 18 16:00:50 pmg postfix/smtpd[26419]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (636D55EA8644E0FE2B); from=<sender@test.localdomain> to=<defer@test.recipient.example> proto=ESMTP helo=<test.localdomain>
+Dec 18 16:00:50 pmg postfix/smtpd[26419]: disconnect from unknown[2001:DB8:1:12::75] ehlo=2 starttls=1 mail=1 rcpt=3 data=1 quit=1 commands=9
+Dec 18 16:00:50 pmg postfix/smtp[26376]: B8010636D6: to=<defer@test.recipient.example>, relay=192.0.2.0.69[192.0.2.0.69]:25, delay=0.06, delays=0.01/0/0.04/0.01, dsn=4.7.1, status=deferred (host 192.0.2.0.69[192.0.2.0.69] said: 450 4.7.1 <defer@test.recipient.example>: Recipient address rejected: no mail now for defer@ (in reply to RCPT TO command))
+Dec 18 16:00:50 pmg postfix/smtp[26376]: B8010636D6: to=<reject@test.recipient.example>, relay=192.0.2.0.69[192.0.2.0.69]:25, delay=0.07, delays=0.01/0/0.04/0.01, dsn=5.7.1, status=bounced (host 192.0.2.0.69[192.0.2.0.69] said: 554 5.7.1 <reject@test.recipient.example>: Recipient address rejected: no mail for reject@ (in reply to RCPT TO command))
+Dec 18 16:00:50 pmg postfix/smtp[26376]: B8010636D6: to=<discard@test.recipient.example>, relay=192.0.2.0.69[192.0.2.0.69]:25, delay=0.17, delays=0.01/0/0.04/0.12, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C69576019F)
+Dec 18 16:00:50 pmg postfix/cleanup[26420]: E2487636D9: message-id=<20200428171350.E2487636D9@pmg6.rosa.proxmox.com>
+Dec 18 16:00:50 pmg postfix/bounce[26467]: B8010636D6: sender non-delivery notification: E2487636D9
+Dec 18 16:00:50 pmg postfix/qmgr[23452]: E2487636D9: from=<>, size=3628, nrcpt=1 (queue active)
+Dec 18 16:00:50 pmg postfix/smtp[26463]: Untrusted TLS connection established to test.localdomain[192.0.2.0.70]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits)
+Dec 18 16:00:51 pmg postfix/smtp[26463]: E2487636D9: to=<sender@test.localdomain>, relay=test.localdomain[192.0.2.0.70]:25, delay=0.08, delays=0.01/0/0.04/0.03, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as F0C696026F)
+Dec 18 16:00:51 pmg postfix/qmgr[23452]: E2487636D9: removed
