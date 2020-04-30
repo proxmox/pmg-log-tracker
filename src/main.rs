@@ -427,10 +427,23 @@ fn handle_lmtp_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
         None => return,
     };
 
+    let mut dstatus = DStatus::Dsn(dsn);
+
+    // the dsn (enhanced status code can only have a class of 2, 4 or 5
+    // see https://tools.ietf.org/html/rfc3463
+    if qe.borrow_mut().bq_filtered {
+        dstatus = match dsn {
+            2 => DStatus::BqPass,
+            4 => DStatus::BqDefer,
+            5 => DStatus::BqReject,
+            _ => return,
+        }
+
+    }
     qe.borrow_mut().add_to_entry(
         to,
         relay,
-        DStatus::Dsn(dsn),
+        dstatus,
         parser.current_record_state.timestamp,
     );
 
@@ -761,6 +774,9 @@ enum DStatus {
     Block,
     Greylist,
     Noqueue,
+    BqPass,
+    BqDefer,
+    BqReject,
     Dsn(u32),
 }
 
@@ -779,6 +795,9 @@ impl std::fmt::Display for DStatus {
             DStatus::Block => 'B',
             DStatus::Greylist => 'G',
             DStatus::Noqueue => 'N',
+            DStatus::BqPass => 'P',
+            DStatus::BqDefer => 'D',
+            DStatus::BqReject => 'R',
             DStatus::Dsn(v) => std::char::from_digit(*v, 10).unwrap(),
         };
         write!(f, "{}", c)
