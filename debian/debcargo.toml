@@ -5,9 +5,8 @@ crate_src_path = ".."
 maintainer = "Proxmox Support Team <support@proxmox.com>"
 section = "admin"
 homepage = "http://www.proxmox.com"
-# TODO:
-vcs_git = ""
-vcs_browser = ""
+vcs_git = "git://git.proxmox.com/git/pmg-log-tracker.git"
+vcs_browser = "https://git.proxmox.com/?p=pmg-log-tracker.git;a=summary"
 
 [package]
 summary = "Proxmox Mailgateway Log Tracker"
