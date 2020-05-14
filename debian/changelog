@@ -1,3 +1,11 @@
+rust-pmg-log-tracker (2.1.5-1) pmg; urgency=medium
+
+  * introduce before queue dstatus to distinguish mails which went
+    through the rule-system, and the locally generated ones (e.g. bounce
+    or spamreport)
+
+ -- Proxmox Support Team <support@proxmox.com>  Thu, 14 May 2020 17:33:57 +0200
+
 rust-pmg-log-tracker (2.1.4-1) pmg; urgency=medium
 
   * get rid of entries from unrelated senders ('from') in situations where a
