@@ -2126,8 +2126,10 @@ fn parse_qid(data: &[u8], max: usize) -> Option<(&[u8], &[u8])> {
     let max = max.min(data.len());
     // take at most max, find the first non-hex-digit
     match data.iter().take(max).position(|b| !b.is_ascii_hexdigit()) {
-        // if there were less than 2 return nothing
-        Some(n) if n < 2 => None,
+        // if there were less than 5 return nothing
+        // the QID always has at least 5 characters for the microseconds (see
+        // http://www.postfix.org/postconf.5.html#enable_long_queue_ids)
+        Some(n) if n < 5 => None,
         // otherwise split at the first non-hex-digit
         Some(n) => Some(data.split_at(n)),
         // or return 'max' length QID if no non-hex-digit is found
