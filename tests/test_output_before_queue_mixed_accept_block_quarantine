@@ -1,0 +1,35 @@
+# LogReader: 9969
+# Query options
+# Start: 2020-04-30 15:40:00 (1588261200)
+# End: 2020-04-30 16:20:00 (1588263600)
+# End Query Options
+
+QENTRY: E1C6561393
+CTIME: 5EAAF183
+SIZE: 1436
+CLIENT: localhost[127.0.0.1],
+MSGID: <20200430134439.GE6794@test@localdomain>
+TO:5EAAF179:E1C6561393:R: from <senduser@test@localdomain> to <reject@test.recipient.example> (192.0.2.69[192.0.2.69]:25)
+TO:5EAAF178:E1C6561393:B: from <senduser@test@localdomain> to <blocked@test.recipient.example> (none)
+TO:5EAAF178:E1C6561393:Q: from <senduser@test@localdomain> to <quarantined@test.recipient.example> (612405EAAD648755DD)
+SMTP:
+L00000003 Apr 30 15:40:39 pmg6 postfix/smtpd[21615]: connect from unknown[2001:DB8:1:12::75]
+L00000004 Apr 30 15:40:39 pmg6 postfix/smtpd[21615]: Anonymous TLS connection established from unknown[2001:DB8:1:12::75]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits)
+L00000005 Apr 30 15:40:39 pmg6 postfix/smtpd[21615]: NOQUEUE: client=unknown[2001:DB8:1:12::75]
+L0000000C Apr 30 15:40:40 pmg6 postfix/smtpd[21631]: connect from localhost[127.0.0.1]
+L0000000D Apr 30 15:40:40 pmg6 postfix/smtpd[21631]: E1C6561393: client=localhost[127.0.0.1], orig_client=unknown[2001:DB8:1:12::75]
+L00000010 Apr 30 15:40:41 pmg6 postfix/smtpd[21631]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+L00000014 Apr 30 15:40:41 pmg6 postfix/smtpd[21615]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (611D85EAAD6477B053); from=<senduser@test@localdomain> to=<blocked@test.recipient.example> proto=ESMTP helo=<test@localdomain>
+FILTER: 611D85EAAD6477B053
+L00000008 Apr 30 15:40:39 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: new mail message-id=<20200430134439.GE6794@test@localdomain>
+L00000009 Apr 30 15:40:40 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: SA score=1/5 time=0.950 bayes=undefined autolearn=disabled hits=KAM_DMARC_STATUS(0.01),RDNS_NONE(1.274),SPF_HELO_PASS(-0.001),SPF_PASS(-0.001)
+L0000000A Apr 30 15:40:40 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: moved mail for <quarantined@test.recipient.example> to spam quarantine - 612405EAAD648755DD (rule: testrule)
+L0000000B Apr 30 15:40:40 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: block mail to <blocked@test.recipient.example> (rule: Blacklist)
+L00000011 Apr 30 15:40:41 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: accept mail to <reject@test.recipient.example> (E1C6561393) (rule: default-accept)
+L00000013 Apr 30 15:40:41 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: processing time: 1.61 seconds (0.95, 0.018, 0)
+QMGR:
+L0000000E Apr 30 15:40:40 pmg6 postfix/cleanup[21632]: E1C6561393: message-id=<20200430134439.GE6794@test@localdomain>
+L0000000F Apr 30 15:40:41 pmg6 postfix/qmgr[23452]: E1C6561393: from=<senduser@test@localdomain>, size=1436, nrcpt=1 (queue active)
+L00000015 Apr 30 15:40:41 pmg6 postfix/smtp[21626]: E1C6561393: to=<reject@test.recipient.example>, relay=192.0.2.69[192.0.2.69]:25, delay=0.73, delays=0.19/0/0.05/0.5, dsn=5.7.1, status=bounced (host 192.0.2.69[192.0.2.69] said: 554 5.7.1 <reject@test.recipient.example>: Recipient address rejected: no mail for reject@ (in reply to RCPT TO command))
+L00000019 Apr 30 15:40:42 pmg6 postfix/qmgr[23452]: E1C6561393: removed
+

@@ -1,0 +1,32 @@
+Apr 30 15:40:39 pmg6 postfix/postscreen[21614]: CONNECT from [2001:DB8:1:12::75]:38778 to [2001:DB8:1:12::66]:25
+Apr 30 15:40:39 pmg6 postfix/postscreen[21614]: WHITELISTED [2001:DB8:1:12::75]:38778
+Apr 30 15:40:39 pmg6 postfix/smtpd[21615]: connect from unknown[2001:DB8:1:12::75]
+Apr 30 15:40:39 pmg6 postfix/smtpd[21615]: Anonymous TLS connection established from unknown[2001:DB8:1:12::75]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits)
+Apr 30 15:40:39 pmg6 postfix/smtpd[21615]: NOQUEUE: client=unknown[2001:DB8:1:12::75]
+Apr 30 15:40:39 pmg6 pmg-smtp-filter[21528]: 2020/04/30-15:44:39 CONNECT TCP Peer: "[127.0.0.1]:35450" Local: "[127.0.0.1]:10024"
+Apr 30 15:40:39 pmg6 pmg-smtp-filter[21528]: reloading configuration Proxmox_ruledb
+Apr 30 15:40:39 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: new mail message-id=<20200430134439.GE6794@test@localdomain>
+Apr 30 15:40:40 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: SA score=1/5 time=0.950 bayes=undefined autolearn=disabled hits=KAM_DMARC_STATUS(0.01),RDNS_NONE(1.274),SPF_HELO_PASS(-0.001),SPF_PASS(-0.001)
+Apr 30 15:40:40 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: moved mail for <quarantined@test.recipient.example> to spam quarantine - 612405EAAD648755DD (rule: testrule)
+Apr 30 15:40:40 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: block mail to <blocked@test.recipient.example> (rule: Blacklist)
+Apr 30 15:40:40 pmg6 postfix/smtpd[21631]: connect from localhost[127.0.0.1]
+Apr 30 15:40:40 pmg6 postfix/smtpd[21631]: E1C6561393: client=localhost[127.0.0.1], orig_client=unknown[2001:DB8:1:12::75]
+Apr 30 15:40:40 pmg6 postfix/cleanup[21632]: E1C6561393: message-id=<20200430134439.GE6794@test@localdomain>
+Apr 30 15:40:41 pmg6 postfix/qmgr[23452]: E1C6561393: from=<senduser@test@localdomain>, size=1436, nrcpt=1 (queue active)
+Apr 30 15:40:41 pmg6 postfix/smtpd[21631]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+Apr 30 15:40:41 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: accept mail to <reject@test.recipient.example> (E1C6561393) (rule: default-accept)
+Apr 30 15:40:41 pmg6 postfix/smtp[21626]: Untrusted TLS connection established to 192.0.2.69[192.0.2.69]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits)
+Apr 30 15:40:41 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: processing time: 1.61 seconds (0.95, 0.018, 0)
+Apr 30 15:40:41 pmg6 postfix/smtpd[21615]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (611D85EAAD6477B053); from=<senduser@test@localdomain> to=<blocked@test.recipient.example> proto=ESMTP helo=<test@localdomain>
+Apr 29 15:40:41 pmg6 postfix/smtpd[21615]: disconnect from unknown[2001:DB8:1:12::75] ehlo=2 starttls=1 mail=1 rcpt=3 data=1 quit=1 commands=9
+Apr 30 15:40:41 pmg6 postfix/smtp[21626]: E1C6561393: to=<reject@test.recipient.example>, relay=192.0.2.69[192.0.2.69]:25, delay=0.73, delays=0.19/0/0.05/0.5, dsn=5.7.1, status=bounced (host 192.0.2.69[192.0.2.69] said: 554 5.7.1 <reject@test.recipient.example>: Recipient address rejected: no mail for reject@ (in reply to RCPT TO command))
+Apr 30 15:40:41 pmg6 postfix/cleanup[21632]: A0AC6614A6: message-id=<20200430134441.A0AC6614A6@pmg6.rosa.proxmox.com>
+Apr 30 15:40:42 pmg6 postfix/bounce[21633]: E1C6561393: sender non-delivery notification: A0AC6614A6
+Apr 30 15:40:42 pmg6 postfix/qmgr[23452]: A0AC6614A6: from=<>, size=3628, nrcpt=1 (queue active)
+Apr 30 15:40:42 pmg6 postfix/qmgr[23452]: E1C6561393: removed
+Apr 30 15:40:42 pmg6 postfix/smtp[21624]: Untrusted TLS connection established to test@localdomain[192.0.2.70]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits)
+Apr 30 15:40:42 pmg6 postfix/smtp[21624]: A0AC6614A6: to=<senduser@test@localdomain>, relay=test@localdomain[192.0.2.70]:25, delay=0.68, delays=0.6/0/0.05/0.03, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 4BD25601F4)
+Apr 30 15:40:42 pmg6 postfix/qmgr[23452]: A0AC6614A6: removed
+Apr 30 15:40:51 pmg6 pmg-smtp-filter[21523]: starting database maintainance
+Apr 30 15:40:51 pmg6 pmg-smtp-filter[21523]: end database maintainance (587 ms)
+

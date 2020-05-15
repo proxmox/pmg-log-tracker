@@ -205,3 +205,25 @@ fn before_queue_from_to() {
     let output_reader = BufReader::new(&output.stdout[..]);
     utils::compare_output(output_reader, expected_output);
 }
+
+#[test]
+fn before_queue_mixed_accept_block_quarantine() {
+    let output = Command::new(utils::log_tracker_path())
+        .arg("-vv")
+        .arg("-s")
+        .arg("1588254000")
+        .arg("-e")
+        .arg("1588255200")
+        .arg("-i")
+        .arg("tests/test_input_mixed_accept_block_quarantine")
+        .arg("-n")
+        .output()
+        .expect("failed to execute pmg-log-tracker");
+
+    let expected_file = File::open("tests/test_output_before_queue_mixed_accept_block_quarantine")
+        .expect("failed to open test_output");
+
+    let expected_output = BufReader::new(&expected_file);
+    let output_reader = BufReader::new(&output.stdout[..]);
+    utils::compare_output(output_reader, expected_output);
+}
