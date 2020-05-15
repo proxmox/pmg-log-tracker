@@ -1481,6 +1481,34 @@ impl QEntry {
             }
         }
 
+        if self.bq_filtered {
+            if let Some(fe) = &fe {
+                if fe.borrow().finished && fe.borrow().is_bq {
+                    fe.borrow_mut().to_entries.retain(|to| {
+                        for to2 in self.to_entries.iter().rev() {
+                            if to.to == to2.to {
+                                return false;
+                            }
+                        }
+                        true
+                    });
+
+                    for to in fe.borrow().to_entries.iter().rev() {
+                        parser.write_all_ok(format!("TO:{:X}:", to.timestamp as i32,));
+                        parser.write_all_ok(&self.qid);
+                        parser.write_all_ok(format!(":{}: from <", to.dstatus));
+                        parser.write_all_ok(&self.from);
+                        parser.write_all_ok(b"> to <");
+                        parser.write_all_ok(&to.to);
+                        parser.write_all_ok(b"> (");
+                        parser.write_all_ok(&to.relay);
+                        parser.write_all_ok(b")\n");
+                        parser.count += 1;
+                    }
+                }
+            }
+        }
+
         // print logs if '-vv' is specified
         if parser.options.verbose > 1 {
             let print_log = |parser: &mut Parser, logs: &Vec<(Box<[u8]>, u64)>| {
