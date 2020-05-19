@@ -1,0 +1,91 @@
+May 18 15:57:43 pmg-demo postfix/postscreen[16981]: CONNECT from [192.168.30.128]:52990 to [192.168.30.128]:25
+May 18 15:57:43 pmg-demo postfix/postscreen[16981]: WHITELISTED [192.168.30.128]:52990
+May 18 15:57:43 pmg-demo postfix/smtpd[16982]: connect from pmg-demo.proxmox.com[192.168.30.128]
+May 18 15:57:43 pmg-demo postfix/smtpd[16982]: NOQUEUE: client=pmg-demo.proxmox.com[192.168.30.128]
+May 18 15:57:43 pmg-demo pmg-smtp-filter[17051]: 2020/05/18-15:57:43 CONNECT TCP Peer: "[127.0.0.1]:50042" Local: "[127.0.0.1]:10024"
+May 18 15:57:43 pmg-demo pmg-smtp-filter[17051]: 3204C55EC294578338F: new mail message-id=
+May 18 15:57:43 pmg-demo pmg-smtp-filter[17051]: 3204C55EC294578338F: SA score=1001/5 time=0.288 bayes=undefined autolearn=no autolearn_force=no hits=ALL_TRUSTED(-1),AWL(-0.397),DKIM_ADSP_NXDOMAIN(0.8),GTUBE(1000),KAM_DMARC_STATUS(0.01),KAM_NUMSUBJECT(0.5),MISSING_DATE(1.396),MISSING_MID(0.14),NO_DNS_FOR_FROM(0.379)
+May 18 15:57:43 pmg-demo pmg-smtp-filter[17051]: 3204C55EC294578338F: block mail to <ferdl@example.proxmox.com> (rule: block-ferdl)
+May 18 15:57:43 pmg-demo pmg-smtp-filter[17051]: 3204C55EC294578338F: moved mail for <ceo@example.proxmox.com> to spam quarantine - 3209E25EC29457CC507 (rule: Quarantine/Mark Spam (Level 3))
+May 18 15:57:43 pmg-demo pmg-smtp-filter[17051]: 3204C55EC294578338F: processing time: 0.302 seconds (0.288, 0.007, 0)
+May 18 15:57:43 pmg-demo postfix/smtpd[16982]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (3204C55EC294578338F); from=<mailtestsender.bad@proxtest.com> to=<ceo@example.proxmox.com> proto=ESMTP helo=<localhost.localdomain>
+May 18 15:57:43 pmg-demo postfix/smtpd[16982]: disconnect from pmg-demo.proxmox.com[192.168.30.128] ehlo=1 mail=1 rcpt=2 data=1 commands=5
+May 18 15:58:38 pmg-demo postfix/postscreen[16981]: CONNECT from [192.168.30.128]:53002 to [192.168.30.128]:25
+May 18 15:58:38 pmg-demo postfix/postscreen[16981]: WHITELISTED [192.168.30.128]:53002
+May 18 15:58:38 pmg-demo postfix/smtpd[16982]: connect from pmg-demo.proxmox.com[192.168.30.128]
+May 18 15:58:38 pmg-demo postfix/smtpd[16982]: NOQUEUE: client=pmg-demo.proxmox.com[192.168.30.128]
+May 18 15:58:38 pmg-demo pmg-smtp-filter[17046]: 2020/05/18-15:58:38 CONNECT TCP Peer: "[127.0.0.1]:50054" Local: "[127.0.0.1]:10024"
+May 18 15:58:38 pmg-demo pmg-smtp-filter[17046]: 32031E5EC2948ECE5AB: new mail message-id=
+May 18 15:58:39 pmg-demo pmg-smtp-filter[17046]: 32031E5EC2948ECE5AB: SA score=1/5 time=0.333 bayes=undefined autolearn=no autolearn_force=no hits=ALL_TRUSTED(-1),AWL(-0.378),DKIM_ADSP_NXDOMAIN(0.8),KAM_DMARC_STATUS(0.01),KAM_NUMSUBJECT(0.5),MISSING_DATE(1.396),MISSING_MID(0.14),NO_DNS_FOR_FROM(0.379)
+May 18 15:58:39 pmg-demo postfix/smtpd[17725]: connect from localhost.localdomain[127.0.0.1]
+May 18 15:58:39 pmg-demo postfix/smtpd[17725]: 315103209E0: client=localhost.localdomain[127.0.0.1], orig_client=pmg-demo.proxmox.com[192.168.30.128]
+May 18 15:58:39 pmg-demo postfix/cleanup[17727]: 315103209E0: message-id=<20200518135839.315103209E0@pmg-demo.proxmox.com>
+May 18 15:58:39 pmg-demo postfix/qmgr[1097]: 315103209E0: from=<mailtestsender.good@proxtest.com>, size=2311, nrcpt=2 (queue active)
+May 18 15:58:39 pmg-demo postfix/smtpd[17725]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=2 data=1 commands=6
+May 18 15:58:39 pmg-demo pmg-smtp-filter[17046]: 32031E5EC2948ECE5AB: accept mail to <office@example.proxmox.com> (315103209E0) (rule: default-accept)
+May 18 15:58:39 pmg-demo pmg-smtp-filter[17046]: 32031E5EC2948ECE5AB: accept mail to <t.last@example.proxmox.com> (315103209E0) (rule: default-accept)
+May 18 15:58:39 pmg-demo pmg-smtp-filter[17046]: 32031E5EC2948ECE5AB: processing time: 0.359 seconds (0.333, 0.006, 0)
+May 18 15:58:39 pmg-demo postfix/smtpd[16982]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (32031E5EC2948ECE5AB); from=<mailtestsender.good@proxtest.com> to=<office@example.proxmox.com> proto=ESMTP helo=<localhost.localdomain>
+May 18 15:58:39 pmg-demo postfix/smtpd[16982]: disconnect from pmg-demo.proxmox.com[192.168.30.128] ehlo=1 mail=1 rcpt=2 data=1 commands=5
+May 18 15:58:39 pmg-demo pmg-smtp-filter[1060]: Starting "1" children
+May 18 15:58:39 pmg-demo postfix/smtp[17728]: 315103209E0: to=<office@example.proxmox.com>, relay=192.168.30.48[192.168.30.48]:25, delay=0.05, delays=0.01/0/0.02/0.02, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 3A97E10162E)
+May 18 15:58:39 pmg-demo postfix/smtp[17728]: 315103209E0: to=<t.last@example.proxmox.com>, relay=192.168.30.48[192.168.30.48]:25, delay=0.05, delays=0.01/0/0.02/0.02, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 3A97E10162E)
+May 18 15:58:39 pmg-demo postfix/qmgr[1097]: 315103209E0: removed
+May 18 16:03:55 pmg-demo postfix/postscreen[16981]: CONNECT from [192.168.30.128]:53066 to [192.168.30.128]:25
+May 18 16:03:55 pmg-demo postfix/postscreen[16981]: WHITELISTED [192.168.30.128]:53066
+May 18 16:03:55 pmg-demo postfix/smtpd[16982]: connect from pmg-demo.proxmox.com[192.168.30.128]
+May 18 16:03:55 pmg-demo postfix/smtpd[16982]: NOQUEUE: client=pmg-demo.proxmox.com[192.168.30.128]
+May 18 16:03:55 pmg-demo pmg-smtp-filter[17729]: 2020/05/18-16:03:55 CONNECT TCP Peer: "[127.0.0.1]:50118" Local: "[127.0.0.1]:10024"
+May 18 16:03:55 pmg-demo pmg-smtp-filter[17729]: 3204C55EC295CB131DB: new mail message-id=
+May 18 16:03:55 pmg-demo pmg-smtp-filter[17729]: 3204C55EC295CB131DB: SA score=1/5 time=0.347 bayes=undefined autolearn=no autolearn_force=no hits=ALL_TRUSTED(-1),AWL(-0.377),DKIM_ADSP_NXDOMAIN(0.8),KAM_DMARC_STATUS(0.01),KAM_NUMSUBJECT(0.5),MISSING_DATE(1.396),MISSING_MID(0.14),NO_DNS_FOR_FROM(0.379)
+May 18 16:03:55 pmg-demo pmg-smtp-filter[17729]: 3204C55EC295CB131DB: block mail to <ferdl@example.proxmox.com> (rule: block-ferdl)
+May 18 16:03:55 pmg-demo postfix/smtpd[17725]: connect from localhost.localdomain[127.0.0.1]
+May 18 16:03:55 pmg-demo postfix/smtpd[17725]: 6B2CD3209E0: client=localhost.localdomain[127.0.0.1], orig_client=pmg-demo.proxmox.com[192.168.30.128]
+May 18 16:03:55 pmg-demo postfix/cleanup[17727]: 6B2CD3209E0: message-id=<20200518140355.6B2CD3209E0@pmg-demo.proxmox.com>
+May 18 16:03:55 pmg-demo postfix/smtpd[17725]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+May 18 16:03:55 pmg-demo postfix/qmgr[1097]: 6B2CD3209E0: from=<mailtestsender.good@proxtest.com>, size=2342, nrcpt=1 (queue active)
+May 18 16:03:55 pmg-demo pmg-smtp-filter[17729]: 3204C55EC295CB131DB: accept mail to <office@example.proxmox.com> (6B2CD3209E0) (rule: default-accept)
+May 18 16:03:55 pmg-demo pmg-smtp-filter[17729]: 3204C55EC295CB131DB: processing time: 0.362 seconds (0.347, 0.008, 0)
+May 18 16:03:55 pmg-demo postfix/smtpd[16982]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (3204C55EC295CB131DB); from=<mailtestsender.good@proxtest.com> to=<ferdl@example.proxmox.com> proto=ESMTP helo=<localhost.localdomain>
+May 18 16:03:55 pmg-demo postfix/smtpd[16982]: disconnect from pmg-demo.proxmox.com[192.168.30.128] ehlo=1 mail=1 rcpt=2 data=1 commands=5
+May 18 16:03:55 pmg-demo postfix/smtp[17728]: 6B2CD3209E0: to=<office@example.proxmox.com>, relay=192.168.30.48[192.168.30.48]:25, delay=0.01, delays=0/0/0/0.01, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 6C1DE10162E)
+May 18 16:03:55 pmg-demo postfix/qmgr[1097]: 6B2CD3209E0: removed
+May 18 16:08:34 pmg-demo postfix/postscreen[16981]: CONNECT from [192.168.30.128]:53156 to [192.168.30.128]:25
+May 18 16:08:34 pmg-demo postfix/postscreen[16981]: WHITELISTED [192.168.30.128]:53156
+May 18 16:08:34 pmg-demo postfix/smtpd[16982]: connect from pmg-demo.proxmox.com[192.168.30.128]
+May 18 16:08:34 pmg-demo postfix/smtpd[16982]: NOQUEUE: client=pmg-demo.proxmox.com[192.168.30.128]
+May 18 16:08:34 pmg-demo pmg-smtp-filter[17740]: 2020/05/18-16:08:34 CONNECT TCP Peer: "[127.0.0.1]:50208" Local: "[127.0.0.1]:10024"
+May 18 16:08:34 pmg-demo pmg-smtp-filter[17740]: 32031E5EC296E2C5FFB: new mail message-id=
+May 18 16:08:35 pmg-demo pmg-smtp-filter[17740]: 32031E5EC296E2C5FFB: SA score=1/5 time=0.334 bayes=undefined autolearn=no autolearn_force=no hits=ALL_TRUSTED(-1),AWL(-0.377),DKIM_ADSP_NXDOMAIN(0.8),KAM_DMARC_STATUS(0.01),KAM_NUMSUBJECT(0.5),MISSING_DATE(1.396),MISSING_MID(0.14),NO_DNS_FOR_FROM(0.379)
+May 18 16:08:35 pmg-demo pmg-smtp-filter[17740]: 32031E5EC296E2C5FFB: block mail to <ferdl@example.proxmox.com> (rule: block-ferdl)
+May 18 16:08:35 pmg-demo postfix/smtpd[17725]: connect from localhost.localdomain[127.0.0.1]
+May 18 16:08:35 pmg-demo postfix/smtpd[17725]: 264C33209E0: client=localhost.localdomain[127.0.0.1], orig_client=pmg-demo.proxmox.com[192.168.30.128]
+May 18 16:08:35 pmg-demo postfix/cleanup[17727]: 264C33209E0: message-id=<20200518140835.264C33209E0@pmg-demo.proxmox.com>
+May 18 16:08:35 pmg-demo postfix/qmgr[1097]: 264C33209E0: from=<mailtestsender.good@proxtest.com>, size=2339, nrcpt=1 (queue active)
+May 18 16:08:35 pmg-demo pmg-smtp-filter[17740]: 32031E5EC296E2C5FFB: accept mail to <ceo@example.proxmox.com> (264C33209E0) (rule: default-accept)
+May 18 16:08:35 pmg-demo postfix/smtpd[17725]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+May 18 16:08:35 pmg-demo pmg-smtp-filter[17740]: 32031E5EC296E2C5FFB: processing time: 0.348 seconds (0.334, 0.007, 0)
+May 18 16:08:35 pmg-demo postfix/smtpd[16982]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (32031E5EC296E2C5FFB); from=<mailtestsender.good@proxtest.com> to=<ferdl@example.proxmox.com> proto=ESMTP helo=<localhost.localdomain>
+May 18 16:08:35 pmg-demo postfix/smtpd[16982]: disconnect from pmg-demo.proxmox.com[192.168.30.128] ehlo=1 mail=1 rcpt=2 data=1 commands=5
+May 18 16:08:35 pmg-demo postfix/smtp[17728]: 264C33209E0: to=<ceo@example.proxmox.com>, relay=192.168.30.48[192.168.30.48]:25, delay=0.01, delays=0/0/0/0.01, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 2749D10162E)
+May 18 16:08:35 pmg-demo postfix/qmgr[1097]: 264C33209E0: removed
+
+May 18 16:09:39 pmg-demo postfix/postscreen[16981]: CONNECT from [192.168.30.128]:53184 to [192.168.30.128]:25
+May 18 16:09:39 pmg-demo postfix/postscreen[16981]: WHITELISTED [192.168.30.128]:53184
+May 18 16:09:39 pmg-demo postfix/smtpd[16982]: connect from pmg-demo.proxmox.com[192.168.30.128]
+May 18 16:09:39 pmg-demo postfix/smtpd[16982]: NOQUEUE: client=pmg-demo.proxmox.com[192.168.30.128]
+May 18 16:09:39 pmg-demo pmg-smtp-filter[17729]: 2020/05/18-16:09:39 CONNECT TCP Peer: "[127.0.0.1]:50236" Local: "[127.0.0.1]:10024"
+May 18 16:09:39 pmg-demo pmg-smtp-filter[17729]: 32031E5EC29723280EB: new mail message-id=
+May 18 16:09:40 pmg-demo pmg-smtp-filter[17729]: 32031E5EC29723280EB: SA score=1/5 time=1.372 bayes=undefined autolearn=no autolearn_force=no hits=ALL_TRUSTED(-1),AWL(-0.377),DKIM_ADSP_NXDOMAIN(0.8),KAM_DMARC_STATUS(0.01),KAM_NUMSUBJECT(0.5),MISSING_DATE(1.396),MISSING_MID(0.14),NO_DNS_FOR_FROM(0.379)
+May 18 16:09:40 pmg-demo pmg-smtp-filter[17729]: 32031E5EC29723280EB: block mail to <ferdl@example.proxmox.com> (rule: block-ferdl)
+May 18 16:09:40 pmg-demo postfix/smtpd[17725]: connect from localhost.localdomain[127.0.0.1]
+May 18 16:09:40 pmg-demo postfix/smtpd[17725]: 86D0C3209DE: client=localhost.localdomain[127.0.0.1], orig_client=pmg-demo.proxmox.com[192.168.30.128]
+May 18 16:09:40 pmg-demo postfix/cleanup[17727]: 86D0C3209DE: message-id=<20200518140940.86D0C3209DE@pmg-demo.proxmox.com>
+May 18 16:09:40 pmg-demo postfix/qmgr[1097]: 86D0C3209DE: from=<mailtestsender.good@proxtest.com>, size=2932, nrcpt=1 (queue active)
+May 18 16:09:40 pmg-demo postfix/smtpd[17725]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+May 18 16:09:40 pmg-demo pmg-smtp-filter[17729]: 32031E5EC29723280EB: accept mail to <ceo@example.proxmox.com> (86D0C3209DE) (rule: default-accept)
+May 18 16:09:40 pmg-demo pmg-smtp-filter[17729]: 32031E5EC29723280EB: processing time: 1.391 seconds (1.372, 0.01, 0)
+May 18 16:09:40 pmg-demo postfix/smtpd[16982]: proxy-accept: END-OF-MESSAGE: 250 2.5.0 OK (32031E5EC29723280EB); from=<mailtestsender.good@proxtest.com> to=<ceo@example.proxmox.com> proto=ESMTP helo=<localhost.localdomain>
+May 18 16:09:40 pmg-demo postfix/smtpd[16982]: disconnect from pmg-demo.proxmox.com[192.168.30.128] ehlo=1 mail=1 rcpt=2 data=1 commands=5
+May 18 16:09:40 pmg-demo postfix/smtp[17728]: 86D0C3209DE: to=<ceo@example.proxmox.com>, relay=192.168.30.48[192.168.30.48]:25, delay=0.01, delays=0/0/0/0.01, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 87BEF10E1B3)
+May 18 16:09:40 pmg-demo postfix/qmgr[1097]: 86D0C3209DE: removed
