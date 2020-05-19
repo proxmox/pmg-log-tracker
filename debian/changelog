@@ -1,3 +1,14 @@
+rust-pmg-log-tracker (2.1.6-1) pmg; urgency=medium
+
+  * print blocked/quarantined entries also if accepted mail exists
+
+  * improve "xfilter" string matching for before-queue case
+
+  * fix "to" filter for mails with a mix of blocked/quarantined and accepted
+    mails
+
+ -- Proxmox Support Team <support@proxmox.com>  Tue, 19 May 2020 16:38:46 +0200
+
 rust-pmg-log-tracker (2.1.5-1) pmg; urgency=medium
 
   * introduce before queue dstatus to distinguish mails which went
