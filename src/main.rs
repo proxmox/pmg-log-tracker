@@ -1345,6 +1345,16 @@ impl QEntry {
                     true
                 }
             });
+            if let Some(fe) = &self.filter {
+                fe.borrow_mut().to_entries.retain(|to| {
+                    if find_lowercase(&to.to, parser.options.to.as_bytes()).is_none() {
+                        false
+                    } else {
+                        found = true;
+                        true
+                    }
+                });
+            }
             if !found {
                 return false;
             }
