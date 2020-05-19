@@ -953,9 +953,18 @@ impl SEntry {
         }
 
         // don't print if there's a string match specified, but none of the
-        // log entries matches
-        if !parser.options.string_match.is_empty() && !self.string_match {
-            return;
+        // log entries matches. in the before-queue case we also have to check
+        // the attached filter for a match
+        if !parser.options.string_match.is_empty() {
+            if let Some(fe) = &self.filter() {
+                if !self.string_match && !fe.borrow().string_match {
+                    return;
+                }
+            } else {
+                if !self.string_match {
+                    return;
+                }
+            }
         }
 
         if parser.options.verbose > 0 {
