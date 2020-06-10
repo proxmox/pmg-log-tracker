@@ -2187,6 +2187,9 @@ fn parse_qid(data: &[u8], max: usize) -> Option<(&[u8], &[u8])> {
 /// Parse a number. Returns a tuple of (parsed_number, remaining_text) or None.
 fn parse_number(data: &[u8], max_digits: usize) -> Option<(usize, &[u8])> {
     let max = max_digits.min(data.len());
+    if max == 0 {
+        return None;
+    }
 
     match data.iter().take(max).position(|b| !b.is_ascii_digit()) {
         Some(n) if n == 0 => None,
