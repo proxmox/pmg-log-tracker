@@ -2271,6 +2271,10 @@ fn parse_time<'a>(
 
     ltime += (mday - 1) as i64;
 
+    if data.len() == 0 {
+        return None;
+    }
+
     let data = &data[1..];
 
     let (hour, data) = match parse_number(data, 2) {
@@ -2321,7 +2325,10 @@ fn parse_time<'a>(
     ltime *= 60;
     ltime += sec as i64;
 
-    let data = &data[1..];
+    let data = match data.len() {
+        0 => &[],
+        _ => &data[1..],
+    };
 
     Some((ltime, data))
 }
