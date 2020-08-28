@@ -252,3 +252,24 @@ fn before_queue_to_search_string() {
     let output_reader = BufReader::new(&output.stdout[..]);
     utils::compare_output(output_reader, expected_output);
 }
+
+#[test]
+fn before_queue_syntax_reject() {
+    let output = Command::new(utils::log_tracker_path())
+        .arg("-vv")
+        .arg("-s")
+        .arg("2020-08-27 14:00:00")
+        .arg("-e")
+        .arg("2020-08-27 14:05:00")
+        .arg("-i")
+        .arg("tests/test_input_before_queue_syntax_reject")
+        .output()
+        .expect("failed to execute pmg-log-tracker");
+
+    let expected_file = File::open("tests/test_output_before_queue_syntax_reject")
+        .expect("failed to open test_output");
+
+    let expected_output = BufReader::new(&expected_file);
+    let output_reader = BufReader::new(&output.stdout[..]);
+    utils::compare_output(output_reader, expected_output);
+}

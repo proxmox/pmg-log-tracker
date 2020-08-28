@@ -647,19 +647,20 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
             return;
         }
         let data = &data[16..];
+
+        // specify that before queue filtering is used and the mail
+        // was rejected for all receivers
+        se.borrow_mut().is_bq_rejected = true;
+
         if let Some(qid_index) = find(data, b"(") {
             let data = &data[qid_index + 1..];
-            if let Some((qid, data)) = parse_qid(data, 25) {
+            if let Some((qid, _)) = parse_qid(data, 25) {
                 let fe = get_or_create_fentry(&mut parser.fentries, qid);
                 // set the FEntry to before-queue filtered
                 fe.borrow_mut().is_bq = true;
                 // we never have a QEntry in this case, so just set the SEntry
                 // filter reference
                 se.borrow_mut().filter = Some(Rc::downgrade(&fe));
-                // specify that before queue filtering is used and the mail
-                // was rejected for all receivers
-                se.borrow_mut().is_bq_rejected = true;
-
                 if let Some(from_index) = find(data, b"from=<") {
                     let data = &data[from_index + 6..];
                     let from_count = data.iter().take_while(|b| (**b as char) != '>').count();
@@ -668,6 +669,28 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
                     se.borrow_mut().bq_from = from.into();
                 }
             }
+        } else if let Some(from_index) = find(data, b"from=<") {
+            let data = &data[from_index + 6..];
+            let from_count = data.iter().take_while(|b| (**b as char) != '>').count();
+            let from = &data[..from_count];
+            // same as for 'proxy-accept' above
+            se.borrow_mut().bq_from = from.into();
+
+            if let Some(to_index) = find(data, b"to=<") {
+                let data = &data[to_index + 4..];
+                let to_count = data
+                    .iter()
+                    .take_while(|b| (**b as char) != '>')
+                    .count();
+                let to = &data[..to_count];
+
+                se.borrow_mut().add_noqueue_entry(
+                    from,
+                    to,
+                    DStatus::Noqueue,
+                    parser.current_record_state.timestamp,
+                );
+            };
         }
 
         return;

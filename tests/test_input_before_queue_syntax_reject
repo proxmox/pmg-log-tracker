@@ -1,0 +1,14 @@
+Aug 27 14:04:08 pmg6 postfix/smtpd[7567]: connect from pmgsender[192.168.22.40]
+Aug 27 14:04:08 pmg6 postfix/smtpd[7567]: Anonymous TLS connection established from pmgsender[192.168.22.40]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+Aug 27 14:04:08 pmg6 postfix/smtpd[7567]: NOQUEUE: client=pmgsender[192.168.22.40]
+Aug 27 14:04:08 pmg6 pmg-smtp-filter[28926]: 2020/08/27-14:04:08 CONNECT TCP Peer: "[127.0.0.1]:39208" Local: "[127.0.0.1]:10023"
+Aug 27 14:04:08 pmg6 postfix/smtpd[7567]: warning: proxy 127.0.0.1:10023 rejected "MAIL FROM:<test@pmgsender.local> SIZE=722 BODY=8BITMIME ENVID=<c7ca5cde-cd5b-e042-c18e-f0c7e4253955@pmgsender.local> RET=FULL": "501 5.5.2 Syntax: MAIL FROM: <address>"
+Aug 27 14:04:08 pmg6 postfix/smtpd[7567]: proxy-reject: END-OF-MESSAGE: 501 5.5.2 Syntax: MAIL FROM: <address>; from=<test@pmgsender.local> to=<test@pmgreceiver.local> proto=ESMTP helo=<pmgsender.local>
+Aug 27 14:04:08 pmg6 postfix/smtpd[7567]: disconnect from pmgsender[192.168.22.40] ehlo=2 starttls=1 mail=1 rcpt=1 data=0/1 quit=1 commands=6/7
+Aug 27 14:04:28 pmg6 pmg-smtp-filter[28920]: starting database maintainance
+Aug 27 14:04:28 pmg6 pmg-smtp-filter[28920]: end database maintainance (3 ms)
+Aug 27 14:04:30 pmg6 pmgpolicy[1137]: starting policy database maintainance (greylist, rbl)
+Aug 27 14:04:30 pmg6 pmgpolicy[1137]: end policy database maintainance (7 ms, 0 ms)
+Aug 27 14:04:37 pmg6 pmgmirror[1069]: starting cluster syncronization
+Aug 27 14:04:37 pmg6 pmgmirror[1069]: cluster syncronization finished  (0 errors, 0.11 seconds (files 0.09, database 0.03, config 0.00))
+
