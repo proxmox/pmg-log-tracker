@@ -1,3 +1,11 @@
+rust-pmg-log-tracker (2.1.7-1) pmg; urgency=medium
+
+  * before-queue filtering: track all 'proxy-reject' cases
+
+  * improve parsing of some edge cases
+
+ -- Proxmox Support Team <support@proxmox.com>  Thu, 03 Sep 2020 17:50:34 +0200
+
 rust-pmg-log-tracker (2.1.6-1) pmg; urgency=medium
 
   * print blocked/quarantined entries also if accepted mail exists
