@@ -114,3 +114,26 @@ fn after_queue_search_string() {
     let output_reader = BufReader::new(&output.stdout[..]);
     utils::compare_output(output_reader, expected_output);
 }
+
+#[test]
+fn after_queue_search_string_case_insensitive() {
+    let output = Command::new(utils::log_tracker_path())
+        .arg("-vv")
+        .arg("-s")
+        .arg("1608302400")
+        .arg("-e")
+        .arg("1608303600")
+        .arg("-i")
+        .arg("tests/test_input_mixed")
+        .arg("-x")
+        .arg("reJECT")
+        .output()
+        .expect("failed to execute pmg-log-tracker");
+
+    let expected_file = File::open("tests/test_output_after_queue_search_string")
+        .expect("failed to open test_output");
+
+    let expected_output = BufReader::new(&expected_file);
+    let output_reader = BufReader::new(&output.stdout[..]);
+    utils::compare_output(output_reader, expected_output);
+}

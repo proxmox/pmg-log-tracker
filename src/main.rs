@@ -1842,7 +1842,7 @@ impl Parser {
 
             self.string_match = false;
             if !self.options.string_match.is_empty()
-                && find(complete_line, self.options.string_match.as_bytes()).is_some()
+                && find_lowercase(complete_line, self.options.string_match.as_bytes()).is_some()
             {
                 self.string_match = true;
             }
