@@ -1,3 +1,9 @@
+rust-pmg-log-tracker (2.1.8-1) pmg; urgency=medium
+
+  * make string match case insensitive again
+
+ -- Proxmox Support Team <support@proxmox.com>  Wed, 18 Nov 2020 19:28:47 +0100
+
 rust-pmg-log-tracker (2.1.7-1) pmg; urgency=medium
 
   * before-queue filtering: track all 'proxy-reject' cases
