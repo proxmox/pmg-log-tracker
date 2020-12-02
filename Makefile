@@ -24,6 +24,7 @@ cargo-build:
 .PHONY: build
 build:
 	rm -rf build
+	rm -rf debian/control
 	debcargo package \
 	  --config debian/debcargo.toml \
 	  --changelog-ready \
@@ -33,6 +34,7 @@ build:
 	  $(shell dpkg-parsechangelog -l debian/changelog -SVersion | sed -e 's/-.*//')
 	rm build/Cargo.lock
 	find build/debian -name "*.hint" -delete
+	cp build/debian/control debian/control
 
 .PHONY: deb
 deb: $(DEB)
