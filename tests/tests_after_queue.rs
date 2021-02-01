@@ -17,8 +17,8 @@ fn after_queue_start_end_time_string() {
         .output()
         .expect("failed to execute pmg-log-tracker");
 
-    let expected_file = File::open("tests/test_output_after_queue")
-        .expect("failed to open test_output");
+    let expected_file =
+        File::open("tests/test_output_after_queue").expect("failed to open test_output");
 
     let expected_output = BufReader::new(&expected_file);
     let output_reader = BufReader::new(&output.stdout[..]);
@@ -38,8 +38,8 @@ fn after_queue_start_end_timestamp() {
         .output()
         .expect("failed to execute pmg-log-tracker");
 
-    let expected_file = File::open("tests/test_output_after_queue")
-        .expect("failed to open test_output");
+    let expected_file =
+        File::open("tests/test_output_after_queue").expect("failed to open test_output");
 
     let expected_output = BufReader::new(&expected_file);
     let output_reader = BufReader::new(&output.stdout[..]);
@@ -61,8 +61,8 @@ fn after_queue_qid() {
         .output()
         .expect("failed to execute pmg-log-tracker");
 
-    let expected_file = File::open("tests/test_output_after_queue_qid")
-        .expect("failed to open test_output");
+    let expected_file =
+        File::open("tests/test_output_after_queue_qid").expect("failed to open test_output");
 
     let expected_output = BufReader::new(&expected_file);
     let output_reader = BufReader::new(&output.stdout[..]);
@@ -84,8 +84,8 @@ fn after_queue_host() {
         .output()
         .expect("failed to execute pmg-log-tracker");
 
-    let expected_file = File::open("tests/test_output_after_queue_host")
-        .expect("failed to open test_output");
+    let expected_file =
+        File::open("tests/test_output_after_queue_host").expect("failed to open test_output");
 
     let expected_output = BufReader::new(&expected_file);
     let output_reader = BufReader::new(&output.stdout[..]);

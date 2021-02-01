@@ -1,8 +1,8 @@
 overlay = "."
 crate_src_path = ".."
+maintainer = "Proxmox Support Team <support@proxmox.com>"
 
 [source]
-maintainer = "Proxmox Support Team <support@proxmox.com>"
 section = "admin"
 homepage = "http://www.proxmox.com"
 vcs_git = "git://git.proxmox.com/git/pmg-log-tracker.git"

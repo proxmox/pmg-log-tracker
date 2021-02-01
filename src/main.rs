@@ -438,14 +438,9 @@ fn handle_lmtp_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
             5 => DStatus::BqReject,
             _ => return,
         }
-
     }
-    qe.borrow_mut().add_to_entry(
-        to,
-        relay,
-        dstatus,
-        parser.current_record_state.timestamp,
-    );
+    qe.borrow_mut()
+        .add_to_entry(to, relay, dstatus, parser.current_record_state.timestamp);
 
     // here the match happens between a QEntry and the corresponding FEntry
     // (only after-queue)
@@ -678,10 +673,7 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
 
             if let Some(to_index) = find(data, b"to=<") {
                 let data = &data[to_index + 4..];
-                let to_count = data
-                    .iter()
-                    .take_while(|b| (**b as char) != '>')
-                    .count();
+                let to_count = data.iter().take_while(|b| (**b as char) != '>').count();
                 let to = &data[..to_count];
 
                 se.borrow_mut().add_noqueue_entry(
@@ -912,8 +904,10 @@ impl SEntry {
             // are set.
             // if neither of them is filtered, we can skip this check
             if let Some(fe) = &self.filter() {
-                if !parser.options.from.is_empty() && find_lowercase(&self.bq_from, parser.options.from.as_bytes()).is_none() {
-                        return false;
+                if !parser.options.from.is_empty()
+                    && find_lowercase(&self.bq_from, parser.options.from.as_bytes()).is_none()
+                {
+                    return false;
                 }
                 let to_option_set = !parser.options.to.is_empty();
                 if to_option_set && fe.borrow().is_bq && !fe.borrow().is_accepted {
@@ -1022,21 +1016,20 @@ impl SEntry {
             }
         }
 
-        let print_filter_to_entries_fn = |fe: &Rc<RefCell<FEntry>>,
-                                          parser: &mut Parser,
-                                          se: &SEntry| {
-            for to in fe.borrow().to_entries.iter().rev() {
-                parser.write_all_ok(format!(
-                    "TO:{:X}:T{:08X}L{:08X}:{}: from <",
-                    to.timestamp as i32, se.timestamp as i32, se.rel_line_nr, to.dstatus,
-                ));
-                parser.write_all_ok(&se.bq_from);
-                parser.write_all_ok(b"> to <");
-                parser.write_all_ok(&to.to);
-                parser.write_all_ok(b">\n");
-                parser.count += 1;
-            }
-        };
+        let print_filter_to_entries_fn =
+            |fe: &Rc<RefCell<FEntry>>, parser: &mut Parser, se: &SEntry| {
+                for to in fe.borrow().to_entries.iter().rev() {
+                    parser.write_all_ok(format!(
+                        "TO:{:X}:T{:08X}L{:08X}:{}: from <",
+                        to.timestamp as i32, se.timestamp as i32, se.rel_line_nr, to.dstatus,
+                    ));
+                    parser.write_all_ok(&se.bq_from);
+                    parser.write_all_ok(b"> to <");
+                    parser.write_all_ok(&to.to);
+                    parser.write_all_ok(b">\n");
+                    parser.count += 1;
+                }
+            };
 
         // only true in before queue filtering case
         if let Some(fe) = &self.filter() {

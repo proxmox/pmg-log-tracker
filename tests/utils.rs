@@ -16,7 +16,6 @@ pub fn log_tracker_path() -> String {
     target_dir.to_str().unwrap().to_string()
 }
 
-
 pub fn compare_output<R: BufRead, R2: BufRead>(command: R, expected: R2) {
     let expected_lines: Vec<String> = expected.lines().map(|l| l.unwrap()).collect();
     let command_lines: Vec<String> = command.lines().map(|l| l.unwrap()).collect();
@@ -27,8 +26,7 @@ pub fn compare_output<R: BufRead, R2: BufRead>(command: R, expected: R2) {
         expected_lines.len(),
         command_lines.len()
     );
-    for (old, new) in expected_lines.iter().zip(command_lines.iter())
-    {
+    for (old, new) in expected_lines.iter().zip(command_lines.iter()) {
         if new.starts_with("# ") && old.starts_with("# ") {
             continue;
         } else if new.starts_with("# ") {
