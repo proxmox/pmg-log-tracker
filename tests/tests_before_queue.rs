@@ -5,7 +5,9 @@ mod utils;
 
 #[test]
 fn before_queue_start_end_time_string() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("2020-12-18 15:00:00")
@@ -26,7 +28,9 @@ fn before_queue_start_end_time_string() {
 
 #[test]
 fn before_queue_start_end_timestamp() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -47,7 +51,9 @@ fn before_queue_start_end_timestamp() {
 
 #[test]
 fn before_queue_qid() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -70,7 +76,9 @@ fn before_queue_qid() {
 
 #[test]
 fn before_queue_host() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -93,7 +101,9 @@ fn before_queue_host() {
 
 #[test]
 fn before_queue_search_string() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -116,7 +126,9 @@ fn before_queue_search_string() {
 
 #[test]
 fn before_queue_search_string_case_insensitive() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -139,7 +151,9 @@ fn before_queue_search_string_case_insensitive() {
 
 #[test]
 fn before_queue_exclude_greylist_ndr() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -162,7 +176,9 @@ fn before_queue_exclude_greylist_ndr() {
 
 #[test]
 fn before_queue_to() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -185,7 +201,9 @@ fn before_queue_to() {
 
 #[test]
 fn before_queue_mixed_downstream() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-v")
         .arg("-s")
         .arg("1608303600")
@@ -206,7 +224,9 @@ fn before_queue_mixed_downstream() {
 
 #[test]
 fn before_queue_from_to() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1608300000")
@@ -231,7 +251,9 @@ fn before_queue_from_to() {
 
 #[test]
 fn before_queue_mixed_accept_block_quarantine() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1588254000")
@@ -253,7 +275,9 @@ fn before_queue_mixed_accept_block_quarantine() {
 
 #[test]
 fn before_queue_to_search_string() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("1589810100")
@@ -278,7 +302,9 @@ fn before_queue_to_search_string() {
 
 #[test]
 fn before_queue_syntax_reject() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("2020-08-27 14:00:00")

@@ -10,7 +10,8 @@ Build-Depends: debhelper (>= 11),
  librust-failure-0.1+default-dev (>= 0.1.5-~~),
  librust-flate2-1+default-dev (>= 1.0.6-~~),
  librust-libc-0.2+default-dev (>= 0.2.48-~~),
- librust-time-0.1+default-dev (>= 0.1.42-~~)
+ librust-time-0.1+default-dev (>= 0.1.42-~~),
+ faketime
 Maintainer: Proxmox Support Team <support@proxmox.com>
 Standards-Version: 4.4.1
 Vcs-Git: git://git.proxmox.com/git/pmg-log-tracker.git
