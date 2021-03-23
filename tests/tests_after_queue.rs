@@ -149,3 +149,26 @@ fn after_queue_search_string_case_insensitive() {
     let output_reader = BufReader::new(&output.stdout[..]);
     utils::compare_output(output_reader, expected_output);
 }
+
+#[test]
+fn after_queue_relay_before_lmtp() {
+    let output = Command::new("faketime")
+        .arg("2020-12-31 23:59:59")
+        .arg(utils::log_tracker_path())
+        .arg("-vv")
+        .arg("-s")
+        .arg("2020-01-21 07:30:00")
+        .arg("-e")
+        .arg("2020-01-21 07:35:00")
+        .arg("-i")
+        .arg("tests/test_input_after_queue_relay_before_lmtp")
+        .output()
+        .expect("failed to execute pmg-log-tracker");
+
+    let expected_file = File::open("tests/test_output_after_queue_relay_before_lmtp")
+        .expect("failed to open test_output");
+
+    let expected_output = BufReader::new(&expected_file);
+    let output_reader = BufReader::new(&output.stdout[..]);
+    utils::compare_output(output_reader, expected_output);
+}
