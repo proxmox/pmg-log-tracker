@@ -447,18 +447,8 @@ fn handle_lmtp_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
         None => return,
     };
 
-    let mut dstatus = DStatus::Dsn(dsn);
+    let dstatus = DStatus::Dsn(dsn);
 
-    // the dsn (enhanced status code can only have a class of 2, 4 or 5
-    // see https://tools.ietf.org/html/rfc3463
-    if qe.borrow_mut().bq_filtered {
-        dstatus = match dsn {
-            2 => DStatus::BqPass,
-            4 => DStatus::BqDefer,
-            5 => DStatus::BqReject,
-            _ => return,
-        }
-    }
     qe.borrow_mut()
         .add_to_entry(to, relay, dstatus, parser.current_record_state.timestamp);
 
@@ -771,6 +761,18 @@ fn handle_cleanup_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8])
             qe.borrow_mut().msgid = msgid.into();
         }
         qe.borrow_mut().cleanup = true;
+
+
+        // does not work correctly if there's a duplicate message id in the logfiles
+        if let Some(q) = parser.msgid_lookup.remove(msgid) {
+            qe.borrow_mut().aq_qentry = Some(Weak::clone(&q));
+            if let Some(q) = q.upgrade() {
+                q.borrow_mut().aq_qentry = Some(Rc::downgrade(&qe));
+            }
+        }
+        else {
+            parser.msgid_lookup.insert(msgid.into(), Rc::downgrade(&qe));
+        }
     }
 }
 
@@ -1225,6 +1227,7 @@ struct QEntry {
     bq_filtered: bool,
     // will differ from smtpd
     bq_sentry: Option<Rc<RefCell<SEntry>>>,
+    aq_qentry: Option<Weak<RefCell<QEntry>>>,
 }
 
 impl QEntry {
@@ -1251,6 +1254,16 @@ impl QEntry {
             if let Some(s) = &self.bq_sentry {
                 if self.bq_filtered && !s.borrow().disconnected {
                     return;
+                }
+            }
+
+            if let Some(qe) = &self.aq_qentry {
+                if let Some(qe) = qe.upgrade() {
+                    if !qe.borrow().removed {
+                        return;
+                    }
+                    qe.borrow_mut().aq_qentry = None;
+                    qe.borrow_mut().finalize(parser);
                 }
             }
 
@@ -1492,12 +1505,26 @@ impl QEntry {
             self.print_qentry_boilerplate(parser, is_se_bq_sentry, se);
         }
 
+        if self.bq_filtered {
+            for to in self.to_entries.iter_mut() {
+                to.dstatus = match to.dstatus {
+                    // the dsn (enhanced status code can only have a class of 2, 4 or 5
+                    // see https://tools.ietf.org/html/rfc3463
+                    DStatus::Dsn(2) => DStatus::BqPass,
+                    DStatus::Dsn(4) => DStatus::BqDefer,
+                    DStatus::Dsn(5) => DStatus::BqReject,
+                    _ => to.dstatus,
+                };
+            }
+        }
+
         // rev() to match the C code iteration direction (linked list vs Vec)
         for to in self.to_entries.iter().rev() {
             if !to.to.is_empty() {
                 let final_rc;
                 let final_borrow;
                 let mut final_to: &ToEntry = to;
+
                 // if status == success and there's a filter attached that has
                 // a matching 'to' in one of the ToEntries, set the ToEntry to
                 // the one in the filter
@@ -1688,6 +1715,7 @@ struct Parser {
     sentries: HashMap<u64, Rc<RefCell<SEntry>>>,
     fentries: HashMap<Box<[u8]>, Rc<RefCell<FEntry>>>,
     qentries: HashMap<Box<[u8]>, Rc<RefCell<QEntry>>>,
+    msgid_lookup: HashMap<Box<[u8]>, Weak<RefCell<QEntry>>>,
 
     smtp_tls_log_by_pid: HashMap<u64, (Box<[u8]>, u64)>,
 
@@ -1728,6 +1756,7 @@ impl Parser {
             sentries: HashMap::new(),
             fentries: HashMap::new(),
             qentries: HashMap::new(),
+            msgid_lookup: HashMap::new(),
             smtp_tls_log_by_pid: HashMap::new(),
             current_record_state: Default::default(),
             rel_line_nr: 0,
