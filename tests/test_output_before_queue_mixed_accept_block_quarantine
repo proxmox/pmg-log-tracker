@@ -30,6 +30,7 @@ L00000013 Apr 30 15:40:41 pmg6 pmg-smtp-filter[21528]: 611D85EAAD6477B053: proce
 QMGR:
 L0000000E Apr 30 15:40:40 pmg6 postfix/cleanup[21632]: E1C6561393: message-id=<20200430134439.GE6794@test@localdomain>
 L0000000F Apr 30 15:40:41 pmg6 postfix/qmgr[23452]: E1C6561393: from=<senduser@test@localdomain>, size=1436, nrcpt=1 (queue active)
+L00000012 Apr 30 15:40:41 pmg6 postfix/smtp[21626]: Untrusted TLS connection established to 192.0.2.69[192.0.2.69]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (2048 bits)
 L00000015 Apr 30 15:40:41 pmg6 postfix/smtp[21626]: E1C6561393: to=<reject@test.recipient.example>, relay=192.0.2.69[192.0.2.69]:25, delay=0.73, delays=0.19/0/0.05/0.5, dsn=5.7.1, status=bounced (host 192.0.2.69[192.0.2.69] said: 554 5.7.1 <reject@test.recipient.example>: Recipient address rejected: no mail for reject@ (in reply to RCPT TO command))
 L00000019 Apr 30 15:40:42 pmg6 postfix/qmgr[23452]: E1C6561393: removed
 

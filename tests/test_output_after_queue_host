@@ -41,6 +41,7 @@ L00000018 Dec 18 15:50:38 proxmox-new postfix/smtpd[13179]: disconnect from loca
 QMGR:
 L00000016 Dec 18 15:50:38 proxmox-new postfix/cleanup[13173]: 88F2E42667: message-id=<xyz>
 L00000017 Dec 18 15:50:38 proxmox-new postfix/qmgr[18171]: 88F2E42667: from=<test@test.localdomain>, size=8037, nrcpt=4 (queue active)
+L0000001D Dec 18 15:50:38 proxmox-new postfix/smtp[13180]: Untrusted TLS connection established to 192.168.22.40[192.168.22.40]:25: TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)
 L00000024 Dec 18 15:50:38 proxmox-new postfix/smtp[13180]: 88F2E42667: to=<test1@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.04/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C928BF624F6)
 L00000025 Dec 18 15:50:38 proxmox-new postfix/smtp[13180]: 88F2E42667: to=<test2@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.04/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C928BF624F6)
 L00000026 Dec 18 15:50:38 proxmox-new postfix/smtp[13180]: 88F2E42667: to=<test3@localhost>, relay=192.168.22.40[192.168.22.40]:25, delay=0.15, delays=0.05/0/0.04/0.05, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as C928BF624F6)

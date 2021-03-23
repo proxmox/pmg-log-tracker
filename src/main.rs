@@ -378,6 +378,18 @@ fn handle_qmgr_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
 
 // handle log entries for 'lmtp', 'smtp', 'error' and 'local'
 fn handle_lmtp_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
+    if msg.starts_with(b"Trusted TLS connection established to")
+        || msg.starts_with(b"Untrusted TLS connection established to")
+    {
+        // the only way to match outgoing TLS connections is by smtp pid
+        // this message has to appear before the 'qmgr: <QID>: removed' entry in the log
+        parser.smtp_tls_log_by_pid.insert(
+            parser.current_record_state.pid,
+            (complete_line.into(), parser.lines),
+        );
+        return;
+    }
+
     let (qid, data) = match parse_qid(msg, 15) {
         Some((q, t)) => (q, t),
         None => return,
@@ -392,6 +404,14 @@ fn handle_lmtp_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
     qe.borrow_mut()
         .log
         .push((complete_line.into(), parser.lines));
+
+    // assume the TLS log entry always appears before as it is the same process
+    if let Some(log_line) = parser
+        .smtp_tls_log_by_pid
+        .remove(&parser.current_record_state.pid)
+    {
+        qe.borrow_mut().log.push(log_line);
+    }
 
     let data = &data[2..];
     if !data.starts_with(b"to=<") {
@@ -1594,6 +1614,7 @@ impl QEntry {
 
             if !self.log.is_empty() {
                 parser.write_all_ok(b"QMGR:\n");
+                self.log.sort_by(|a, b| a.1.cmp(&b.1));
                 print_log(parser, &self.log);
             }
         }
@@ -1668,6 +1689,8 @@ struct Parser {
     fentries: HashMap<Box<[u8]>, Rc<RefCell<FEntry>>>,
     qentries: HashMap<Box<[u8]>, Rc<RefCell<QEntry>>>,
 
+    smtp_tls_log_by_pid: HashMap<u64, (Box<[u8]>, u64)>,
+
     current_record_state: RecordState,
     rel_line_nr: u64,
 
@@ -1705,6 +1728,7 @@ impl Parser {
             sentries: HashMap::new(),
             fentries: HashMap::new(),
             qentries: HashMap::new(),
+            smtp_tls_log_by_pid: HashMap::new(),
             current_record_state: Default::default(),
             rel_line_nr: 0,
             current_year: years,
