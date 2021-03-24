@@ -1,9 +1,10 @@
 rust-pmg-log-tracker (2.1.9-1) pmg; urgency=medium
 
   * show outgoing TLS connection in tracking center
+
   * improve after-queue matching if logs are not in expected order
 
- -- Proxmox Support Team <support@proxmox.com>  Wed, 24 Mar 2021 11:47:46 +0100
+ -- Proxmox Support Team <support@proxmox.com>  Wed, 24 Mar 2021 12:07:54 +0100
 
 rust-pmg-log-tracker (2.1.8-1) pmg; urgency=medium
 
