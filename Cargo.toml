@@ -10,8 +10,8 @@ homepage = "https://www.proxmox.com"
 exclude = [ "build", "debian" ]
 
 [dependencies]
-clap = "2.32.0"
+clap = "2.32"
 failure = "0.1.5"
-flate2 = "1.0.6"
+flate2 = "1.0"
 libc = "0.2.48"
 time = "0.1.42"
