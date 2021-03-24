@@ -4,7 +4,7 @@ maintainer = "Proxmox Support Team <support@proxmox.com>"
 
 [source]
 section = "admin"
-homepage = "http://www.proxmox.com"
+homepage = "https://www.proxmox.com"
 vcs_git = "git://git.proxmox.com/git/pmg-log-tracker.git"
 vcs_browser = "https://git.proxmox.com/?p=pmg-log-tracker.git;a=summary"
 build_depends = ["faketime"]
