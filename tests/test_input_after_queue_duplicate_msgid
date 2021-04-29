@@ -1,0 +1,20 @@
+Jan 21 07:33:20 pmghost postfix/smtpd[29361]: connect from pmghost.mydomain.tld[192.168.1.001]
+Jan 21 07:33:20 pmghost postfix/smtpd[29361]: DEF2520A69: client=pmghost.mydomain.tld[192.168.1.001]
+Jan 21 07:33:20 pmghost postfix/cleanup[29364]: DEF2520A69: message-id=<redacted:msgid>
+Jan 21 07:33:20 pmghost postfix/cleanup[29364]: DEF2520A69: message-id=<redacted:msgid>
+Jan 21 07:33:20 pmghost postfix/qmgr[529]: DEF2520A69: from=<redacted:returnpath@domain.tld>, size=161138, nrcpt=1 (queue active)
+Jan 21 07:33:21 pmghost pmg-smtp-filter[28437]: 20A9560092030F3374: new mail message-id=<redacted:msgid>#012
+Jan 21 07:33:21 pmghost postfix/smtpd[29361]: 1855220A70: client=pmghost.mydomain.tld[192.168.1.001]
+Jan 21 07:33:21 pmghost postfix/smtpd[29361]: disconnect from pmghost.mydomain.tld[192.168.1.001] ehlo=1 mail=2 rcpt=2 data=2 quit=1 commands=8
+Jan 21 07:33:24 pmghost pmg-smtp-filter[28437]: 20A9560092030F3374: SA score=1/5 time=3.500 bayes=undefined autolearn=no autolearn_force=no hits=AWL(0.270),DKIM_SIGNED(0.1),DKIM_VALID(-0.1),DKIM_VALID_AU(-0.1),HTML_EMBEDS(0.001),HTML_FONT_LOW_CONTRAST(0.001),HTML_IMAGE_RATIO_02(0.001),HTML_MESSAGE(0.001),KAM_LOTSOFHASH(0.25),MPART_ALT_DIFF_COUNT(1.483),SPF_HELO_NONE(0.001),SPF_PASS(-0.001)
+Jan 21 07:33:24 pmghost postfix/smtpd[29375]: connect from localhost[127.0.0.1]
+Jan 21 07:33:24 pmghost postfix/smtpd[29375]: A673520AB5: client=localhost[127.0.0.1], orig_client=pmghost.mydomain.tld[192.168.1.001]
+Jan 21 07:33:24 pmghost postfix/cleanup[29364]: A673520AB5: message-id=<redacted:msgid>
+Jan 21 07:33:24 pmghost postfix/smtpd[29375]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+Jan 21 07:33:24 pmghost pmg-smtp-filter[28437]: 20A9560092030F3374: accept mail to <redacted:recipient@mydomain.tld> (A673520AB5) (rule: default-accept)
+Jan 21 07:33:24 pmghost postfix/qmgr[529]: A673520AB5: from=<redacted:returnpath@domain.tld>, size=162287, nrcpt=1 (queue active)
+Jan 21 07:33:24 pmghost postfix/smtp[29376]: A673520AB5: to=<redacted:recipient@mydomain.tld>, relay=192.168.1.002[192.168.1.002]:25, delay=0.07, delays=0.06/0/0/0.01, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as B6B682E547)
+Jan 21 07:33:24 pmghost postfix/qmgr[529]: A673520AB5: removed
+Jan 21 07:33:24 pmghost pmg-smtp-filter[28437]: 20A9560092030F3374: processing time: 3.748 seconds (3.5, 0.137, 0)
+Jan 21 07:33:24 pmghost postfix/lmtp[29365]: DEF2520A69: to=<redacted:recipient@mydomain.tld>, relay=127.0.0.1[127.0.0.1]:10024, delay=3.9, delays=0.05/0.04/0.01/3.8, dsn=2.5.0, status=sent (250 2.5.0 OK (20A9560092030F3374))
+Jan 21 07:33:24 pmghost postfix/qmgr[529]: DEF2520A69: removed

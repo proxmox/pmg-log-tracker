@@ -765,9 +765,16 @@ fn handle_cleanup_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8])
 
         // does not work correctly if there's a duplicate message id in the logfiles
         if let Some(q) = parser.msgid_lookup.remove(msgid) {
-            qe.borrow_mut().aq_qentry = Some(Weak::clone(&q));
+            let q_clone = Weak::clone(&q);
             if let Some(q) = q.upgrade() {
-                q.borrow_mut().aq_qentry = Some(Rc::downgrade(&qe));
+                // check to make sure it's not the same QEntry
+                // this can happen if the cleanup line is duplicated in the log
+                if Rc::ptr_eq(&q, &qe) {
+                    parser.msgid_lookup.insert(msgid.into(), q_clone);
+                } else {
+                    qe.borrow_mut().aq_qentry = Some(q_clone);
+                    q.borrow_mut().aq_qentry = Some(Rc::downgrade(&qe));
+                }
             }
         }
         else {
