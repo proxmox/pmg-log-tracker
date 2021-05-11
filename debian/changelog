@@ -1,3 +1,9 @@
+rust-pmg-log-tracker (2.2.0-1) pmg; urgency=medium
+
+  * improve parser robustness on duplicate `msgid`
+
+ -- Proxmox Support Team <support@proxmox.com>  Tue, 11 May 2021 16:01:39 +0200
+
 rust-pmg-log-tracker (2.1.9-1) pmg; urgency=medium
 
   * show outgoing TLS connection in tracking center
