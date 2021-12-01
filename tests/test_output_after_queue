@@ -104,3 +104,10 @@ L0000002D Dec 18 15:55:44 pmg postfix/qmgr[24651]: 0022C3801B5: from=<mailtestse
 L00000034 Dec 18 15:55:44 pmg postfix/lmtp[29327]: 0022C3801B5: to=<pmgtest@localhost>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.02/0.01/0.02/0.02, dsn=2.7.0, status=sent (250 2.7.0 BLOCKED (3802E45DFA503808B06))
 L00000035 Dec 18 15:55:44 pmg postfix/qmgr[24651]: 0022C3801B5: removed
 
+SMTPD: T5FDCD200L00000001
+CTIME: 5FDCD200
+CLIENT: 192.0.2.0
+TO:5FDCD200:T5FDCD200L00000001:N: from <info@test.example> to <>
+LOGS:
+L00000037 Dec 18 16:00:00 pmg postfix/postscreen[42055]: NOQUEUE: reject: RCPT from [192.0.2.0]:38834: 550 5.7.1 Service unavailable; client [192.0.2.0] blocked using testbl.example; from=<info@test.example>, to=<>, proto=ESMTP, helo=<testhost.example>
+

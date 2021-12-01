@@ -110,6 +110,7 @@ Dec 18 15:55:44 pmg pmg-smtp-filter[1565]: 3802E45DFA503808B06: processing time:
 Dec 18 15:55:44 pmg postfix/lmtp[29327]: 0022C3801B5: to=<pmgtest@localhost>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.02/0.01/0.02/0.02, dsn=2.7.0, status=sent (250 2.7.0 BLOCKED (3802E45DFA503808B06))
 Dec 18 15:55:44 pmg postfix/qmgr[24651]: 0022C3801B5: removed
 Dec 18 16:00:00 pmg something[12345]: BEFORE QUEUE LOGS2 START
+Dec 18 16:00:00 pmg postfix/postscreen[42055]: NOQUEUE: reject: RCPT from [192.0.2.0]:38834: 550 5.7.1 Service unavailable; client [192.0.2.0] blocked using testbl.example; from=<info@test.example>, to=<>, proto=ESMTP, helo=<testhost.example>
 Dec 18 16:00:50 pmg postfix/postscreen[26369]: CONNECT from [2001:DB8:1:12::75]:38768 to [2001:DB8:1:12::66]:25
 Dec 18 16:00:50 pmg postfix/postscreen[26369]: WHITELISTED [2001:DB8:1:12::75]:38768
 Dec 18 16:00:50 pmg postfix/smtpd[26419]: connect from unknown[2001:DB8:1:12::75]
