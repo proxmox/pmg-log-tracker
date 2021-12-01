@@ -762,7 +762,6 @@ fn handle_cleanup_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8])
         }
         qe.borrow_mut().cleanup = true;
 
-
         // does not work correctly if there's a duplicate message id in the logfiles
         if let Some(q) = parser.msgid_lookup.remove(msgid) {
             let q_clone = Weak::clone(&q);
@@ -776,8 +775,7 @@ fn handle_cleanup_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8])
                     q.borrow_mut().aq_qentry = Some(Rc::downgrade(&qe));
                 }
             }
-        }
-        else {
+        } else {
             parser.msgid_lookup.insert(msgid.into(), Rc::downgrade(&qe));
         }
     }
@@ -908,8 +906,9 @@ impl SEntry {
                     || (parser.options.exclude_greylist && nq.dstatus == DStatus::Greylist)
                     || (parser.options.exclude_ndr && nq.from.is_empty())
                     || (!parser.options.to.is_empty()
-                        && !nq.to.is_empty()
-                        && find_lowercase(&nq.to, parser.options.to.as_bytes()).is_none())
+                        && ((!nq.to.is_empty()
+                            && find_lowercase(&nq.to, parser.options.to.as_bytes()).is_none())
+                            || nq.to.is_empty()))
                 {
                     nq.dstatus = DStatus::Invalid;
                 }
