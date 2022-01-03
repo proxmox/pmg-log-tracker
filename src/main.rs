@@ -1,9 +1,3 @@
-#[macro_use]
-extern crate clap;
-extern crate failure;
-extern crate flate2;
-extern crate libc;
-
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::ffi::CString;
@@ -15,15 +9,15 @@ use std::io::BufReader;
 use std::io::BufWriter;
 use std::io::Write;
 
-use failure::Error;
+use anyhow::{bail, Error};
 use flate2::read;
 
 use clap::{App, Arg};
 
 fn main() -> Result<(), Error> {
-    let matches = App::new(crate_name!())
-        .version(crate_version!())
-        .about(crate_description!())
+    let matches = App::new(clap::crate_name!())
+        .version(clap::crate_version!())
+        .about(clap::crate_description!())
         .arg(
             Arg::with_name("verbose")
                 .short("v")
@@ -1996,7 +1990,7 @@ impl Parser {
                 self.options.start = mkgmtime(&res);
                 self.start_tm = res;
             } else {
-                failure::bail!(failure::err_msg("failed to parse start time"));
+                bail!("failed to parse start time");
             }
         } else {
             let mut ltime = time::now();
@@ -2016,7 +2010,7 @@ impl Parser {
                 self.options.end = mkgmtime(&res);
                 self.end_tm = res;
             } else {
-                failure::bail!(failure::err_msg("failed to parse end time"));
+                bail!("failed to parse end time");
             }
         } else {
             let ltime = time::now();
@@ -2025,7 +2019,7 @@ impl Parser {
         }
 
         if self.options.end < self.options.start {
-            failure::bail!(failure::err_msg("end time before start time"));
+            bail!("end time before start time");
         }
 
         self.options.limit = match args.value_of("limit") {
