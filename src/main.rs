@@ -631,7 +631,7 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
                 // mail is 'accepted', add a reference to the QEntry to the
                 // SEntry so we can wait for all to be finished before printing
                 qe.borrow_mut().bq_sentry = Some(Rc::clone(&se));
-                SEntry::add_ref(&se, &qe, true);
+                SEntry::add_ref(&se, qe, true);
             }
             // specify that before queue filtering is used and the mail was
             // accepted, but not necessarily by an 'accept' rule
@@ -1067,7 +1067,7 @@ impl SEntry {
                 && !fe.borrow().is_accepted
                 && (self.is_bq_accepted || self.is_bq_rejected)
             {
-                print_filter_to_entries_fn(&fe, parser, self);
+                print_filter_to_entries_fn(fe, parser, self);
             }
         }
 
@@ -1164,7 +1164,7 @@ impl SEntry {
                         // add a reference to the SEntry referenced by the
                         // QEntry so it gets deleted when both the SEntry
                         // and the QEntry is done
-                        Self::add_ref(&se, &q, true);
+                        Self::add_ref(se, &q, true);
                         continue;
                     }
                 }
@@ -1988,10 +1988,10 @@ impl Parser {
         }
 
         if let Some(start) = args.value_of("start") {
-            if let Ok(res) = time::strptime(&start, "%F %T") {
+            if let Ok(res) = time::strptime(start, "%F %T") {
                 self.options.start = mkgmtime(&res);
                 self.start_tm = res;
-            } else if let Ok(res) = time::strptime(&start, "%s") {
+            } else if let Ok(res) = time::strptime(start, "%s") {
                 let res = res.to_local();
                 self.options.start = mkgmtime(&res);
                 self.start_tm = res;
@@ -2008,10 +2008,10 @@ impl Parser {
         }
 
         if let Some(end) = args.value_of("end") {
-            if let Ok(res) = time::strptime(&end, "%F %T") {
+            if let Ok(res) = time::strptime(end, "%F %T") {
                 self.options.end = mkgmtime(&res);
                 self.end_tm = res;
-            } else if let Ok(res) = time::strptime(&end, "%s") {
+            } else if let Ok(res) = time::strptime(end, "%s") {
                 let res = res.to_local();
                 self.options.end = mkgmtime(&res);
                 self.end_tm = res;
@@ -2089,7 +2089,7 @@ impl Parser {
 
 impl Drop for Parser {
     fn drop(&mut self) {
-        let mut qentries = std::mem::replace(&mut self.qentries, HashMap::new());
+        let mut qentries = std::mem::take(&mut self.qentries);
         for q in qentries.values() {
             let smtpd = q.borrow().smtpd.clone();
             if let Some(s) = smtpd {
@@ -2099,7 +2099,7 @@ impl Drop for Parser {
             }
         }
         qentries.clear();
-        let mut sentries = std::mem::replace(&mut self.sentries, HashMap::new());
+        let mut sentries = std::mem::take(&mut self.sentries);
         for s in sentries.values() {
             s.borrow_mut().print(self);
         }
@@ -2349,7 +2349,7 @@ fn parse_time<'a>(
 
     ltime += (mday - 1) as i64;
 
-    if data.len() == 0 {
+    if data.is_empty() {
         return None;
     }
 
