@@ -1722,7 +1722,7 @@ struct Parser {
     current_record_state: RecordState,
     rel_line_nr: u64,
 
-    current_year: [i64; 32],
+    current_year: i64,
     current_month: i64,
     current_file_index: usize,
 
@@ -1743,14 +1743,7 @@ struct Parser {
 
 impl Parser {
     fn new() -> Self {
-        let mut years: [i64; 32] = [0; 32];
-
-        for (i, year) in years.iter_mut().enumerate() {
-            let mut ts = time::get_time();
-            ts.sec -= (3600 * 24 * i) as i64;
-            let ltime = time::at(ts);
-            *year = (ltime.tm_year + 1900) as i64;
-        }
+        let ltime = time::now();
 
         Self {
             sentries: HashMap::new(),
@@ -1760,8 +1753,8 @@ impl Parser {
             smtp_tls_log_by_pid: HashMap::new(),
             current_record_state: Default::default(),
             rel_line_nr: 0,
-            current_year: years,
-            current_month: 0,
+            current_year: (ltime.tm_year + 1900) as i64,
+            current_month: ltime.tm_mon as i64,
             current_file_index: 0,
             count: 0,
             buffered_stdout: BufWriter::with_capacity(4 * 1024 * 1024, std::io::stdout()),
@@ -1848,8 +1841,8 @@ impl Parser {
 
             let (time, line) = match parse_time(
                 line,
-                self.current_year[self.current_file_index],
-                &mut self.current_month,
+                self.current_year,
+                self.current_month,
             ) {
                 Some(t) => t,
                 None => continue,
@@ -1938,8 +1931,8 @@ impl Parser {
                         }
                         if let Some((time, _)) = parse_time(
                             &buffer[0..size],
-                            self.current_year[i],
-                            &mut self.current_month,
+                            self.current_year,
+                            self.current_month,
                         ) {
                             // found the earliest file in the time frame
                             if time < self.options.start {
@@ -1957,8 +1950,8 @@ impl Parser {
                         }
                         if let Some((time, _)) = parse_time(
                             &buffer[0..size],
-                            self.current_year[i],
-                            &mut self.current_month,
+                            self.current_year,
+                            self.current_month,
                         ) {
                             if time < self.options.start {
                                 break;
@@ -2285,7 +2278,7 @@ fn parse_number(data: &[u8], max_digits: usize) -> Option<(usize, &[u8])> {
 fn parse_time<'a>(
     data: &'a [u8],
     cur_year: i64,
-    cur_month: &mut i64,
+    cur_month: i64,
 ) -> Option<(libc::time_t, &'a [u8])> {
     if data.len() < 15 {
         return None;
@@ -2311,19 +2304,17 @@ fn parse_time<'a>(
     let mut ltime: libc::time_t;
     let mut year = cur_year;
 
-    if *cur_month == 11 && mon == 0 {
-        year += 1;
-    }
-    if mon > *cur_month {
-        *cur_month = mon;
+    // assume smaller month now than in log line means yearwrap
+    if cur_month < mon {
+        year -= 1;
     }
 
     ltime = (year - 1970) * 365 + CAL_MTOD[mon as usize];
 
+    // leap year considerations
     if mon <= 1 {
         year -= 1;
     }
-
     ltime += (year - 1968) / 4;
     ltime -= (year - 1900) / 100;
     ltime += (year - 1600) / 400;
