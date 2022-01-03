@@ -11,6 +11,7 @@ use std::io::Write;
 
 use anyhow::{bail, Error};
 use flate2::read;
+use libc::time_t;
 
 use clap::{App, Arg};
 
@@ -133,7 +134,7 @@ fn main() -> Result<(), Error> {
     for m in parser.options.match_list.iter() {
         match m {
             Match::Qid(b) => println!("# QID: {}", std::str::from_utf8(b)?),
-            Match::RelLineNr(t, l) => println!("# QID: T{:8X}L{:08X}", *t as u32, *l as u32),
+            Match::RelLineNr(t, l) => println!("# QID: T{:8X}L{:08X}", *t, *l as u32),
         }
     }
 
@@ -780,7 +781,7 @@ struct NoqueueEntry {
     from: Box<[u8]>,
     to: Box<[u8]>,
     dstatus: DStatus,
-    timestamp: u64,
+    timestamp: time_t,
 }
 
 #[derive(Debug)]
@@ -788,7 +789,7 @@ struct ToEntry {
     to: Box<[u8]>,
     relay: Box<[u8]>,
     dstatus: DStatus,
-    timestamp: u64,
+    timestamp: time_t,
 }
 
 impl Default for ToEntry {
@@ -855,7 +856,7 @@ struct SEntry {
     // used as a fallback in case no QEntry is referenced
     filter: Option<Weak<RefCell<FEntry>>>,
     string_match: bool,
-    timestamp: u64,
+    timestamp: time_t,
     rel_line_nr: u64,
     // before queue filtering with the mail accepted for at least one receiver
     is_bq_accepted: bool,
@@ -866,7 +867,7 @@ struct SEntry {
 }
 
 impl SEntry {
-    fn add_noqueue_entry(&mut self, from: &[u8], to: &[u8], dstatus: DStatus, timestamp: u64) {
+    fn add_noqueue_entry(&mut self, from: &[u8], to: &[u8], dstatus: DStatus, timestamp: time_t) {
         let ne = NoqueueEntry {
             to: to.into(),
             from: from.into(),
@@ -975,7 +976,7 @@ impl SEntry {
                 match m {
                     Match::Qid(_) => return,
                     Match::RelLineNr(t, l) => {
-                        if (*t as u64) == self.timestamp && *l == self.rel_line_nr {
+                        if *t == self.timestamp && *l == self.rel_line_nr {
                             found = true;
                             break;
                         }
@@ -1009,7 +1010,7 @@ impl SEntry {
         if parser.options.verbose > 0 {
             parser.write_all_ok(format!(
                 "SMTPD: T{:8X}L{:08X}\n",
-                self.timestamp as u32, self.rel_line_nr as u32
+                self.timestamp, self.rel_line_nr as u32
             ));
             parser.write_all_ok(format!("CTIME: {:8X}\n", parser.ctime).as_bytes());
 
@@ -1028,7 +1029,7 @@ impl SEntry {
             if nq.dstatus != DStatus::Invalid {
                 parser.write_all_ok(format!(
                     "TO:{:X}:T{:08X}L{:08X}:{}: from <",
-                    nq.timestamp as i32, self.timestamp as i32, self.rel_line_nr, nq.dstatus,
+                    nq.timestamp, self.timestamp, self.rel_line_nr, nq.dstatus,
                 ));
                 parser.write_all_ok(&nq.from);
                 parser.write_all_ok(b"> to <");
@@ -1043,7 +1044,7 @@ impl SEntry {
                 for to in fe.borrow().to_entries.iter().rev() {
                     parser.write_all_ok(format!(
                         "TO:{:X}:T{:08X}L{:08X}:{}: from <",
-                        to.timestamp as i32, se.timestamp as i32, se.rel_line_nr, to.dstatus,
+                        to.timestamp, se.timestamp, se.rel_line_nr, to.dstatus,
                     ));
                     parser.write_all_ok(&se.bq_from);
                     parser.write_all_ok(b"> to <");
@@ -1231,7 +1232,7 @@ struct QEntry {
 }
 
 impl QEntry {
-    fn add_to_entry(&mut self, to: &[u8], relay: &[u8], dstatus: DStatus, timestamp: u64) {
+    fn add_to_entry(&mut self, to: &[u8], relay: &[u8], dstatus: DStatus, timestamp: time_t) {
         let te = ToEntry {
             to: to.into(),
             relay: relay.into(),
@@ -1334,7 +1335,7 @@ impl QEntry {
                     }
                     Match::RelLineNr(t, l) => {
                         if let Some(s) = se {
-                            if s.timestamp == (*t as u64) && s.rel_line_nr == *l {
+                            if s.timestamp == *t && s.rel_line_nr == *l {
                                 found = true;
                                 break;
                             }
@@ -1543,7 +1544,7 @@ impl QEntry {
                     }
                 }
 
-                parser.write_all_ok(format!("TO:{:X}:", to.timestamp as i32,));
+                parser.write_all_ok(format!("TO:{:X}:", to.timestamp));
                 parser.write_all_ok(&self.qid);
                 parser.write_all_ok(format!(":{}: from <", final_to.dstatus));
                 parser.write_all_ok(&self.from);
@@ -1576,7 +1577,7 @@ impl QEntry {
                     });
 
                     for to in fe.borrow().to_entries.iter().rev() {
-                        parser.write_all_ok(format!("TO:{:X}:", to.timestamp as i32,));
+                        parser.write_all_ok(format!("TO:{:X}:", to.timestamp));
                         parser.write_all_ok(&self.qid);
                         parser.write_all_ok(format!(":{}: from <", to.dstatus));
                         parser.write_all_ok(&self.from);
@@ -1669,7 +1670,7 @@ struct FEntry {
 }
 
 impl FEntry {
-    fn add_accept(&mut self, to: &[u8], qid: &[u8], timestamp: u64) {
+    fn add_accept(&mut self, to: &[u8], qid: &[u8], timestamp: time_t) {
         let te = ToEntry {
             to: to.into(),
             relay: qid.into(),
@@ -1680,7 +1681,7 @@ impl FEntry {
         self.is_accepted = true;
     }
 
-    fn add_quarantine(&mut self, to: &[u8], qid: &[u8], timestamp: u64) {
+    fn add_quarantine(&mut self, to: &[u8], qid: &[u8], timestamp: time_t) {
         let te = ToEntry {
             to: to.into(),
             relay: qid.into(),
@@ -1690,7 +1691,7 @@ impl FEntry {
         self.to_entries.push(te);
     }
 
-    fn add_block(&mut self, to: &[u8], timestamp: u64) {
+    fn add_block(&mut self, to: &[u8], timestamp: time_t) {
         let te = ToEntry {
             to: to.into(),
             relay: (&b"none"[..]).into(),
@@ -1735,7 +1736,7 @@ struct Parser {
     start_tm: time::Tm,
     end_tm: time::Tm,
 
-    ctime: libc::time_t,
+    ctime: time_t,
     string_match: bool,
 
     lines: u64,
@@ -1877,7 +1878,7 @@ impl Parser {
             self.current_record_state.host = host.into();
             self.current_record_state.service = service.into();
             self.current_record_state.pid = pid;
-            self.current_record_state.timestamp = time as u64;
+            self.current_record_state.timestamp = time;
 
             self.string_match = false;
             if !self.options.string_match.is_empty()
@@ -2022,7 +2023,7 @@ impl Parser {
 
         if let Some(qids) = args.values_of("qids") {
             for q in qids {
-                let ltime: libc::time_t = 0;
+                let ltime: time_t = 0;
                 let rel_line_nr: libc::c_ulong = 0;
                 let input = CString::new(q)?;
                 let bytes = concat!("T%08lXL%08lX", "\0");
@@ -2103,8 +2104,8 @@ struct Options {
     msgid: String,
     from: String,
     to: String,
-    start: libc::time_t,
-    end: libc::time_t,
+    start: time_t,
+    end: time_t,
     limit: u64,
     verbose: u32,
     exclude_greylist: bool,
@@ -2114,7 +2115,7 @@ struct Options {
 #[derive(Debug)]
 enum Match {
     Qid(Box<[u8]>),
-    RelLineNr(libc::time_t, u64),
+    RelLineNr(time_t, u64),
 }
 
 #[derive(Debug, Default)]
@@ -2122,7 +2123,7 @@ struct RecordState {
     host: Box<[u8]>,
     service: Box<[u8]>,
     pid: u64,
-    timestamp: u64,
+    timestamp: time_t,
 }
 
 fn get_or_create_qentry(
@@ -2143,7 +2144,7 @@ fn get_or_create_sentry(
     sentries: &mut HashMap<u64, Rc<RefCell<SEntry>>>,
     pid: u64,
     rel_line_nr: u64,
-    timestamp: u64,
+    timestamp: time_t,
 ) -> Rc<RefCell<SEntry>> {
     if let Some(se) = sentries.get(&pid) {
         Rc::clone(se)
@@ -2170,10 +2171,10 @@ fn get_or_create_fentry(
     }
 }
 
-fn mkgmtime(tm: &time::Tm) -> libc::time_t {
-    let mut res: libc::time_t;
+fn mkgmtime(tm: &time::Tm) -> time_t {
+    let mut res: time_t;
 
-    let mut year = (tm.tm_year + 1900) as i64;
+    let mut year = tm.tm_year as i64 + 1900;
     let mon = tm.tm_mon;
 
     res = (year - 1970) * 365 + CAL_MTOD[mon as usize];
@@ -2279,7 +2280,7 @@ fn parse_time<'a>(
     data: &'a [u8],
     cur_year: i64,
     cur_month: i64,
-) -> Option<(libc::time_t, &'a [u8])> {
+) -> Option<(time_t, &'a [u8])> {
     if data.len() < 15 {
         return None;
     }
@@ -2301,7 +2302,7 @@ fn parse_time<'a>(
     };
     let data = &data[3..];
 
-    let mut ltime: libc::time_t;
+    let mut ltime: time_t;
     let mut year = cur_year;
 
     // assume smaller month now than in log line means yearwrap
