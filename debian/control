@@ -2,12 +2,12 @@ Source: rust-pmg-log-tracker
 Section: admin
 Priority: optional
 Build-Depends: debhelper (>= 12),
- dh-cargo (>= 24),
+ dh-cargo (>= 25),
  cargo:native,
  rustc:native,
  libstd-rust-dev,
+ librust-anyhow-1+default-dev,
  librust-clap-2+default-dev (>= 2.32-~~),
- librust-failure-0.1+default-dev (>= 0.1.5-~~),
  librust-flate2-1+default-dev,
  librust-libc-0.2+default-dev (>= 0.2.48-~~),
  librust-time-0.1+default-dev (>= 0.1.42-~~),
