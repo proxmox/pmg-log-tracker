@@ -15,6 +15,9 @@ use libc::time_t;
 
 use clap::{App, Arg};
 
+mod time;
+use time::{Tm, CAL_MTOD};
+
 fn main() -> Result<(), Error> {
     let matches = App::new(clap::crate_name!())
         .version(clap::crate_version!())
@@ -114,7 +117,7 @@ fn main() -> Result<(), Error> {
         )
         .get_matches();
 
-    let mut parser = Parser::new();
+    let mut parser = Parser::new()?;
     parser.handle_args(matches)?;
 
     println!("# LogReader: {}", std::process::id());
@@ -144,12 +147,12 @@ fn main() -> Result<(), Error> {
 
     println!(
         "# Start: {} ({})",
-        time::strftime("%F %T", &parser.start_tm)?,
+        time::strftime(c_str!("%F %T"), &parser.start_tm)?,
         parser.options.start
     );
     println!(
         "# End: {} ({})",
-        time::strftime("%F %T", &parser.end_tm)?,
+        time::strftime(c_str!("%F %T"), &parser.end_tm)?,
         parser.options.end
     );
 
@@ -1743,10 +1746,10 @@ struct Parser {
 }
 
 impl Parser {
-    fn new() -> Self {
-        let ltime = time::now();
+    fn new() -> Result<Self, Error> {
+        let ltime = Tm::now_local()?;
 
-        Self {
+        Ok(Self {
             sentries: HashMap::new(),
             fentries: HashMap::new(),
             qentries: HashMap::new(),
@@ -1760,12 +1763,12 @@ impl Parser {
             count: 0,
             buffered_stdout: BufWriter::with_capacity(4 * 1024 * 1024, std::io::stdout()),
             options: Options::default(),
-            start_tm: time::empty_tm(),
-            end_tm: time::empty_tm(),
+            start_tm: Tm::zero(),
+            end_tm: Tm::zero(),
             ctime: 0,
             string_match: false,
             lines: 0,
-        }
+        })
     }
 
     fn free_sentry(&mut self, sentry_pid: u64) {
@@ -1974,40 +1977,37 @@ impl Parser {
         }
 
         if let Some(start) = args.value_of("start") {
-            if let Ok(res) = time::strptime(start, "%F %T") {
-                self.options.start = mkgmtime(&res);
+            if let Ok(res) = time::strptime(start, c_str!("%F %T")) {
+                self.options.start = res.as_utc_to_epoch();
                 self.start_tm = res;
-            } else if let Ok(res) = time::strptime(start, "%s") {
-                let res = res.to_local();
-                self.options.start = mkgmtime(&res);
+            } else if let Ok(res) = time::strptime(start, c_str!("%s")) {
+                self.options.start = res.as_utc_to_epoch();
                 self.start_tm = res;
             } else {
                 bail!("failed to parse start time");
             }
         } else {
-            let mut ltime = time::now();
+            let mut ltime = Tm::now_local()?;
             ltime.tm_sec = 0;
             ltime.tm_min = 0;
             ltime.tm_hour = 0;
-            self.options.start = mkgmtime(&ltime);
+            self.options.start = ltime.as_utc_to_epoch();
             self.start_tm = ltime;
         }
 
         if let Some(end) = args.value_of("end") {
-            if let Ok(res) = time::strptime(end, "%F %T") {
-                self.options.end = mkgmtime(&res);
+            if let Ok(res) = time::strptime(end, c_str!("%F %T")) {
+                self.options.end = res.as_utc_to_epoch();
                 self.end_tm = res;
-            } else if let Ok(res) = time::strptime(end, "%s") {
-                let res = res.to_local();
-                self.options.end = mkgmtime(&res);
+            } else if let Ok(res) = time::strptime(end, c_str!("%s")) {
+                self.options.end = res.as_utc_to_epoch();
                 self.end_tm = res;
             } else {
                 bail!("failed to parse end time");
             }
         } else {
-            let ltime = time::now();
-            self.options.end = mkgmtime(&ltime);
-            self.end_tm = ltime;
+            self.options.end = unsafe { libc::time(std::ptr::null_mut()) };
+            self.end_tm = Tm::at_local(self.options.end)?;
         }
 
         if self.options.end < self.options.start {
@@ -2167,30 +2167,6 @@ fn get_or_create_fentry(
         fentries.insert(qid.into(), fe.clone());
         fe
     }
-}
-
-fn mkgmtime(tm: &time::Tm) -> time_t {
-    let mut res: time_t;
-
-    let mut year = tm.tm_year as i64 + 1900;
-    let mon = tm.tm_mon;
-
-    res = (year - 1970) * 365 + CAL_MTOD[mon as usize];
-
-    if mon <= 1 {
-        year -= 1;
-    }
-
-    res += (year - 1968) / 4;
-    res -= (year - 1900) / 100;
-    res += (year - 1600) / 400;
-
-    res += (tm.tm_mday - 1) as i64;
-    res = res * 24 + tm.tm_hour as i64;
-    res = res * 60 + tm.tm_min as i64;
-    res = res * 60 + tm.tm_sec as i64;
-
-    res
 }
 
 const LOGFILES: [&str; 32] = [
@@ -2394,8 +2370,6 @@ fn parse_time<'a>(
 
     Some((ltime, data))
 }
-
-const CAL_MTOD: [i64; 12] = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
 
 type ByteSlice<'a> = &'a [u8];
 /// Parse Host, Service and PID at the beginning of data. Returns a tuple of (host, service, pid, remaining_text).
