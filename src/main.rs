@@ -1802,7 +1802,6 @@ impl Parser {
         } else {
             let filecount = self.count_files_in_time_range();
             for i in (0..filecount).rev() {
-                self.current_month = 0;
                 if let Ok(file) = File::open(LOGFILES[i]) {
                     self.current_file_index = i;
                     if i > 1 {
@@ -1916,7 +1915,6 @@ impl Parser {
         let mut buffer = Vec::new();
 
         for (i, item) in LOGFILES.iter().enumerate() {
-            self.current_month = 0;
 
             count = i;
             if let Ok(file) = File::open(item) {
