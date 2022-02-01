@@ -5,8 +5,8 @@ PACKAGE=pmg-log-tracker
 
 GITVERSION:=$(shell git rev-parse HEAD)
 
-DEB=${PACKAGE}_${DEB_VERSION_UPSTREAM_REVISION}_${DEB_BUILD_ARCH}.deb
-DSC=rust-${PACKAGE}_${DEB_VERSION_UPSTREAM_REVISION}.dsc
+DEB=$(PACKAGE)_$(DEB_VERSION_UPSTREAM_REVISION)_$(DEB_BUILD_ARCH).deb
+DSC=rust-$(PACKAGE)_$(DEB_VERSION_UPSTREAM_REVISION).dsc
 
 ifeq ($(BUILD_MODE), release)
 CARGO_BUILD_ARGS += --release
@@ -49,17 +49,17 @@ $(DSC): build
 	lintian $(DSC)
 
 .PHONY: dinstall
-dinstall: ${DEB}
-	dpkg -i ${DEB}
+dinstall: $(DEB)
+	dpkg -i $(DEB)
 
 .PHONY: upload
-upload: ${DEB} ${DBG_DEB}
-	tar cf - ${DEB} ${DBG_DEB}| ssh -X repoman@repo.proxmox.com -- upload --product pmg --dist bullseye --arch ${DEB_BUILD_ARCH}
+upload: $(DEB) $(DBG_DEB)
+	tar cf - $(DEB) $(DBG_DEB)| ssh -X repoman@repo.proxmox.com -- upload --product pmg --dist bullseye --arch $(DEB_BUILD_ARCH)
 
 .PHONY: distclean
 distclean: clean
 
 .PHONY: clean
 clean:
-	rm -rf *.deb ${PACKAGE}-* *.buildinfo *.changes *.dsc rust-${PACKAGE}_*.tar.?z build/
+	rm -rf *.deb $(PACKAGE)-* *.buildinfo *.changes *.dsc rust-$(PACKAGE)_*.tar.?z build/
 	find . -name '*~' -exec rm {} ';'
