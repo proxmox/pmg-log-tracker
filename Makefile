@@ -6,6 +6,7 @@ PACKAGE=pmg-log-tracker
 GITVERSION:=$(shell git rev-parse HEAD)
 
 DEB=$(PACKAGE)_$(DEB_VERSION_UPSTREAM_REVISION)_$(DEB_BUILD_ARCH).deb
+DBG_DEB=$(PACKAGE)-dbgsym_$(DEB_VERSION_UPSTREAM_REVISION)_$(DEB_BUILD_ARCH).deb
 DSC=rust-$(PACKAGE)_$(DEB_VERSION_UPSTREAM_REVISION).dsc
 
 ifeq ($(BUILD_MODE), release)
@@ -38,7 +39,7 @@ build:
 
 .PHONY: deb
 deb: $(DEB)
-$(DEB): build
+$(DEB) $(DBG_DEB): build
 	cd build; dpkg-buildpackage -b -us -uc --no-pre-clean --build-profiles=nodoc
 	lintian $(DEB)
 
