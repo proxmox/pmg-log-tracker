@@ -1,0 +1,236 @@
+Mar 28 01:50:00 proxmox-pmg informational: DST begins
+Mar 28 01:51:30 proxmox-pmg pmg-smtp-filter[8174]: starting database maintainance
+Mar 28 01:51:30 proxmox-pmg pmg-smtp-filter[8174]: end database maintainance (5 ms)
+Mar 28 01:51:47 proxmox-pmg pmgpolicy[476]: starting policy database maintainance (greylist, rbl)
+Mar 28 01:51:47 proxmox-pmg pmgpolicy[476]: end policy database maintainance (12 ms, 1 ms)
+Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23385]: connect from bbs.domain.example[192.0.2.245]
+Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23385]: 3AA60B752: client=bbs.domain.example[192.0.2.245]
+Mar 28 01:53:05 proxmox-pmg postfix/cleanup[23388]: 3AA60B752: message-id=<57213b21fafd7b52a6e07ef664c7e8a4@bbs.domain.example>
+Mar 28 01:53:05 proxmox-pmg postfix/qmgr[570]: 3AA60B752: from=<office@domain.example>, size=5935, nrcpt=1 (queue active)
+Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23385]: disconnect from bbs.domain.example[192.0.2.245] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+Mar 28 01:53:05 proxmox-pmg pmg-smtp-filter[22815]: 2021/03/28-01:53:05 CONNECT TCP Peer: "[127.0.0.1]:59132" Local: "[127.0.0.1]:10023"
+Mar 28 01:53:05 proxmox-pmg pmg-smtp-filter[22815]: B753605FD3713E420: new mail message-id=<57213b21fafd7b52a6e07ef664c7e8a4@bbs.domain.example>#012
+Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23393]: connect from localhost[127.0.0.1]
+Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23393]: 48070B766: client=localhost[127.0.0.1], orig_client=bbs.domain.example[192.0.2.245]
+Mar 28 01:53:05 proxmox-pmg postfix/cleanup[23388]: 48070B766: message-id=<57213b21fafd7b52a6e07ef664c7e8a4@bbs.domain.example>
+Mar 28 01:53:05 proxmox-pmg postfix/qmgr[570]: 48070B766: from=<office@domain.example>, size=5816, nrcpt=1 (queue active)
+Mar 28 01:53:05 proxmox-pmg pmg-smtp-filter[22815]: B753605FD3713E420: accept mail to <tb@msp1.example> (48070B766) (rule: default-accept)
+Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23393]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+Mar 28 01:53:05 proxmox-pmg pmg-smtp-filter[22815]: B753605FD3713E420: processing time: 0.042 seconds (0, 0.026, 0)
+Mar 28 01:53:05 proxmox-pmg postfix/lmtp[23389]: 3AA60B752: to=<tb@msp1.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.06, delays=0.01/0.01/0/0.04, dsn=2.5.0, status=sent (250 2.5.0 OK (B753605FD3713E420))
+Mar 28 01:53:05 proxmox-pmg postfix/qmgr[570]: 3AA60B752: removed
+Mar 28 01:53:06 proxmox-pmg postfix/smtp[23394]: Trusted TLS connection established to mta6.msp1.example[192.0.2.72]:25: TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits)
+Mar 28 01:53:08 proxmox-pmg postfix/smtp[23394]: 48070B766: to=<tb@msp1.example>, relay=mta6.msp1.example[192.0.2.72]:25, delay=2.8, delays=0/0.02/1.2/1.6, dsn=2.0.0, status=sent (250 ok dirdel)
+Mar 28 01:53:08 proxmox-pmg postfix/qmgr[570]: 48070B766: removed
+Mar 28 01:57:35 proxmox-pmg pmg-smtp-filter[8174]: starting database maintainance
+Mar 28 01:57:35 proxmox-pmg pmg-smtp-filter[8174]: end database maintainance (5 ms)
+Mar 28 01:58:17 proxmox-pmg pmgpolicy[476]: starting policy database maintainance (greylist, rbl)
+Mar 28 01:58:17 proxmox-pmg pmgpolicy[476]: end policy database maintainance (12 ms, 1 ms)
+Mar 28 01:59:25 proxmox-pmg postfix/postscreen[23433]: CONNECT from [192.0.2.37]:39508 to [192.0.2.68]:25
+Mar 28 01:59:26 proxmox-pmg postfix/dnsblog[23434]: addr 192.0.2.37 listed by domain zen.spamhaus.org as 127.0.0.4
+Mar 28 01:59:32 proxmox-pmg postfix/postscreen[23433]: DNSBL rank 1 for [192.0.2.37]:39508
+Mar 28 01:59:32 proxmox-pmg postfix/tlsproxy[23435]: CONNECT from [192.0.2.37]:39508
+Mar 28 01:59:32 proxmox-pmg postfix/tlsproxy[23435]: Anonymous TLS connection established from [192.0.2.37]:39508: TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits)
+Mar 28 01:59:32 proxmox-pmg postfix/postscreen[23433]: HANGUP after 0.53 from [192.0.2.37]:39508 in tests after SMTP handshake
+Mar 28 01:59:32 proxmox-pmg postfix/postscreen[23433]: DISCONNECT [192.0.2.37]:39508
+Mar 28 01:59:32 proxmox-pmg postfix/tlsproxy[23435]: DISCONNECT [192.0.2.37]:39508
+Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23509]: connect from backoffice.domain2.example[192.0.2.249]
+Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23509]: B76CCB76D: client=backoffice.domain2.example[192.0.2.249]
+Mar 28 03:07:48 proxmox-pmg postfix/cleanup[23512]: B76CCB76D: message-id=<7nwfURRJWcDhR89oZjv9eCy7YKOpCFfXDGTDMakN0k@backoffice.domain2.example>
+Mar 28 03:07:48 proxmox-pmg postfix/qmgr[570]: B76CCB76D: from=<office@domain2.example>, size=136634, nrcpt=2 (queue active)
+Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23509]: disconnect from backoffice.domain2.example[192.0.2.249] ehlo=1 mail=1 rcpt=2 data=1 quit=1 commands=6
+Mar 28 03:07:48 proxmox-pmg pmg-smtp-filter[22851]: 2021/03/28-03:07:48 CONNECT TCP Peer: "[127.0.0.1]:59680" Local: "[127.0.0.1]:10023"
+Mar 28 03:07:48 proxmox-pmg pmg-smtp-filter[22851]: B76E605FD6E4BBA6B: new mail message-id=<7nwfURRJWcDhR89oZjv9eCy7YKOpCFfXDGTDMakN0k@backoffice.domain2.example>#012
+Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23517]: connect from localhost[127.0.0.1]
+Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23517]: CF907B795: client=localhost[127.0.0.1], orig_client=backoffice.domain2.example[192.0.2.249]
+Mar 28 03:07:48 proxmox-pmg postfix/cleanup[23512]: CF907B795: message-id=<7nwfURRJWcDhR89oZjv9eCy7YKOpCFfXDGTDMakN0k@backoffice.domain2.example>
+Mar 28 03:07:48 proxmox-pmg postfix/qmgr[570]: CF907B795: from=<office@domain2.example>, size=136511, nrcpt=2 (queue active)
+Mar 28 03:07:48 proxmox-pmg pmg-smtp-filter[22851]: B76E605FD6E4BBA6B: accept mail to <backoffice@domain2.example> (CF907B795) (rule: default-accept)
+Mar 28 03:07:48 proxmox-pmg pmg-smtp-filter[22851]: B76E605FD6E4BBA6B: accept mail to <ext1@external1.example> (CF907B795) (rule: default-accept)
+Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23517]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=2 data=1 commands=6
+Mar 28 03:07:48 proxmox-pmg pmg-smtp-filter[22851]: B76E605FD6E4BBA6B: processing time: 0.087 seconds (0, 0.061, 0)
+Mar 28 03:07:48 proxmox-pmg postfix/lmtp[23513]: B76CCB76D: to=<backoffice@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0.01/0/0.09, dsn=2.5.0, status=sent (250 2.5.0 OK (B76E605FD6E4BBA6B))
+Mar 28 03:07:48 proxmox-pmg postfix/lmtp[23513]: B76CCB76D: to=<ext1@external1.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0.01/0/0.09, dsn=2.5.0, status=sent (250 2.5.0 OK (B76E605FD6E4BBA6B))
+Mar 28 03:07:48 proxmox-pmg postfix/qmgr[570]: B76CCB76D: removed
+Mar 28 03:07:49 proxmox-pmg postfix/smtp[23518]: Trusted TLS connection established to smtp.domain2.example[192.0.2.180]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+Mar 28 03:07:50 proxmox-pmg postfix/smtp[23518]: CF907B795: to=<backoffice@domain2.example>, relay=smtp.domain2.example[192.0.2.180]:25, delay=1.5, delays=0.01/0.02/0.21/1.2, dsn=2.5.0, status=sent (250 2.5.0 OK (406CC605FD6E52AE8B))
+Mar 28 03:07:55 proxmox-pmg postfix/smtp[23519]: Trusted TLS connection established to smtp.external1.example[192.0.2.51]:25: TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)
+Mar 28 03:07:55 proxmox-pmg postfix/smtp[23519]: CF907B795: to=<ext1@external1.example>, relay=smtp.external1.example[192.0.2.51]:25, delay=6.6, delays=0.01/0.03/6.3/0.33, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 61FE04093ED0)
+Mar 28 03:07:55 proxmox-pmg postfix/qmgr[570]: CF907B795: removed
+Mar 28 03:08:30 proxmox-pmg pmgpolicy[476]: starting policy database maintainance (greylist, rbl)
+Mar 28 03:08:30 proxmox-pmg pmgpolicy[476]: end policy database maintainance (12 ms, 1 ms)
+Mar 28 03:09:48 proxmox-pmg pmg-smtp-filter[8174]: starting database maintainance
+Mar 28 03:09:48 proxmox-pmg pmg-smtp-filter[8174]: end database maintainance (10 ms)
+Mar 28 03:10:40 proxmox-pmg pmgpolicy[476]: starting policy database maintainance (greylist, rbl)
+Mar 28 03:50:00 proxmox-pmg informational: DST ends
+Oct 31 02:00:29 proxmox-pmg pmgpolicy[453]: Received a SIG HUP
+Oct 31 02:00:29 proxmox-pmg pmgpolicy[453]: 2021/10/31-02:00:29 Server closing!
+Oct 31 02:00:29 proxmox-pmg pmgpolicy[453]: 2021/10/31-02:00:29 Re-exec server during HUP
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: WARNING: Pid_file created by this same process. Doing nothing.
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: WARNING: Pid_file created by this same process. Doing nothing.
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: 2021/10/31-02:00:30 main (type Net::Server::PreForkSimple) starting! pid(453)
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: Binding open file descriptors
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: Binding to TCP port 10022 on host 127.0.0.1 with IPv4
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: Reassociating file descriptor 8 with TCP on [127.0.0.1]:10022, using IPv4
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: Group Not Defined.  Defaulting to EGID '0'
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: User Not Defined.  Defaulting to EUID '0'
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: Setting up serialization via flock
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: Policy daemon (re)started
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: Beginning prefork (5 processes)
+Oct 31 02:00:30 proxmox-pmg pmgpolicy[453]: Starting "5" children
+Oct 31 02:01:19 proxmox-pmg pmg-smtp-filter[25146]: starting database maintenance
+Oct 31 02:01:19 proxmox-pmg pmg-smtp-filter[25146]: end database maintenance (5 ms)
+Oct 31 02:02:40 proxmox-pmg pmgpolicy[453]: starting policy database maintenance (greylist, rbl)
+Oct 31 02:02:40 proxmox-pmg pmgpolicy[453]: end policy database maintenance (13 ms, 1 ms)
+Oct 31 02:03:19 proxmox-pmg pmg-smtp-filter[25146]: starting database maintenance
+Oct 31 02:03:19 proxmox-pmg pmg-smtp-filter[25146]: end database maintenance (5 ms)
+Oct 31 02:04:50 proxmox-pmg pmgpolicy[453]: starting policy database maintenance (greylist, rbl)
+Oct 31 02:04:50 proxmox-pmg pmgpolicy[453]: end policy database maintenance (12 ms, 1 ms)
+Oct 31 02:15:13 proxmox-pmg postfix/postscreen[6185]: CONNECT from [192.0.2.213]:12641 to [192.0.2.68]:25
+Oct 31 02:15:13 proxmox-pmg postfix/dnsblog[6186]: addr 192.0.2.213 listed by domain zen.spamhaus.org as 127.0.0.3
+Oct 31 02:15:13 proxmox-pmg postfix/postscreen[6185]: DNSBL rank 1 for [192.0.2.213]:12641
+Oct 31 02:15:14 proxmox-pmg postfix/postscreen[6185]: NOQUEUE: reject: RCPT from [192.0.2.213]:12641: 550 5.7.1 Service unavailable; client [192.0.2.213] blocked using zen.spamhaus.org; from=<contact@spammer1.example>, to=<list1@listserv.domain.example>, proto=ESMTP, helo=<spammer1.example>
+Oct 31 02:15:14 proxmox-pmg postfix/postscreen[6185]: DISCONNECT [192.0.2.213]:12641
+Oct 31 02:15:20 proxmox-pmg pmg-smtp-filter[25146]: starting database maintenance
+Oct 31 02:26:24 proxmox-pmg postfix/postscreen[6262]: CONNECT from [192.0.2.214]:13426 to [192.0.2.68]:25
+Oct 31 02:26:30 proxmox-pmg postfix/postscreen[6262]: PASS NEW [192.0.2.214]:13426
+Oct 31 02:26:30 proxmox-pmg postfix/smtpd[6264]: connect from unknown[192.0.2.214]
+Oct 31 02:26:30 proxmox-pmg pmgpolicy[6064]: reloading configuration Proxmox_ruledb
+Oct 31 02:26:30 proxmox-pmg pmgpolicy[6064]: defer greylisted mail
+Oct 31 02:26:30 proxmox-pmg postfix/smtpd[6264]: NOQUEUE: reject: RCPT from unknown[192.0.2.214]: 450 4.7.1 <list1@listserv.domain.example>: Recipient address rejected: Service is unavailable (try later); from=<product1@spammer2.example> to=<list1@listserv.domain.example> proto=ESMTP helo=<spammer2.example>
+Oct 31 02:26:31 proxmox-pmg postfix/smtpd[6264]: disconnect from unknown[192.0.2.214] ehlo=1 mail=1 rcpt=0/1 data=0/1 quit=1 commands=3/5
+Oct 31 02:27:21 proxmox-pmg pmg-smtp-filter[25146]: starting database maintenance
+Oct 31 02:27:21 proxmox-pmg pmg-smtp-filter[25146]: end database maintenance (5 ms)
+Oct 31 02:28:22 proxmox-pmg pmgpolicy[453]: starting policy database maintenance (greylist, rbl)
+Oct 31 02:28:22 proxmox-pmg pmgpolicy[453]: end policy database maintenance (13 ms, 1 ms)
+Oct 31 02:29:21 proxmox-pmg pmg-smtp-filter[25146]: starting database maintenance
+Oct 31 02:29:21 proxmox-pmg pmg-smtp-filter[25146]: end database maintenance (5 ms)
+Oct 31 02:53:17 proxmox-pmg pmg-smtp-filter[25146]: starting database maintenance
+Oct 31 02:53:17 proxmox-pmg pmg-smtp-filter[25146]: end database maintenance (5 ms)
+Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6006]: connect from bbs.domain.example[192.0.2.245]
+Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6006]: 7EC601A15F: client=bbs.domain.example[192.0.2.245]
+Oct 31 02:53:38 proxmox-pmg postfix/cleanup[6007]: 7EC601A15F: message-id=<ac1e470c93dbecffeda550e0c96da154@bbs.domain.example>
+Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6006]: disconnect from bbs.domain.example[192.0.2.245] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+Oct 31 02:53:38 proxmox-pmg postfix/qmgr[567]: 7EC601A15F: from=<office@domain.example>, size=11013, nrcpt=1 (queue active)
+Oct 31 02:53:38 proxmox-pmg pmg-smtp-filter[5363]: 2021/10/31-01:53:38 CONNECT TCP Peer: "[127.0.0.1]:34704" Local: "[127.0.0.1]:10023"
+Oct 31 02:53:38 proxmox-pmg pmg-smtp-filter[5363]: 1A160617DDB02828DA: new mail message-id=<ac1e470c93dbecffeda550e0c96da154@bbs.domain.example>#012
+Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6012]: connect from localhost[127.0.0.1]
+Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6012]: 8D0041A173: client=localhost[127.0.0.1], orig_client=bbs.domain.example[192.0.2.245]
+Oct 31 02:53:38 proxmox-pmg postfix/cleanup[6007]: 8D0041A173: message-id=<ac1e470c93dbecffeda550e0c96da154@bbs.domain.example>
+Oct 31 02:53:38 proxmox-pmg pmg-smtp-filter[5363]: 1A160617DDB02828DA: accept mail to <ks@msp2.example> (8D0041A173) (rule: default-accept)
+Oct 31 02:53:38 proxmox-pmg postfix/qmgr[567]: 8D0041A173: from=<office@domain.example>, size=10893, nrcpt=1 (queue active)
+Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6012]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+Oct 31 02:53:38 proxmox-pmg pmg-smtp-filter[5363]: 1A160617DDB02828DA: processing time: 0.045 seconds (0, 0.027, 0)
+Oct 31 02:53:38 proxmox-pmg postfix/lmtp[6008]: 7EC601A15F: to=<ks@msp2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.01/0.01/0/0.05, dsn=2.5.0, status=sent (250 2.5.0 OK (1A160617DDB02828DA))
+Oct 31 02:53:38 proxmox-pmg postfix/qmgr[567]: 7EC601A15F: removed
+Oct 31 02:53:38 proxmox-pmg postfix/smtp[6013]: Trusted TLS connection established to mx-in.msp2.example[2001:db8:1111:1111::1b]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256
+Oct 31 02:53:39 proxmox-pmg postfix/smtp[6013]: 8D0041A173: to=<ks@msp2.example>, relay=mx-in.msp2.example[2001:db8:1111:1111::1b]:25, delay=0.76, delays=0/0.01/0.11/0.63, dsn=2.0.0, status=sent (250 2.0.0 OK  1635638019 l24si20980973wmj.233 - exim)
+Oct 31 02:53:39 proxmox-pmg postfix/qmgr[567]: 8D0041A173: removed
+Oct 31 02:54:13 proxmox-pmg pmgpolicy[453]: starting policy database maintenance (greylist, rbl)
+Oct 31 02:54:13 proxmox-pmg pmgpolicy[453]: end policy database maintenance (13 ms, 1 ms)
+Oct 31 02:55:18 proxmox-pmg pmg-smtp-filter[25146]: starting database maintenance
+Oct 31 02:55:18 proxmox-pmg pmg-smtp-filter[25146]: end database maintenance (10 ms)
+Oct 31 02:56:14 proxmox-pmg pmgpolicy[453]: starting policy database maintenance (greylist, rbl)
+Oct 31 02:56:14 proxmox-pmg pmgpolicy[453]: end policy database maintenance (13 ms, 1 ms)
+Oct 31 02:56:34 proxmox-pmg postfix/anvil[6002]: statistics: max connection rate 1/60s for (smtpd:192.0.2.213) at Oct 31 01:53:13
+Oct 31 02:56:34 proxmox-pmg postfix/anvil[6002]: statistics: max connection count 1 for (smtpd:192.0.2.213) at Oct 31 01:53:13
+Oct 31 02:56:34 proxmox-pmg postfix/anvil[6002]: statistics: max cache size 1 at Oct 31 01:53:13
+Oct 31 02:57:18 proxmox-pmg pmg-smtp-filter[25146]: starting database maintenance
+Oct 31 02:57:18 proxmox-pmg pmg-smtp-filter[25146]: end database maintenance (5 ms)
+Oct 31 02:58:24 proxmox-pmg pmgpolicy[453]: starting policy database maintenance (greylist, rbl)
+Oct 31 02:58:24 proxmox-pmg pmgpolicy[453]: end policy database maintenance (13 ms, 1 ms)
+
+Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6520]: connect from www.domain.example[192.0.2.69]
+Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6520]: 44A0B1A1BB: client=www.domain.example[192.0.2.69]
+Oct 31 02:00:12 proxmox-pmg postfix/cleanup[6522]: 44A0B1A1BB: message-id=<NTI1OTkyMAAC20549Y5BAMTYzNTY0MjAxMjcyMDg4@www.domain.example>
+Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6520]: disconnect from www.domain.example[192.0.2.69] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+Oct 31 02:00:12 proxmox-pmg postfix/qmgr[567]: 44A0B1A1BB: from=<news@domain.example>, size=28128, nrcpt=1 (queue active)
+Oct 31 02:00:12 proxmox-pmg pmg-smtp-filter[5614]: 2021/10/31-02:00:12 CONNECT TCP Peer: "[127.0.0.1]:39832" Local: "[127.0.0.1]:10023"
+Oct 31 02:00:12 proxmox-pmg pmg-smtp-filter[5614]: 1A1BC617DEA9C48923: new mail message-id=<NTI1OTkyMAAC20549Y5BAMTYzNTY0MjAxMjcyMDg4@www.domain.example>#012
+Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6527]: connect from localhost[127.0.0.1]
+Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6527]: 53EF81A1CD: client=localhost[127.0.0.1], orig_client=www.domain.example[192.0.2.69]
+Oct 31 02:00:12 proxmox-pmg postfix/cleanup[6522]: 53EF81A1CD: message-id=<NTI1OTkyMAAC20549Y5BAMTYzNTY0MjAxMjcyMDg4@www.domain.example>
+Oct 31 02:00:12 proxmox-pmg pmg-smtp-filter[5614]: 1A1BC617DEA9C48923: accept mail to <mbox1@domain.example> (53EF81A1CD) (rule: default-accept)
+Oct 31 02:00:12 proxmox-pmg postfix/qmgr[567]: 53EF81A1CD: from=<news@domain.example>, size=28014, nrcpt=1 (queue active)
+Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6527]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+Oct 31 02:00:12 proxmox-pmg pmg-smtp-filter[5614]: 1A1BC617DEA9C48923: processing time: 0.049 seconds (0, 0.031, 0)
+Oct 31 02:00:12 proxmox-pmg postfix/lmtp[6523]: 44A0B1A1BB: to=<mbox1@domain.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.01/0.01/0/0.05, dsn=2.5.0, status=sent (250 2.5.0 OK (1A1BC617DEA9C48923))
+Oct 31 02:00:12 proxmox-pmg postfix/qmgr[567]: 44A0B1A1BB: removed
+Oct 31 02:00:12 proxmox-pmg postfix/smtp[6512]: Trusted TLS connection established to mail.domain.example[192.0.2.106]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+Oct 31 02:00:16 proxmox-pmg postfix/smtp[6512]: 53EF81A1CD: to=<mbox1@domain.example>, relay=mail.domain.example[192.0.2.106]:25, delay=4.2, delays=0/0/0.34/3.9, dsn=2.5.0, status=sent (250 2.5.0 OK (448AE617DEA9CB1BE8))
+Oct 31 02:00:16 proxmox-pmg postfix/qmgr[567]: 53EF81A1CD: removed
+Oct 31 02:00:34 proxmox-pmg pmgpolicy[453]: starting policy database maintenance (greylist, rbl)
+Oct 31 02:00:34 proxmox-pmg pmgpolicy[453]: end policy database maintenance (13 ms, 1 ms)
+Oct 31 02:01:32 proxmox-pmg pmg-smtp-filter[25146]: starting database maintenance
+Oct 31 02:01:32 proxmox-pmg pmg-smtp-filter[25146]: end database maintenance (11 ms)
+Oct 31 02:02:44 proxmox-pmg pmgpolicy[453]: starting policy database maintenance (greylist, rbl)
+Oct 31 02:02:44 proxmox-pmg pmgpolicy[453]: end policy database maintenance (12 ms, 1 ms)
+Oct 31 02:02:49 proxmox-pmg postfix/postscreen[6545]: CONNECT from [192.0.2.215]:17245 to [192.0.2.68]:25
+Oct 31 02:02:55 proxmox-pmg postfix/postscreen[6545]: PASS NEW [192.0.2.215]:17245
+Oct 31 02:02:56 proxmox-pmg postfix/smtpd[6548]: connect from unknown[192.0.2.215]
+Oct 31 02:02:57 proxmox-pmg pmgpolicy[6064]: defer greylisted mail
+Oct 31 02:02:57 proxmox-pmg postfix/smtpd[6548]: NOQUEUE: reject: RCPT from unknown[192.0.2.215]: 450 4.7.1 <list1@listserv.domain.example>: Recipient address rejected: Service is unavailable (try later); from=<product2@spammer3.example> to=<list1@listserv.domain.example> proto=ESMTP helo=<spammer3.example>
+Oct 31 02:02:57 proxmox-pmg postfix/smtpd[6548]: disconnect from unknown[192.0.2.215] ehlo=1 mail=1 rcpt=0/1 data=0/1 quit=1 commands=3/5
+Oct 31 02:03:32 proxmox-pmg pmg-smtp-filter[25146]: starting database maintenance
+Oct 31 02:03:32 proxmox-pmg pmg-smtp-filter[25146]: end database maintenance (5 ms)
+Oct 31 02:04:54 proxmox-pmg pmgpolicy[453]: starting policy database maintenance (greylist, rbl)
+Oct 31 02:04:54 proxmox-pmg pmgpolicy[453]: end policy database maintenance (13 ms, 1 ms)
+Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6570]: connect from bbs.domain.example[192.0.2.245]
+Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6570]: BBA631A1D1: client=bbs.domain.example[192.0.2.245]
+Oct 31 02:05:06 proxmox-pmg postfix/cleanup[6572]: BBA631A1D1: message-id=<ff48fa12236e379e1a34cd6f50430922@bbs.domain.example>
+Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6570]: disconnect from bbs.domain.example[192.0.2.245] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+Oct 31 02:05:06 proxmox-pmg postfix/qmgr[567]: BBA631A1D1: from=<office@domain.example>, size=10843, nrcpt=1 (queue active)
+Oct 31 02:05:06 proxmox-pmg pmg-smtp-filter[5363]: 2021/10/31-02:05:06 CONNECT TCP Peer: "[127.0.0.1]:40216" Local: "[127.0.0.1]:10023"
+Oct 31 02:05:06 proxmox-pmg pmg-smtp-filter[5363]: 1A1D2617DEBC2BF4FC: new mail message-id=<ff48fa12236e379e1a34cd6f50430922@bbs.domain.example>#012
+Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6577]: connect from localhost[127.0.0.1]
+Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6577]: C9D5E1A1E6: client=localhost[127.0.0.1], orig_client=bbs.domain.example[192.0.2.245]
+Oct 31 02:05:06 proxmox-pmg postfix/cleanup[6572]: C9D5E1A1E6: message-id=<ff48fa12236e379e1a34cd6f50430922@bbs.domain.example>
+Oct 31 02:05:06 proxmox-pmg pmg-smtp-filter[5363]: 1A1D2617DEBC2BF4FC: accept mail to <jw@msp3.example> (C9D5E1A1E6) (rule: default-accept)
+Oct 31 02:05:06 proxmox-pmg postfix/qmgr[567]: C9D5E1A1E6: from=<office@domain.example>, size=10724, nrcpt=1 (queue active)
+Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6577]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+Oct 31 02:05:06 proxmox-pmg pmg-smtp-filter[5363]: 1A1D2617DEBC2BF4FC: processing time: 0.045 seconds (0, 0.028, 0)
+Oct 31 02:05:06 proxmox-pmg postfix/lmtp[6573]: BBA631A1D1: to=<jw@msp3.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.01/0.01/0/0.05, dsn=2.5.0, status=sent (250 2.5.0 OK (1A1D2617DEBC2BF4FC))
+Oct 31 02:05:06 proxmox-pmg postfix/qmgr[567]: BBA631A1D1: removed
+Oct 31 02:05:06 proxmox-pmg postfix/smtp[6578]: Trusted TLS connection established to mx-in.msp2.example[2001:db8:1111:1111::1a]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256
+Oct 31 02:05:07 proxmox-pmg postfix/smtp[6578]: C9D5E1A1E6: to=<jw@msp3.example>, relay=mx-in.msp2.example[2001:db8:1111:1111::1a]:25, delay=0.84, delays=0/0.01/0.16/0.67, dsn=2.0.0, status=sent (250 2.0.0 OK  1635642307 f16si14351334wrf.347 - exim)
+Oct 31 02:05:07 proxmox-pmg postfix/qmgr[567]: C9D5E1A1E6: removed
+Oct 31 03:00:00 proxmox-pmg informational: yearchange begins
+
+Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26384]: connect from backoffice.domain.example[192.0.2.249]
+Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26384]: 42EA826EA2: client=backoffice.domain.example[192.0.2.249]
+Dec 31 23:59:59 proxmox-pmg postfix/cleanup[26383]: 42EA826EA2: message-id=<LpNdZDCBBeeogzOLgHlkvs93WqJU4ZLlol8UCBOYmY@backoffice.domain.example>
+Dec 31 23:59:59 proxmox-pmg postfix/qmgr[567]: 42EA826EA2: from=<noreply@domain.example>, size=10334, nrcpt=6 (queue active)
+Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 2021/12/31-23:59:59 CONNECT TCP Peer: "[127.0.0.1]:41202" Local: "[127.0.0.1]:10023"
+Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: new mail message-id=<LpNdZDCBBeeogzOLgHlkvs93WqJU4ZLlol8UCBOYmY@backoffice.domain.example>#012
+Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26384]: disconnect from backoffice.domain.example[192.0.2.249] ehlo=1 mail=1 rcpt=6 data=1 quit=1 commands=10
+Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26400]: connect from localhost[127.0.0.1]
+Dec 31 23:59:59 proxmox-pmg postfix/qmgr[567]: 3C2EE26E95: removed
+Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26398]: connect from localhost[127.0.0.1]
+Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26398]: 51BD826EBE: client=localhost[127.0.0.1], orig_client=backoffice.domain.example[192.0.2.249]
+Dec 31 23:59:59 proxmox-pmg postfix/cleanup[26383]: 51BD826EBE: message-id=<LpNdZDCBBeeogzOLgHlkvs93WqJU4ZLlol8UCBOYmY@backoffice.domain.example>
+Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <mbox3@domain2.example> (51BD826EBE) (rule: default-accept)
+Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <mbox2@domain2.example> (51BD826EBE) (rule: default-accept)
+Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <mbox4@domain2.example> (51BD826EBE) (rule: default-accept)
+Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <backoffice@domain2.example> (51BD826EBE) (rule: default-accept)
+Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <backoffice@domain2.example> (51BD826EBE) (rule: default-accept)
+Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <mbox5@domain.example> (51BD826EBE) (rule: default-accept)
+Dec 31 23:59:59 proxmox-pmg postfix/qmgr[567]: 51BD826EBE: from=<noreply@domain.example>, size=10218, nrcpt=5 (queue active)
+Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26398]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=6 data=1 commands=10
+Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: processing time: 0.099 seconds (0, 0.046, 0)
+Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<mbox3@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<mbox2@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<mbox4@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<backoffice@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<backoffice@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<mbox5@domain.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+Dec 31 23:59:59 proxmox-pmg postfix/qmgr[567]: 42EA826EA2: removed
+Dec 31 23:59:59 proxmox-pmg postfix/smtp[26404]: Trusted TLS connection established to smtp.domain2.example[192.0.2.106]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits)
+Dec 31 23:59:59 proxmox-pmg postfix/smtp[26355]: Trusted TLS connection established to mail.domain.example[192.0.2.106]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits)
+Dec 31 23:59:59 proxmox-pmg postfix/smtp[26403]: Trusted TLS connection established to smtp.domain2.example[192.0.2.180]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits)
+Dec 31 23:59:59 proxmox-pmg postfix/smtp[26355]: 51BD826EBE: to=<mbox5@domain.example>, relay=mail.domain.example[192.0.2.106]:25, delay=1.1, delays=0.05/0/0.17/0.87, dsn=2.5.0, status=sent (250 2.5.0 OK (46BE361CF83FD8FA29))
+Dec 31 23:59:59 proxmox-pmg postfix/smtp[26403]: 51BD826EBE: to=<mbox3@domain2.example>, relay=smtp.domain2.example[192.0.2.180]:25, delay=1.2, delays=0.05/0/0.22/0.89, dsn=2.5.0, status=sent (250 2.5.0 OK (46BE861CF83FDA43DE))
+Dec 31 23:59:59 proxmox-pmg postfix/smtp[26403]: 51BD826EBE: to=<mbox2@domain2.example>, relay=smtp.domain2.example[192.0.2.180]:25, delay=1.2, delays=0.05/0/0.22/0.89, dsn=2.5.0, status=sent (250 2.5.0 OK (46BE861CF83FDA43DE))
+Dec 31 23:59:59 proxmox-pmg postfix/smtp[26403]: 51BD826EBE: to=<mbox4@domain2.example>, relay=smtp.domain2.example[192.0.2.180]:25, delay=1.2, delays=0.05/0/0.22/0.89, dsn=2.5.0, status=sent (250 2.5.0 OK (46BE861CF83FDA43DE))
+Dec 31 23:59:59 proxmox-pmg postfix/smtp[26403]: 51BD826EBE: to=<backoffice@domain2.example>, relay=smtp.domain2.example[192.0.2.180]:25, delay=1.2, delays=0.05/0/0.22/0.89, dsn=2.5.0, status=sent (250 2.5.0 OK (46BE861CF83FDA43DE))
+Dec 31 23:59:59 proxmox-pmg postfix/qmgr[567]: 51BD826EBE: removed
+

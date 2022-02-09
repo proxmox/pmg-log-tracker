@@ -1,0 +1,295 @@
+# LogReader: 243090
+# Query options
+# Start: 2020-01-02 00:00:00 (1577923200)
+# End: 2021-01-01 01:02:00 (1609462920)
+# End Query Options
+
+QENTRY: 3AA60B752
+CTIME: 5E7EAE04
+SIZE: 5935
+CLIENT: bbs.domain.example[192.0.2.245]
+MSGID: <57213b21fafd7b52a6e07ef664c7e8a4@bbs.domain.example>
+TO:5E7EAE01:3AA60B752:A: from <office@domain.example> to <tb@msp1.example> (48070B766)
+SMTP:
+L00000006 Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23385]: connect from bbs.domain.example[192.0.2.245]
+L00000007 Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23385]: 3AA60B752: client=bbs.domain.example[192.0.2.245]
+L0000000A Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23385]: disconnect from bbs.domain.example[192.0.2.245] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+FILTER: B753605FD3713E420
+L0000000C Mar 28 01:53:05 proxmox-pmg pmg-smtp-filter[22815]: B753605FD3713E420: new mail message-id=<57213b21fafd7b52a6e07ef664c7e8a4@bbs.domain.example>#012
+L00000011 Mar 28 01:53:05 proxmox-pmg pmg-smtp-filter[22815]: B753605FD3713E420: accept mail to <tb@msp1.example> (48070B766) (rule: default-accept)
+L00000013 Mar 28 01:53:05 proxmox-pmg pmg-smtp-filter[22815]: B753605FD3713E420: processing time: 0.042 seconds (0, 0.026, 0)
+QMGR:
+L00000008 Mar 28 01:53:05 proxmox-pmg postfix/cleanup[23388]: 3AA60B752: message-id=<57213b21fafd7b52a6e07ef664c7e8a4@bbs.domain.example>
+L00000009 Mar 28 01:53:05 proxmox-pmg postfix/qmgr[570]: 3AA60B752: from=<office@domain.example>, size=5935, nrcpt=1 (queue active)
+L00000014 Mar 28 01:53:05 proxmox-pmg postfix/lmtp[23389]: 3AA60B752: to=<tb@msp1.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.06, delays=0.01/0.01/0/0.04, dsn=2.5.0, status=sent (250 2.5.0 OK (B753605FD3713E420))
+L00000015 Mar 28 01:53:05 proxmox-pmg postfix/qmgr[570]: 3AA60B752: removed
+
+QENTRY: 48070B766
+CTIME: 5E7EAE04
+SIZE: 5816
+CLIENT: localhost[127.0.0.1],
+MSGID: <57213b21fafd7b52a6e07ef664c7e8a4@bbs.domain.example>
+TO:5E7EAE04:48070B766:2: from <office@domain.example> to <tb@msp1.example> (mta6.msp1.example[192.0.2.72]:25)
+SMTP:
+L0000000D Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23393]: connect from localhost[127.0.0.1]
+L0000000E Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23393]: 48070B766: client=localhost[127.0.0.1], orig_client=bbs.domain.example[192.0.2.245]
+L00000012 Mar 28 01:53:05 proxmox-pmg postfix/smtpd[23393]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+QMGR:
+L0000000F Mar 28 01:53:05 proxmox-pmg postfix/cleanup[23388]: 48070B766: message-id=<57213b21fafd7b52a6e07ef664c7e8a4@bbs.domain.example>
+L00000010 Mar 28 01:53:05 proxmox-pmg postfix/qmgr[570]: 48070B766: from=<office@domain.example>, size=5816, nrcpt=1 (queue active)
+L00000016 Mar 28 01:53:06 proxmox-pmg postfix/smtp[23394]: Trusted TLS connection established to mta6.msp1.example[192.0.2.72]:25: TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits)
+L00000017 Mar 28 01:53:08 proxmox-pmg postfix/smtp[23394]: 48070B766: to=<tb@msp1.example>, relay=mta6.msp1.example[192.0.2.72]:25, delay=2.8, delays=0/0.02/1.2/1.6, dsn=2.0.0, status=sent (250 ok dirdel)
+L00000018 Mar 28 01:53:08 proxmox-pmg postfix/qmgr[570]: 48070B766: removed
+
+QENTRY: B76CCB76D
+CTIME: 5E7EBF8B
+SIZE: 136634
+CLIENT: backoffice.domain2.example[192.0.2.249]
+MSGID: <7nwfURRJWcDhR89oZjv9eCy7YKOpCFfXDGTDMakN0k@backoffice.domain2.example>
+TO:5E7EBF84:B76CCB76D:A: from <office@domain2.example> to <ext1@external1.example> (CF907B795)
+TO:5E7EBF84:B76CCB76D:A: from <office@domain2.example> to <backoffice@domain2.example> (CF907B795)
+SMTP:
+L00000025 Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23509]: connect from backoffice.domain2.example[192.0.2.249]
+L00000026 Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23509]: B76CCB76D: client=backoffice.domain2.example[192.0.2.249]
+L00000029 Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23509]: disconnect from backoffice.domain2.example[192.0.2.249] ehlo=1 mail=1 rcpt=2 data=1 quit=1 commands=6
+FILTER: B76E605FD6E4BBA6B
+L0000002B Mar 28 03:07:48 proxmox-pmg pmg-smtp-filter[22851]: B76E605FD6E4BBA6B: new mail message-id=<7nwfURRJWcDhR89oZjv9eCy7YKOpCFfXDGTDMakN0k@backoffice.domain2.example>#012
+L00000030 Mar 28 03:07:48 proxmox-pmg pmg-smtp-filter[22851]: B76E605FD6E4BBA6B: accept mail to <backoffice@domain2.example> (CF907B795) (rule: default-accept)
+L00000031 Mar 28 03:07:48 proxmox-pmg pmg-smtp-filter[22851]: B76E605FD6E4BBA6B: accept mail to <ext1@external1.example> (CF907B795) (rule: default-accept)
+L00000033 Mar 28 03:07:48 proxmox-pmg pmg-smtp-filter[22851]: B76E605FD6E4BBA6B: processing time: 0.087 seconds (0, 0.061, 0)
+QMGR:
+L00000027 Mar 28 03:07:48 proxmox-pmg postfix/cleanup[23512]: B76CCB76D: message-id=<7nwfURRJWcDhR89oZjv9eCy7YKOpCFfXDGTDMakN0k@backoffice.domain2.example>
+L00000028 Mar 28 03:07:48 proxmox-pmg postfix/qmgr[570]: B76CCB76D: from=<office@domain2.example>, size=136634, nrcpt=2 (queue active)
+L00000034 Mar 28 03:07:48 proxmox-pmg postfix/lmtp[23513]: B76CCB76D: to=<backoffice@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0.01/0/0.09, dsn=2.5.0, status=sent (250 2.5.0 OK (B76E605FD6E4BBA6B))
+L00000035 Mar 28 03:07:48 proxmox-pmg postfix/lmtp[23513]: B76CCB76D: to=<ext1@external1.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0.01/0/0.09, dsn=2.5.0, status=sent (250 2.5.0 OK (B76E605FD6E4BBA6B))
+L00000036 Mar 28 03:07:48 proxmox-pmg postfix/qmgr[570]: B76CCB76D: removed
+
+QENTRY: CF907B795
+CTIME: 5E7EBF8B
+SIZE: 136511
+CLIENT: localhost[127.0.0.1],
+MSGID: <7nwfURRJWcDhR89oZjv9eCy7YKOpCFfXDGTDMakN0k@backoffice.domain2.example>
+TO:5E7EBF8B:CF907B795:2: from <office@domain2.example> to <ext1@external1.example> (smtp.external1.example[192.0.2.51]:25)
+TO:5E7EBF86:CF907B795:2: from <office@domain2.example> to <backoffice@domain2.example> (smtp.domain2.example[192.0.2.180]:25)
+SMTP:
+L0000002C Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23517]: connect from localhost[127.0.0.1]
+L0000002D Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23517]: CF907B795: client=localhost[127.0.0.1], orig_client=backoffice.domain2.example[192.0.2.249]
+L00000032 Mar 28 03:07:48 proxmox-pmg postfix/smtpd[23517]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=2 data=1 commands=6
+QMGR:
+L0000002E Mar 28 03:07:48 proxmox-pmg postfix/cleanup[23512]: CF907B795: message-id=<7nwfURRJWcDhR89oZjv9eCy7YKOpCFfXDGTDMakN0k@backoffice.domain2.example>
+L0000002F Mar 28 03:07:48 proxmox-pmg postfix/qmgr[570]: CF907B795: from=<office@domain2.example>, size=136511, nrcpt=2 (queue active)
+L00000037 Mar 28 03:07:49 proxmox-pmg postfix/smtp[23518]: Trusted TLS connection established to smtp.domain2.example[192.0.2.180]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+L00000038 Mar 28 03:07:50 proxmox-pmg postfix/smtp[23518]: CF907B795: to=<backoffice@domain2.example>, relay=smtp.domain2.example[192.0.2.180]:25, delay=1.5, delays=0.01/0.02/0.21/1.2, dsn=2.5.0, status=sent (250 2.5.0 OK (406CC605FD6E52AE8B))
+L00000039 Mar 28 03:07:55 proxmox-pmg postfix/smtp[23519]: Trusted TLS connection established to smtp.external1.example[192.0.2.51]:25: TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)
+L0000003A Mar 28 03:07:55 proxmox-pmg postfix/smtp[23519]: CF907B795: to=<ext1@external1.example>, relay=smtp.external1.example[192.0.2.51]:25, delay=6.6, delays=0.01/0.03/6.3/0.33, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 61FE04093ED0)
+L0000003B Mar 28 03:07:55 proxmox-pmg postfix/qmgr[570]: CF907B795: removed
+
+SMTPD: T5F9CC8B2L00000000
+CTIME: 5F9CC8B2
+CLIENT: 192.0.2.213
+TO:5F9CC8B2:T5F9CC8B2L00000000:N: from <contact@spammer1.example> to <list1@listserv.domain.example>
+LOGS:
+L0000005C Oct 31 02:15:14 proxmox-pmg postfix/postscreen[6185]: NOQUEUE: reject: RCPT from [192.0.2.213]:12641: 550 5.7.1 Service unavailable; client [192.0.2.213] blocked using zen.spamhaus.org; from=<contact@spammer1.example>, to=<list1@listserv.domain.example>, proto=ESMTP, helo=<spammer1.example>
+
+SMTPD: T5F9CCB56L00000001
+CTIME: 5F9CCB57
+CLIENT: unknown[192.0.2.214]
+TO:5F9CCB56:T5F9CCB56L00000001:G: from <product1@spammer2.example> to <list1@listserv.domain.example>
+LOGS:
+L00000061 Oct 31 02:26:30 proxmox-pmg postfix/smtpd[6264]: connect from unknown[192.0.2.214]
+L00000064 Oct 31 02:26:30 proxmox-pmg postfix/smtpd[6264]: NOQUEUE: reject: RCPT from unknown[192.0.2.214]: 450 4.7.1 <list1@listserv.domain.example>: Recipient address rejected: Service is unavailable (try later); from=<product1@spammer2.example> to=<list1@listserv.domain.example> proto=ESMTP helo=<spammer2.example>
+L00000065 Oct 31 02:26:31 proxmox-pmg postfix/smtpd[6264]: disconnect from unknown[192.0.2.214] ehlo=1 mail=1 rcpt=0/1 data=0/1 quit=1 commands=3/5
+
+QENTRY: 7EC601A15F
+CTIME: 5F9CD1B3
+SIZE: 11013
+CLIENT: bbs.domain.example[192.0.2.245]
+MSGID: <ac1e470c93dbecffeda550e0c96da154@bbs.domain.example>
+TO:5F9CD1B2:7EC601A15F:A: from <office@domain.example> to <ks@msp2.example> (8D0041A173)
+SMTP:
+L0000006E Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6006]: connect from bbs.domain.example[192.0.2.245]
+L0000006F Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6006]: 7EC601A15F: client=bbs.domain.example[192.0.2.245]
+L00000071 Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6006]: disconnect from bbs.domain.example[192.0.2.245] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+FILTER: 1A160617DDB02828DA
+L00000074 Oct 31 02:53:38 proxmox-pmg pmg-smtp-filter[5363]: 1A160617DDB02828DA: new mail message-id=<ac1e470c93dbecffeda550e0c96da154@bbs.domain.example>#012
+L00000078 Oct 31 02:53:38 proxmox-pmg pmg-smtp-filter[5363]: 1A160617DDB02828DA: accept mail to <ks@msp2.example> (8D0041A173) (rule: default-accept)
+L0000007B Oct 31 02:53:38 proxmox-pmg pmg-smtp-filter[5363]: 1A160617DDB02828DA: processing time: 0.045 seconds (0, 0.027, 0)
+QMGR:
+L00000070 Oct 31 02:53:38 proxmox-pmg postfix/cleanup[6007]: 7EC601A15F: message-id=<ac1e470c93dbecffeda550e0c96da154@bbs.domain.example>
+L00000072 Oct 31 02:53:38 proxmox-pmg postfix/qmgr[567]: 7EC601A15F: from=<office@domain.example>, size=11013, nrcpt=1 (queue active)
+L0000007C Oct 31 02:53:38 proxmox-pmg postfix/lmtp[6008]: 7EC601A15F: to=<ks@msp2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.01/0.01/0/0.05, dsn=2.5.0, status=sent (250 2.5.0 OK (1A160617DDB02828DA))
+L0000007D Oct 31 02:53:38 proxmox-pmg postfix/qmgr[567]: 7EC601A15F: removed
+
+QENTRY: 8D0041A173
+CTIME: 5F9CD1B3
+SIZE: 10893
+CLIENT: localhost[127.0.0.1],
+MSGID: <ac1e470c93dbecffeda550e0c96da154@bbs.domain.example>
+TO:5F9CD1B3:8D0041A173:2: from <office@domain.example> to <ks@msp2.example> (mx-in.msp2.example[2001:db8:1111:1111::1b]:25)
+SMTP:
+L00000075 Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6012]: connect from localhost[127.0.0.1]
+L00000076 Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6012]: 8D0041A173: client=localhost[127.0.0.1], orig_client=bbs.domain.example[192.0.2.245]
+L0000007A Oct 31 02:53:38 proxmox-pmg postfix/smtpd[6012]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+QMGR:
+L00000077 Oct 31 02:53:38 proxmox-pmg postfix/cleanup[6007]: 8D0041A173: message-id=<ac1e470c93dbecffeda550e0c96da154@bbs.domain.example>
+L00000079 Oct 31 02:53:38 proxmox-pmg postfix/qmgr[567]: 8D0041A173: from=<office@domain.example>, size=10893, nrcpt=1 (queue active)
+L0000007E Oct 31 02:53:38 proxmox-pmg postfix/smtp[6013]: Trusted TLS connection established to mx-in.msp2.example[2001:db8:1111:1111::1b]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256
+L0000007F Oct 31 02:53:39 proxmox-pmg postfix/smtp[6013]: 8D0041A173: to=<ks@msp2.example>, relay=mx-in.msp2.example[2001:db8:1111:1111::1b]:25, delay=0.76, delays=0/0.01/0.11/0.63, dsn=2.0.0, status=sent (250 2.0.0 OK  1635638019 l24si20980973wmj.233 - exim)
+L00000080 Oct 31 02:53:39 proxmox-pmg postfix/qmgr[567]: 8D0041A173: removed
+
+QENTRY: 44A0B1A1BB
+CTIME: 5F9CC530
+SIZE: 28128
+CLIENT: www.domain.example[192.0.2.69]
+MSGID: <NTI1OTkyMAAC20549Y5BAMTYzNTY0MjAxMjcyMDg4@www.domain.example>
+TO:5F9CC52C:44A0B1A1BB:A: from <news@domain.example> to <mbox1@domain.example> (53EF81A1CD)
+SMTP:
+L0000008E Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6520]: connect from www.domain.example[192.0.2.69]
+L0000008F Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6520]: 44A0B1A1BB: client=www.domain.example[192.0.2.69]
+L00000091 Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6520]: disconnect from www.domain.example[192.0.2.69] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+FILTER: 1A1BC617DEA9C48923
+L00000094 Oct 31 02:00:12 proxmox-pmg pmg-smtp-filter[5614]: 1A1BC617DEA9C48923: new mail message-id=<NTI1OTkyMAAC20549Y5BAMTYzNTY0MjAxMjcyMDg4@www.domain.example>#012
+L00000098 Oct 31 02:00:12 proxmox-pmg pmg-smtp-filter[5614]: 1A1BC617DEA9C48923: accept mail to <mbox1@domain.example> (53EF81A1CD) (rule: default-accept)
+L0000009B Oct 31 02:00:12 proxmox-pmg pmg-smtp-filter[5614]: 1A1BC617DEA9C48923: processing time: 0.049 seconds (0, 0.031, 0)
+QMGR:
+L00000090 Oct 31 02:00:12 proxmox-pmg postfix/cleanup[6522]: 44A0B1A1BB: message-id=<NTI1OTkyMAAC20549Y5BAMTYzNTY0MjAxMjcyMDg4@www.domain.example>
+L00000092 Oct 31 02:00:12 proxmox-pmg postfix/qmgr[567]: 44A0B1A1BB: from=<news@domain.example>, size=28128, nrcpt=1 (queue active)
+L0000009C Oct 31 02:00:12 proxmox-pmg postfix/lmtp[6523]: 44A0B1A1BB: to=<mbox1@domain.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.01/0.01/0/0.05, dsn=2.5.0, status=sent (250 2.5.0 OK (1A1BC617DEA9C48923))
+L0000009D Oct 31 02:00:12 proxmox-pmg postfix/qmgr[567]: 44A0B1A1BB: removed
+
+QENTRY: 53EF81A1CD
+CTIME: 5F9CC530
+SIZE: 28014
+CLIENT: localhost[127.0.0.1],
+MSGID: <NTI1OTkyMAAC20549Y5BAMTYzNTY0MjAxMjcyMDg4@www.domain.example>
+TO:5F9CC530:53EF81A1CD:2: from <news@domain.example> to <mbox1@domain.example> (mail.domain.example[192.0.2.106]:25)
+SMTP:
+L00000095 Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6527]: connect from localhost[127.0.0.1]
+L00000096 Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6527]: 53EF81A1CD: client=localhost[127.0.0.1], orig_client=www.domain.example[192.0.2.69]
+L0000009A Oct 31 02:00:12 proxmox-pmg postfix/smtpd[6527]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+QMGR:
+L00000097 Oct 31 02:00:12 proxmox-pmg postfix/cleanup[6522]: 53EF81A1CD: message-id=<NTI1OTkyMAAC20549Y5BAMTYzNTY0MjAxMjcyMDg4@www.domain.example>
+L00000099 Oct 31 02:00:12 proxmox-pmg postfix/qmgr[567]: 53EF81A1CD: from=<news@domain.example>, size=28014, nrcpt=1 (queue active)
+L0000009E Oct 31 02:00:12 proxmox-pmg postfix/smtp[6512]: Trusted TLS connection established to mail.domain.example[192.0.2.106]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+L0000009F Oct 31 02:00:16 proxmox-pmg postfix/smtp[6512]: 53EF81A1CD: to=<mbox1@domain.example>, relay=mail.domain.example[192.0.2.106]:25, delay=4.2, delays=0/0/0.34/3.9, dsn=2.5.0, status=sent (250 2.5.0 OK (448AE617DEA9CB1BE8))
+L000000A0 Oct 31 02:00:16 proxmox-pmg postfix/qmgr[567]: 53EF81A1CD: removed
+
+SMTPD: T5F9CC5D0L00000000
+CTIME: 5F9CC5D1
+CLIENT: unknown[192.0.2.215]
+TO:5F9CC5D1:T5F9CC5D0L00000000:G: from <product2@spammer3.example> to <list1@listserv.domain.example>
+LOGS:
+L000000A9 Oct 31 02:02:56 proxmox-pmg postfix/smtpd[6548]: connect from unknown[192.0.2.215]
+L000000AB Oct 31 02:02:57 proxmox-pmg postfix/smtpd[6548]: NOQUEUE: reject: RCPT from unknown[192.0.2.215]: 450 4.7.1 <list1@listserv.domain.example>: Recipient address rejected: Service is unavailable (try later); from=<product2@spammer3.example> to=<list1@listserv.domain.example> proto=ESMTP helo=<spammer3.example>
+L000000AC Oct 31 02:02:57 proxmox-pmg postfix/smtpd[6548]: disconnect from unknown[192.0.2.215] ehlo=1 mail=1 rcpt=0/1 data=0/1 quit=1 commands=3/5
+
+QENTRY: BBA631A1D1
+CTIME: 5F9CC653
+SIZE: 10843
+CLIENT: bbs.domain.example[192.0.2.245]
+MSGID: <ff48fa12236e379e1a34cd6f50430922@bbs.domain.example>
+TO:5F9CC652:BBA631A1D1:A: from <office@domain.example> to <jw@msp3.example> (C9D5E1A1E6)
+SMTP:
+L000000B1 Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6570]: connect from bbs.domain.example[192.0.2.245]
+L000000B2 Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6570]: BBA631A1D1: client=bbs.domain.example[192.0.2.245]
+L000000B4 Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6570]: disconnect from bbs.domain.example[192.0.2.245] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+FILTER: 1A1D2617DEBC2BF4FC
+L000000B7 Oct 31 02:05:06 proxmox-pmg pmg-smtp-filter[5363]: 1A1D2617DEBC2BF4FC: new mail message-id=<ff48fa12236e379e1a34cd6f50430922@bbs.domain.example>#012
+L000000BB Oct 31 02:05:06 proxmox-pmg pmg-smtp-filter[5363]: 1A1D2617DEBC2BF4FC: accept mail to <jw@msp3.example> (C9D5E1A1E6) (rule: default-accept)
+L000000BE Oct 31 02:05:06 proxmox-pmg pmg-smtp-filter[5363]: 1A1D2617DEBC2BF4FC: processing time: 0.045 seconds (0, 0.028, 0)
+QMGR:
+L000000B3 Oct 31 02:05:06 proxmox-pmg postfix/cleanup[6572]: BBA631A1D1: message-id=<ff48fa12236e379e1a34cd6f50430922@bbs.domain.example>
+L000000B5 Oct 31 02:05:06 proxmox-pmg postfix/qmgr[567]: BBA631A1D1: from=<office@domain.example>, size=10843, nrcpt=1 (queue active)
+L000000BF Oct 31 02:05:06 proxmox-pmg postfix/lmtp[6573]: BBA631A1D1: to=<jw@msp3.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.07, delays=0.01/0.01/0/0.05, dsn=2.5.0, status=sent (250 2.5.0 OK (1A1D2617DEBC2BF4FC))
+L000000C0 Oct 31 02:05:06 proxmox-pmg postfix/qmgr[567]: BBA631A1D1: removed
+
+QENTRY: C9D5E1A1E6
+CTIME: 5F9CC653
+SIZE: 10724
+CLIENT: localhost[127.0.0.1],
+MSGID: <ff48fa12236e379e1a34cd6f50430922@bbs.domain.example>
+TO:5F9CC653:C9D5E1A1E6:2: from <office@domain.example> to <jw@msp3.example> (mx-in.msp2.example[2001:db8:1111:1111::1a]:25)
+SMTP:
+L000000B8 Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6577]: connect from localhost[127.0.0.1]
+L000000B9 Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6577]: C9D5E1A1E6: client=localhost[127.0.0.1], orig_client=bbs.domain.example[192.0.2.245]
+L000000BD Oct 31 02:05:06 proxmox-pmg postfix/smtpd[6577]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=1 data=1 commands=5
+QMGR:
+L000000BA Oct 31 02:05:06 proxmox-pmg postfix/cleanup[6572]: C9D5E1A1E6: message-id=<ff48fa12236e379e1a34cd6f50430922@bbs.domain.example>
+L000000BC Oct 31 02:05:06 proxmox-pmg postfix/qmgr[567]: C9D5E1A1E6: from=<office@domain.example>, size=10724, nrcpt=1 (queue active)
+L000000C1 Oct 31 02:05:06 proxmox-pmg postfix/smtp[6578]: Trusted TLS connection established to mx-in.msp2.example[2001:db8:1111:1111::1a]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256
+L000000C2 Oct 31 02:05:07 proxmox-pmg postfix/smtp[6578]: C9D5E1A1E6: to=<jw@msp3.example>, relay=mx-in.msp2.example[2001:db8:1111:1111::1a]:25, delay=0.84, delays=0/0.01/0.16/0.67, dsn=2.0.0, status=sent (250 2.0.0 OK  1635642307 f16si14351334wrf.347 - exim)
+L000000C3 Oct 31 02:05:07 proxmox-pmg postfix/qmgr[567]: C9D5E1A1E6: removed
+
+QENTRY: 3C2EE26E95
+CTIME: 5FEE65FF
+SIZE: 0
+QMGR:
+L000000CD Dec 31 23:59:59 proxmox-pmg postfix/qmgr[567]: 3C2EE26E95: removed
+
+QENTRY: 42EA826EA2
+CTIME: 5FEE65FF
+SIZE: 10334
+CLIENT: backoffice.domain.example[192.0.2.249]
+MSGID: <LpNdZDCBBeeogzOLgHlkvs93WqJU4ZLlol8UCBOYmY@backoffice.domain.example>
+TO:5FEE65FF:42EA826EA2:A: from <noreply@domain.example> to <mbox5@domain.example> (51BD826EBE)
+TO:5FEE65FF:42EA826EA2:A: from <noreply@domain.example> to <backoffice@domain2.example> (51BD826EBE)
+TO:5FEE65FF:42EA826EA2:A: from <noreply@domain.example> to <backoffice@domain2.example> (51BD826EBE)
+TO:5FEE65FF:42EA826EA2:A: from <noreply@domain.example> to <mbox4@domain2.example> (51BD826EBE)
+TO:5FEE65FF:42EA826EA2:A: from <noreply@domain.example> to <mbox2@domain2.example> (51BD826EBE)
+TO:5FEE65FF:42EA826EA2:A: from <noreply@domain.example> to <mbox3@domain2.example> (51BD826EBE)
+SMTP:
+L000000C5 Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26384]: connect from backoffice.domain.example[192.0.2.249]
+L000000C6 Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26384]: 42EA826EA2: client=backoffice.domain.example[192.0.2.249]
+L000000CB Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26384]: disconnect from backoffice.domain.example[192.0.2.249] ehlo=1 mail=1 rcpt=6 data=1 quit=1 commands=10
+FILTER: 26EA761CF83FD449E9
+L000000CA Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: new mail message-id=<LpNdZDCBBeeogzOLgHlkvs93WqJU4ZLlol8UCBOYmY@backoffice.domain.example>#012
+L000000D1 Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <mbox3@domain2.example> (51BD826EBE) (rule: default-accept)
+L000000D2 Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <mbox2@domain2.example> (51BD826EBE) (rule: default-accept)
+L000000D3 Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <mbox4@domain2.example> (51BD826EBE) (rule: default-accept)
+L000000D4 Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <backoffice@domain2.example> (51BD826EBE) (rule: default-accept)
+L000000D5 Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <backoffice@domain2.example> (51BD826EBE) (rule: default-accept)
+L000000D6 Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: accept mail to <mbox5@domain.example> (51BD826EBE) (rule: default-accept)
+L000000D9 Jan 01 00:00:00 proxmox-pmg pmg-smtp-filter[26154]: 26EA761CF83FD449E9: processing time: 0.099 seconds (0, 0.046, 0)
+QMGR:
+L000000C7 Dec 31 23:59:59 proxmox-pmg postfix/cleanup[26383]: 42EA826EA2: message-id=<LpNdZDCBBeeogzOLgHlkvs93WqJU4ZLlol8UCBOYmY@backoffice.domain.example>
+L000000C8 Dec 31 23:59:59 proxmox-pmg postfix/qmgr[567]: 42EA826EA2: from=<noreply@domain.example>, size=10334, nrcpt=6 (queue active)
+L000000DA Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<mbox3@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+L000000DB Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<mbox2@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+L000000DC Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<mbox4@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+L000000DD Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<backoffice@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+L000000DE Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<backoffice@domain2.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+L000000DF Dec 31 23:59:59 proxmox-pmg postfix/lmtp[26389]: 42EA826EA2: to=<mbox5@domain.example>, relay=127.0.0.1[127.0.0.1]:10023, delay=0.11, delays=0.01/0/0/0.1, dsn=2.5.0, status=sent (250 2.5.0 OK (26EA761CF83FD449E9))
+L000000E0 Dec 31 23:59:59 proxmox-pmg postfix/qmgr[567]: 42EA826EA2: removed
+
+QENTRY: 51BD826EBE
+CTIME: 5FEE65FF
+SIZE: 10218
+CLIENT: localhost[127.0.0.1],
+MSGID: <LpNdZDCBBeeogzOLgHlkvs93WqJU4ZLlol8UCBOYmY@backoffice.domain.example>
+TO:5FEE65FF:51BD826EBE:2: from <noreply@domain.example> to <backoffice@domain2.example> (smtp.domain2.example[192.0.2.180]:25)
+TO:5FEE65FF:51BD826EBE:2: from <noreply@domain.example> to <mbox4@domain2.example> (smtp.domain2.example[192.0.2.180]:25)
+TO:5FEE65FF:51BD826EBE:2: from <noreply@domain.example> to <mbox2@domain2.example> (smtp.domain2.example[192.0.2.180]:25)
+TO:5FEE65FF:51BD826EBE:2: from <noreply@domain.example> to <mbox3@domain2.example> (smtp.domain2.example[192.0.2.180]:25)
+TO:5FEE65FF:51BD826EBE:2: from <noreply@domain.example> to <mbox5@domain.example> (mail.domain.example[192.0.2.106]:25)
+SMTP:
+L000000CE Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26398]: connect from localhost[127.0.0.1]
+L000000CF Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26398]: 51BD826EBE: client=localhost[127.0.0.1], orig_client=backoffice.domain.example[192.0.2.249]
+L000000D8 Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26398]: disconnect from localhost[127.0.0.1] ehlo=1 xforward=1 mail=1 rcpt=6 data=1 commands=10
+QMGR:
+L000000D0 Dec 31 23:59:59 proxmox-pmg postfix/cleanup[26383]: 51BD826EBE: message-id=<LpNdZDCBBeeogzOLgHlkvs93WqJU4ZLlol8UCBOYmY@backoffice.domain.example>
+L000000D7 Dec 31 23:59:59 proxmox-pmg postfix/qmgr[567]: 51BD826EBE: from=<noreply@domain.example>, size=10218, nrcpt=5 (queue active)
+L000000E2 Dec 31 23:59:59 proxmox-pmg postfix/smtp[26355]: Trusted TLS connection established to mail.domain.example[192.0.2.106]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits)
+L000000E3 Dec 31 23:59:59 proxmox-pmg postfix/smtp[26403]: Trusted TLS connection established to smtp.domain2.example[192.0.2.180]:25: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits)
+L000000E4 Dec 31 23:59:59 proxmox-pmg postfix/smtp[26355]: 51BD826EBE: to=<mbox5@domain.example>, relay=mail.domain.example[192.0.2.106]:25, delay=1.1, delays=0.05/0/0.17/0.87, dsn=2.5.0, status=sent (250 2.5.0 OK (46BE361CF83FD8FA29))
+L000000E5 Dec 31 23:59:59 proxmox-pmg postfix/smtp[26403]: 51BD826EBE: to=<mbox3@domain2.example>, relay=smtp.domain2.example[192.0.2.180]:25, delay=1.2, delays=0.05/0/0.22/0.89, dsn=2.5.0, status=sent (250 2.5.0 OK (46BE861CF83FDA43DE))
+L000000E6 Dec 31 23:59:59 proxmox-pmg postfix/smtp[26403]: 51BD826EBE: to=<mbox2@domain2.example>, relay=smtp.domain2.example[192.0.2.180]:25, delay=1.2, delays=0.05/0/0.22/0.89, dsn=2.5.0, status=sent (250 2.5.0 OK (46BE861CF83FDA43DE))
+L000000E7 Dec 31 23:59:59 proxmox-pmg postfix/smtp[26403]: 51BD826EBE: to=<mbox4@domain2.example>, relay=smtp.domain2.example[192.0.2.180]:25, delay=1.2, delays=0.05/0/0.22/0.89, dsn=2.5.0, status=sent (250 2.5.0 OK (46BE861CF83FDA43DE))
+L000000E8 Dec 31 23:59:59 proxmox-pmg postfix/smtp[26403]: 51BD826EBE: to=<backoffice@domain2.example>, relay=smtp.domain2.example[192.0.2.180]:25, delay=1.2, delays=0.05/0/0.22/0.89, dsn=2.5.0, status=sent (250 2.5.0 OK (46BE861CF83FDA43DE))
+L000000E9 Dec 31 23:59:59 proxmox-pmg postfix/qmgr[567]: 51BD826EBE: removed
+
+SMTPD: T5FEE65FFL00000001
+CTIME: 5FEE65FF
+CLIENT: localhost[127.0.0.1]
+LOGS:
+L000000CC Dec 31 23:59:59 proxmox-pmg postfix/smtpd[26400]: connect from localhost[127.0.0.1]
+
