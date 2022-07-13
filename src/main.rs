@@ -254,7 +254,6 @@ fn handle_pmg_smtp_filter_message(msg: &[u8], parser: &mut Parser, complete_line
         let time = &data[..time_count];
 
         fe.borrow_mut().set_processing_time(time);
-        return;
     }
 }
 
@@ -848,7 +847,6 @@ impl std::fmt::Display for DStatus {
 struct SEntry {
     log: Vec<(Box<[u8]>, u64)>,
     connect: Box<[u8]>,
-    cursor: Box<[u8]>,
     pid: u64,
     // references to QEntries, Weak so they are not kept alive longer than
     // necessary, RefCell for mutability (Rc<> is immutable)
@@ -995,18 +993,15 @@ impl SEntry {
             return;
         }
 
-        // don't print if there's a string match specified, but none of the
-        // log entries matches. in the before-queue case we also have to check
-        // the attached filter for a match
+        // don't print if there's a string match specified, but none of the log entries matches.
+        // in the before-queue case we also have to check the attached filter for a match
         if !parser.options.string_match.is_empty() {
             if let Some(fe) = &self.filter() {
                 if !self.string_match && !fe.borrow().string_match {
                     return;
                 }
-            } else {
-                if !self.string_match {
-                    return;
-                }
+            } else if !self.string_match {
+                return;
             }
         }
 
@@ -2241,7 +2236,7 @@ fn parse_number(data: &[u8], max_digits: usize) -> Option<(usize, &[u8])> {
 }
 
 /// Parse time. Returns a tuple of (parsed_time, remaining_text) or None.
-fn parse_time<'a>(data: &'a [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, &'a [u8])> {
+fn parse_time(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, &'_ [u8])> {
     if data.len() < 15 {
         return None;
     }
@@ -2263,15 +2258,10 @@ fn parse_time<'a>(data: &'a [u8], cur_year: i64, cur_month: i64) -> Option<(time
     };
     let data = &data[3..];
 
-    let mut ltime: time_t;
-    let mut year = cur_year;
-
     // assume smaller month now than in log line means yearwrap
-    if cur_month < mon {
-        year -= 1;
-    }
+    let mut year = if cur_month < mon { cur_year - 1 } else { cur_year };
 
-    ltime = (year - 1970) * 365 + CAL_MTOD[mon as usize];
+    let mut ltime: time_t = (year - 1970) * 365 + CAL_MTOD[mon as usize];
 
     // leap year considerations
     if mon <= 1 {
