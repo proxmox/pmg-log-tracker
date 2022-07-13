@@ -1842,11 +1842,7 @@ impl Parser {
             let line = &buffer[0..size - 1];
             let complete_line = line;
 
-            let (time, line) = match parse_time(
-                line,
-                self.current_year,
-                self.current_month,
-            ) {
+            let (time, line) = match parse_time(line, self.current_year, self.current_month) {
                 Some(t) => t,
                 None => continue,
             };
@@ -1918,7 +1914,6 @@ impl Parser {
         let mut buffer = Vec::new();
 
         for (i, item) in LOGFILES.iter().enumerate() {
-
             count = i;
             if let Ok(file) = File::open(item) {
                 self.current_file_index = i;
@@ -1931,11 +1926,9 @@ impl Parser {
                         if size == 0 {
                             return count;
                         }
-                        if let Some((time, _)) = parse_time(
-                            &buffer[0..size],
-                            self.current_year,
-                            self.current_month,
-                        ) {
+                        if let Some((time, _)) =
+                            parse_time(&buffer[0..size], self.current_year, self.current_month)
+                        {
                             // found the earliest file in the time frame
                             if time < self.options.start {
                                 break;
@@ -1950,11 +1943,9 @@ impl Parser {
                         if size == 0 {
                             return count;
                         }
-                        if let Some((time, _)) = parse_time(
-                            &buffer[0..size],
-                            self.current_year,
-                            self.current_month,
-                        ) {
+                        if let Some((time, _)) =
+                            parse_time(&buffer[0..size], self.current_year, self.current_month)
+                        {
                             if time < self.options.start {
                                 break;
                             }
@@ -2250,11 +2241,7 @@ fn parse_number(data: &[u8], max_digits: usize) -> Option<(usize, &[u8])> {
 }
 
 /// Parse time. Returns a tuple of (parsed_time, remaining_text) or None.
-fn parse_time<'a>(
-    data: &'a [u8],
-    cur_year: i64,
-    cur_month: i64,
-) -> Option<(time_t, &'a [u8])> {
+fn parse_time<'a>(data: &'a [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, &'a [u8])> {
     if data.len() < 15 {
         return None;
     }

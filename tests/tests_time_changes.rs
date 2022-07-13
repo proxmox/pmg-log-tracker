@@ -26,4 +26,3 @@ fn after_queue_time_change_string() {
     let output_reader = BufReader::new(&output.stdout[..]);
     utils::compare_output(output_reader, expected_output);
 }
-
