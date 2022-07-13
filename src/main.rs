@@ -2276,9 +2276,7 @@ fn parse_time(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, 
 
     let (mday, data) = match parse_number(data, 2) {
         Some(t) => t,
-        None => {
-            return None;
-        }
+        None => return None,
     };
     if mday == 0 {
         return None;
@@ -2294,9 +2292,7 @@ fn parse_time(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, 
 
     let (hour, data) = match parse_number(data, 2) {
         Some(t) => t,
-        None => {
-            return None;
-        }
+        None => return None,
     };
 
     ltime *= 24;
@@ -2313,9 +2309,7 @@ fn parse_time(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, 
 
     let (min, data) = match parse_number(data, 2) {
         Some(t) => t,
-        None => {
-            return None;
-        }
+        None => return None,
     };
 
     ltime *= 60;
@@ -2332,9 +2326,7 @@ fn parse_time(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, 
 
     let (sec, data) = match parse_number(data, 2) {
         Some(t) => t,
-        None => {
-            return None;
-        }
+        None => return None,
     };
 
     ltime *= 60;
