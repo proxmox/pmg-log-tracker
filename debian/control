@@ -7,10 +7,10 @@ Build-Depends: debhelper (>= 12),
  rustc:native,
  libstd-rust-dev,
  librust-anyhow-1+default-dev,
- librust-clap-2+default-dev (>= 2.32-~~),
+ librust-clap-3+cargo-dev (>= 3.2-~~),
+ librust-clap-3+default-dev (>= 3.2-~~),
  librust-flate2-1+default-dev,
- librust-libc-0.2+default-dev (>= 0.2.48-~~),
- librust-time-0.1+default-dev (>= 0.1.42-~~),
+ librust-libc-0.2+default-dev,
  faketime
 Maintainer: Proxmox Support Team <support@proxmox.com>
 Standards-Version: 4.5.1

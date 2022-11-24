@@ -24,64 +24,63 @@ fn main() -> Result<(), Error> {
         .about(clap::crate_description!())
         .arg(
             Arg::with_name("verbose")
-                .short("v")
+                .short('v')
                 .long("verbose")
                 .help("Verbose output, can be specified multiple times")
-                .multiple(true)
-                .takes_value(false),
+                .action(clap::ArgAction::Count),
         )
         .arg(
             Arg::with_name("inputfile")
-                .short("i")
+                .short('i')
                 .long("inputfile")
                 .help("Input file to use instead of /var/log/syslog, or '-' for stdin")
                 .value_name("INPUTFILE"),
         )
         .arg(
             Arg::with_name("host")
-                .short("h")
+                .short('h')
                 .long("host")
                 .help("Hostname or Server IP")
                 .value_name("HOST"),
         )
         .arg(
             Arg::with_name("from")
-                .short("f")
+                .short('f')
                 .long("from")
                 .help("Mails from SENDER")
                 .value_name("SENDER"),
         )
         .arg(
             Arg::with_name("to")
-                .short("t")
+                .short('t')
                 .long("to")
                 .help("Mails to RECIPIENT")
                 .value_name("RECIPIENT"),
         )
         .arg(
             Arg::with_name("start")
-                .short("s")
+                .short('s')
                 .long("starttime")
                 .help("Start time (YYYY-MM-DD HH:MM:SS) or seconds since epoch")
                 .value_name("TIME"),
         )
         .arg(
             Arg::with_name("end")
-                .short("e")
+                .short('e')
                 .long("endtime")
                 .help("End time (YYYY-MM-DD HH:MM:SS) or seconds since epoch")
                 .value_name("TIME"),
         )
         .arg(
             Arg::with_name("msgid")
-                .short("m")
+                .short('m')
                 .long("message-id")
                 .help("Message ID (exact match)")
                 .value_name("MSGID"),
         )
         .arg(
             Arg::with_name("qids")
-                .short("q")
+                .short('q')
                 .long("queue-id")
                 .help("Queue ID (exact match), can be specified multiple times")
                 .value_name("QID")
@@ -90,14 +89,14 @@ fn main() -> Result<(), Error> {
         )
         .arg(
             Arg::with_name("search")
-                .short("x")
+                .short('x')
                 .long("search-string")
                 .help("Search for string")
                 .value_name("STRING"),
         )
         .arg(
             Arg::with_name("limit")
-                .short("l")
+                .short('l')
                 .long("limit")
                 .help("Print MAX entries")
                 .value_name("MAX")
@@ -105,13 +104,13 @@ fn main() -> Result<(), Error> {
         )
         .arg(
             Arg::with_name("exclude_greylist")
-                .short("g")
+                .short('g')
                 .long("exclude-greylist")
                 .help("Exclude greylist entries"),
         )
         .arg(
             Arg::with_name("exclude_ndr")
-                .short("n")
+                .short('n')
                 .long("exclude-ndr")
                 .help("Exclude NDR entries"),
         )
@@ -2043,7 +2042,7 @@ impl Parser {
         self.options.exclude_greylist = args.is_present("exclude_greylist");
         self.options.exclude_ndr = args.is_present("exclude_ndr");
 
-        self.options.verbose = args.occurrences_of("verbose") as _;
+        self.options.verbose = args.get_one::<u8>("verbose").copied().unwrap_or(0) as _;
 
         if let Some(string_match) = args.value_of("search") {
             self.options.string_match = string_match.to_string();
