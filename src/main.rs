@@ -2259,7 +2259,11 @@ fn parse_time(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, 
     let data = &data[3..];
 
     // assume smaller month now than in log line means yearwrap
-    let mut year = if cur_month < mon { cur_year - 1 } else { cur_year };
+    let mut year = if cur_month < mon {
+        cur_year - 1
+    } else {
+        cur_year
+    };
 
     let mut ltime: time_t = (year - 1970) * 365 + CAL_MTOD[mon as usize];
 
