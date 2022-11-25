@@ -2042,7 +2042,7 @@ impl Parser {
         self.options.exclude_greylist = args.is_present("exclude_greylist");
         self.options.exclude_ndr = args.is_present("exclude_ndr");
 
-        self.options.verbose = args.get_one::<u8>("verbose").copied().unwrap_or(0) as _;
+        self.options.verbose = args.get_count("verbose") as _;
 
         if let Some(string_match) = args.value_of("search") {
             self.options.string_match = string_match.to_string();
