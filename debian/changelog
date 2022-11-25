@@ -1,3 +1,9 @@
+rust-pmg-log-tracker (2.3.2-1) bullseye; urgency=medium
+
+  * re-build with updated rustc and dependencies
+
+ -- Proxmox Support Team <support@proxmox.com>  Fri, 25 Nov 2022 11:38:01 +0100
+
 rust-pmg-log-tracker (2.3.1-1) bullseye; urgency=medium
 
   * fix regression related to months != january
