@@ -45,9 +45,15 @@ $(DEB) $(DBG_DEB): build
 
 .PHONY: dsc
 dsc: $(DSC)
+	$(MAKE) $(DSC)
+	lintian $(DSC)
+
 $(DSC): build
 	cd build; dpkg-buildpackage -S -us -uc -d -nc
-	lintian $(DSC)
+
+.PHONY: sbuild
+sbuild: $(DSC)
+	sbuild $(DSC)
 
 .PHONY: dinstall
 dinstall: $(DEB)
@@ -62,5 +68,5 @@ distclean: clean
 
 .PHONY: clean
 clean:
-	rm -rf *.deb $(PACKAGE)-* *.buildinfo *.changes *.dsc rust-$(PACKAGE)_*.tar.?z build/
+	rm -rf *.deb $(PACKAGE)-* *.buildinfo *.changes *.dsc rust-$(PACKAGE)_*.tar.?z build/ *build
 	find . -name '*~' -exec rm {} ';'
