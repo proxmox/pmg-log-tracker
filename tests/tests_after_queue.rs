@@ -30,6 +30,7 @@ fn after_queue_start_end_time_string() {
 #[test]
 fn after_queue_start_end_timestamp() {
     let output = Command::new("faketime")
+        .env("TZ", "Europe/Vienna")
         .arg("2020-12-31 23:59:59")
         .arg(utils::log_tracker_path())
         .arg("-vv")
@@ -53,6 +54,7 @@ fn after_queue_start_end_timestamp() {
 #[test]
 fn after_queue_qid() {
     let output = Command::new("faketime")
+        .env("TZ", "Europe/Vienna")
         .arg("2020-12-31 23:59:59")
         .arg(utils::log_tracker_path())
         .arg("-vv")
@@ -78,6 +80,7 @@ fn after_queue_qid() {
 #[test]
 fn after_queue_host() {
     let output = Command::new("faketime")
+        .env("TZ", "Europe/Vienna")
         .arg("2020-12-31 23:59:59")
         .arg(utils::log_tracker_path())
         .arg("-vv")
@@ -103,6 +106,7 @@ fn after_queue_host() {
 #[test]
 fn after_queue_search_string() {
     let output = Command::new("faketime")
+        .env("TZ", "Europe/Vienna")
         .arg("2020-12-31 23:59:59")
         .arg(utils::log_tracker_path())
         .arg("-vv")
@@ -128,6 +132,7 @@ fn after_queue_search_string() {
 #[test]
 fn after_queue_search_string_case_insensitive() {
     let output = Command::new("faketime")
+        .env("TZ", "Europe/Vienna")
         .arg("2020-12-31 23:59:59")
         .arg(utils::log_tracker_path())
         .arg("-vv")
@@ -153,6 +158,7 @@ fn after_queue_search_string_case_insensitive() {
 #[test]
 fn after_queue_relay_before_lmtp() {
     let output = Command::new("faketime")
+        .env("TZ", "Europe/Vienna")
         .arg("2020-12-31 23:59:59")
         .arg(utils::log_tracker_path())
         .arg("-vv")
@@ -176,6 +182,7 @@ fn after_queue_relay_before_lmtp() {
 #[test]
 fn after_queue_duplicate_msgid() {
     let output = Command::new("faketime")
+        .env("TZ", "Europe/Vienna")
         .arg("2020-12-31 23:59:59")
         .arg(utils::log_tracker_path())
         .arg("-vv")
