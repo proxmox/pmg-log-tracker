@@ -2236,6 +2236,42 @@ fn parse_number(data: &[u8], max_digits: usize) -> Option<(usize, &[u8])> {
 
 /// Parse time. Returns a tuple of (parsed_time, remaining_text) or None.
 fn parse_time(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, &'_ [u8])> {
+    parse_time_with_year(data).or_else(|| parse_time_no_year(data, cur_year, cur_month))
+}
+
+fn parse_time_with_year(data: &'_ [u8]) -> Option<(time_t, &'_ [u8])> {
+    let mut timestamp_buffer = [0u8; 25];
+
+    let count = data.iter().take_while(|b| **b != b' ').count();
+    if count != 27 && count != 32 {
+        return None;
+    }
+    let (timestamp, data) = data.split_at(count);
+    // remove whitespace
+    let data = &data[1..];
+
+    // microseconds: .123456 -> 7 bytes
+    let microseconds_idx = timestamp.iter().take_while(|b| **b != b'.').count();
+
+    // YYYY-MM-DDTHH:MM:SS
+    let year_time = &timestamp[0..microseconds_idx];
+    let year_time_len = year_time.len();
+    // Z | +HH:MM | -HH:MM
+    let timezone = &timestamp[microseconds_idx + 7..];
+    let timezone_len = timezone.len();
+    let timestamp_len = year_time_len + timezone_len;
+    timestamp_buffer[0..year_time_len].copy_from_slice(year_time);
+    timestamp_buffer[year_time_len..timestamp_len].copy_from_slice(timezone);
+
+    match proxmox_time::parse_rfc3339(unsafe {
+        std::str::from_utf8_unchecked(&timestamp_buffer[0..timestamp_len])
+    }) {
+        Ok(ltime) => Some((ltime, data)),
+        Err(_err) => None,
+    }
+}
+
+fn parse_time_no_year(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, &'_ [u8])> {
     if data.len() < 15 {
         return None;
     }

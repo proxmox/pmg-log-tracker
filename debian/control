@@ -11,6 +11,7 @@ Build-Depends: debhelper (>= 12),
  librust-clap-3+default-dev (>= 3.2.23-~~),
  librust-flate2-1+default-dev,
  librust-libc-0.2+default-dev,
+ librust-proxmox-time-1+default-dev (>= 1.1-~~),
  faketime
 Maintainer: Proxmox Support Team <support@proxmox.com>
 Standards-Version: 4.6.1
