@@ -3,8 +3,6 @@ include /usr/share/dpkg/architecture.mk
 
 PACKAGE=pmg-log-tracker
 
-GITVERSION:=$(shell git rev-parse HEAD)
-
 DEB=$(PACKAGE)_$(DEB_VERSION)_$(DEB_BUILD_ARCH).deb
 DBG_DEB=$(PACKAGE)-dbgsym_$(DEB_VERSION)_$(DEB_BUILD_ARCH).deb
 DSC=rust-$(PACKAGE)_$(DEB_VERSION).dsc
@@ -36,7 +34,7 @@ build:
 	rm build/Cargo.lock
 	find build/debian -name "*.hint" -delete
 	cp build/debian/control debian/control
-	echo "git clone git://git.proxmox.com/git/pmg-log-tracker.git\\ngit checkout ${GITVERSION}" > build/debian/SOURCE
+	echo "git clone git://git.proxmox.com/git/pmg-log-tracker.git\\ngit checkout $(shell git rev-parse HEAD)" > build/debian/SOURCE
 
 .PHONY: deb
 deb: $(DEB)
