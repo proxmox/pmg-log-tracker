@@ -36,6 +36,7 @@ build:
 	rm build/Cargo.lock
 	find build/debian -name "*.hint" -delete
 	cp build/debian/control debian/control
+	echo "git clone git://git.proxmox.com/git/pmg-log-tracker.git\\ngit checkout ${GITVERSION}" > build/debian/SOURCE
 
 .PHONY: deb
 deb: $(DEB)
