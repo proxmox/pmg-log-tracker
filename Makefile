@@ -38,7 +38,7 @@ build:
 .PHONY: deb
 deb: $(DEB)
 $(DEB) $(DBG_DEB): build
-	cd build; dpkg-buildpackage -b -us -uc --no-pre-clean --build-profiles=nodoc
+	cd build; dpkg-buildpackage -b -us -uc
 	lintian $(DEB)
 
 .PHONY: dsc
@@ -47,7 +47,7 @@ dsc: $(DSC)
 	lintian $(DSC)
 
 $(DSC): build
-	cd build; dpkg-buildpackage -S -us -uc -d -nc
+	cd build; dpkg-buildpackage -S -us -uc -d
 
 .PHONY: sbuild
 sbuild: $(DSC)
