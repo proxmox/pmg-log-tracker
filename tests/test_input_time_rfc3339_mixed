@@ -1,0 +1,67 @@
+2023-06-23T14:26:29.324152+02:00 pmg1 postfix/postscreen[1180]: CONNECT from [192.168.1.001]:58320 to [192.168.1.001]:25
+2023-06-23T14:26:29.324181+02:00 pmg1 postfix/postscreen[1180]: WHITELISTED [192.168.1.001]:58320
+2023-06-23T14:26:29.324224+02:00 pmg1 postfix/postscreen[1180]: using backwards-compatible default setting respectful_logging=no for client [192.168.1.001]:58320
+2023-06-23T14:26:29.331019+02:00 pmg1 postfix/smtpd[1181]: connect from pmghost.mydomain.tld[192.168.1.001]
+2023-06-23T14:26:29.336189+02:00 pmg1 postfix/smtpd[1181]: 520C9C0192: client=pmghost.mydomain.tld[192.168.1.001]
+2023-06-23T14:26:29.377880+02:00 pmg1 postfix/cleanup[1184]: 520C9C0192: message-id=<redacted:msgid>
+2023-06-23T14:26:29.390150+02:00 pmg1 postfix/qmgr[1136]: 520C9C0192: from=<redacted:returnpath@domain.tld>, size=1902, nrcpt=2 (queue active)
+2023-06-23T14:26:29.392121+02:00 pmg1 postfix/smtpd[1181]: disconnect from pmghost.mydomain.tld[192.168.1.001] ehlo=1 mail=1 rcpt=2 data=1 commands=5
+2023-06-23T14:26:29.395191+02:00 pmg1 pmg-smtp-filter[945]: 2023/06/23-14:26:29 CONNECT TCP Peer: "[127.0.0.1]:47134" Local: "[127.0.0.1]:10024"
+2023-06-23T14:26:29.395261+02:00 pmg1 pmg-smtp-filter[945]: reloading configuration Proxmox_ruledb
+2023-06-23T14:26:29.452836+02:00 pmg1 pmg-smtp-filter[945]: C019B64958F756CDA5: new mail message-id=<redacted:msgid>#012
+2023-06-23T14:26:33.403125+02:00 pmg1 pmg-smtp-filter[945]: C019B64958F756CDA5: SA score=999/5 time=3.932 bayes=undefined autolearn=disabled hits=DKIM_ADSP_NXDOMAIN(0.8),GTUBE(1000),HEADER_FROM_DIFFERENT_DOMAINS(0.25),KAM_DMARC_STATUS(0.01),RCVD_IN_DNSWL_MED(-2.3),RCVD_IN_MSPIKE_H3(-0.01),RCVD_IN_MSPIKE_WL(-0.01),SPF_HELO_NONE(0.001),SUBJ_ALL_CAPS(0.5),T_TVD_MIME_NO_HEADERS(0.01)
+2023-06-23T14:26:33.414170+02:00 pmg1 pmg-smtp-filter[945]: C019B64958F756CDA5: moved mail for <test@mydomain.tld> to spam quarantine - C01C264958F7962FEA (rule: quarall)
+2023-06-23T14:26:33.414342+02:00 pmg1 pmg-smtp-filter[945]: C019B64958F756CDA5: moved mail for <user@domain2.tld> to spam quarantine - C01C264958F7962FEA (rule: quarall)
+2023-06-23T14:26:33.418457+02:00 pmg1 pmg-smtp-filter[945]: C019B64958F756CDA5: processing time: 3.968 seconds (3.932, 0.015, 0)
+2023-06-23T14:26:33.418637+02:00 pmg1 postfix/lmtp[1186]: 520C9C0192: to=<test@mydomain.tld>, relay=127.0.0.1[127.0.0.1]:10024, delay=4.1, delays=0.06/0/0.05/4, dsn=2.5.0, status=sent (250 2.5.0 OK (C019B64958F756CDA5))
+2023-06-23T14:26:33.461645+02:00 pmg1 postfix/lmtp[1186]: 520C9C0192: to=<user@domain2.tld>, relay=127.0.0.1[127.0.0.1]:10024, delay=4.1, delays=0.06/0/0.05/4, dsn=2.5.0, status=sent (250 2.5.0 OK (C019B64958F756CDA5))
+2023-06-23T14:26:33.461834+02:00 pmg1 postfix/qmgr[1136]: 520C9C0192: removed
+2023-06-23T14:27:23.513591+02:00 pmg1 pmg-smtp-filter[905]: starting database maintenance
+2023-06-23T14:27:23.542354+02:00 pmg1 pmg-smtp-filter[905]: end database maintenance (28 ms)
+2023-06-23T14:27:33.001794+02:00 pmg1 systemd[1]: Started session-9.scope - Session 9 of User root.
+2023-06-23T14:27:33.051280+02:00 pmg1 systemd[1]: session-9.scope: Deactivated successfully.
+2023-06-23T14:27:40.550321Z pmg1 postfix/postscreen[1180]: CONNECT from [192.168.1.001]:39892 to [192.168.1.001]:25
+2023-06-23T14:27:40.550394Z pmg1 postfix/postscreen[1180]: WHITELISTED [192.168.1.001]:39892
+2023-06-23T14:27:40.550478Z pmg1 postfix/smtpd[1181]: connect from pmghost.mydomain.tld[192.168.1.001]
+2023-06-23T14:27:40.550799Z pmg1 postfix/smtpd[1181]: 866B7C0192: client=pmghost.mydomain.tld[192.168.1.001]
+2023-06-23T14:27:40.552674Z pmg1 postfix/cleanup[1184]: 866B7C0192: message-id=<redacted:msgid>
+2023-06-23T14:27:40.600303Z pmg1 postfix/qmgr[1136]: 866B7C0192: from=<redacted:returnpath@domain.tld>, size=44585, nrcpt=2 (queue active)
+2023-06-23T14:27:40.600340Z pmg1 postfix/smtpd[1181]: disconnect from pmghost.mydomain.tld[192.168.1.001] ehlo=1 mail=1 rcpt=2 data=1 commands=5
+2023-06-23T14:27:40.600582Z pmg1 pmg-smtp-filter[946]: 2023/06/23-14:27:40 CONNECT TCP Peer: "[127.0.0.1]:33362" Local: "[127.0.0.1]:10024"
+2023-06-23T14:27:40.600623Z pmg1 pmg-smtp-filter[946]: reloading configuration Proxmox_ruledb
+2023-06-23T14:27:40.657572Z pmg1 pmg-smtp-filter[946]: C019B64958FBC9EA20: new mail message-id=<redacted:msgid>#012
+2023-06-23T14:27:41.350786Z pmg1 pmg-smtp-filter[946]: C019B64958FBC9EA20: SA score=0/5 time=0.583 bayes=undefined autolearn=disabled hits=ALL_TRUSTED(-1),HEADER_FROM_DIFFERENT_DOMAINS(0.25),KAM_DMARC_STATUS(0.01),SUBJ_ALL_CAPS(0.5),T_SPF_HELO_TEMPERROR(0.01)
+2023-06-23T14:27:41.376794Z pmg1 pmg-smtp-filter[946]: C019B64958FBC9EA20: moved mail for <test@mydomain.tld> to spam quarantine - C01C364958FBD55D53 (rule: quarall)
+2023-06-23T14:27:41.376848Z pmg1 pmg-smtp-filter[946]: C019B64958FBC9EA20: moved mail for <user@domain2.tld> to spam quarantine - C01C364958FBD55D53 (rule: quarall)
+2023-06-23T14:27:41.385561Z pmg1 pmg-smtp-filter[946]: C019B64958FBC9EA20: processing time: 0.726 seconds (0.583, 0.106, 0)
+2023-06-23T14:27:41.385756Z pmg1 postfix/lmtp[1186]: 866B7C0192: to=<test@mydomain.tld>, relay=127.0.0.1[127.0.0.1]:10024, delay=0.84, delays=0.05/0/0.05/0.74, dsn=2.5.0, status=sent (250 2.5.0 OK (C019B64958FBC9EA20))
+2023-06-23T14:27:41.429627Z pmg1 postfix/lmtp[1186]: 866B7C0192: to=<user@domain2.tld>, relay=127.0.0.1[127.0.0.1]:10024, delay=0.88, delays=0.05/0/0.05/0.78, dsn=2.5.0, status=sent (250 2.5.0 OK (C019B64958FBC9EA20))
+2023-06-23T14:27:41.429803Z pmg1 postfix/qmgr[1136]: 866B7C0192: removed
+2023-06-23T14:28:17.609713Z pmg1 systemd[1]: Started session-10.scope - Session 10 of User root.
+2023-06-23T14:28:17.659597Z pmg1 systemd[1]: session-10.scope: Deactivated successfully.
+2023-06-23T14:28:23.806414-02:00 pmg1 postfix/postscreen[1180]: CONNECT from [192.168.1.001]:51308 to [192.168.1.001]:25
+2023-06-23T14:28:23.806488-02:00 pmg1 postfix/postscreen[1180]: WHITELISTED [192.168.1.001]:51308
+2023-06-23T14:28:23.806586-02:00 pmg1 postfix/smtpd[1181]: connect from pmghost.mydomain.tld[192.168.1.001]
+2023-06-23T14:28:23.806755-02:00 pmg1 postfix/smtpd[1181]: C4EC9C0192: client=pmghost.mydomain.tld[192.168.1.001]
+2023-06-23T14:28:23.807109-02:00 pmg1 postfix/cleanup[1184]: C4EC9C0192: message-id=<redacted:msgid>
+2023-06-23T14:28:23.862979-02:00 pmg1 postfix/qmgr[1136]: C4EC9C0192: from=<redacted:returnpath@domain.tld>, size=130922, nrcpt=2 (queue active)
+2023-06-23T14:28:23.863025-02:00 pmg1 postfix/smtpd[1181]: disconnect from pmghost.mydomain.tld[192.168.1.001] ehlo=1 mail=1 rcpt=2 data=1 commands=5
+2023-06-23T14:28:23.863110-02:00 pmg1 pmg-smtp-filter[945]: 2023/06/23-14:28:23 CONNECT TCP Peer: "[127.0.0.1]:47888" Local: "[127.0.0.1]:10024"
+2023-06-23T14:28:23.912017-02:00 pmg1 pmg-smtp-filter[945]: C019B64958FE7DD4C6: new mail message-id=<redacted:msgid>#012
+2023-06-23T14:28:26.162626-02:00 pmg1 pmg-smtp-filter[945]: C019B64958FE7DD4C6: SA score=1/5 time=2.195 bayes=undefined autolearn=disabled hits=DKIM_INVALID(0.1),DKIM_SIGNED(0.1),HEADER_FROM_DIFFERENT_DOMAINS(0.25),HTML_MESSAGE(0.001),KAM_DMARC_STATUS(0.01),KAM_EU(0.5),KAM_NUMSUBJECT(0.5),KAM_SOMETLD_ARE_BAD_TLD(5),MAILING_LIST_MULTI(-1),RCVD_IN_DNSWL_NONE(-0.0001),RCVD_IN_HOSTKARMA_W(-2.5),RCVD_IN_MSPIKE_H5(-1),RCVD_IN_MSPIKE_WL(-0.01),SPF_HELO_PASS(-0.001),SPF_PASS(-0.001)
+2023-06-23T14:28:26.189001-02:00 pmg1 pmg-smtp-filter[945]: C019B64958FE7DD4C6: moved mail for <test@mydomain.tld> to spam quarantine - C01D364958FEA2A254 (rule: quarall)
+2023-06-23T14:28:26.189075-02:00 pmg1 pmg-smtp-filter[945]: C019B64958FE7DD4C6: moved mail for <user@domain2.tld> to spam quarantine - C01D364958FEA2A254 (rule: quarall)
+2023-06-23T14:28:26.193461-02:00 pmg1 pmg-smtp-filter[945]: C019B64958FE7DD4C6: processing time: 2.281 seconds (2.195, 0.053, 0)
+2023-06-23T14:28:26.193813-02:00 pmg1 postfix/lmtp[1186]: C4EC9C0192: to=<test@mydomain.tld>, relay=127.0.0.1[127.0.0.1]:10024, delay=2.4, delays=0.06/0/0.04/2.3, dsn=2.5.0, status=sent (250 2.5.0 OK (C019B64958FE7DD4C6))
+2023-06-23T14:28:26.241632-02:00 pmg1 postfix/lmtp[1186]: C4EC9C0192: to=<user@domain2.tld>, relay=127.0.0.1[127.0.0.1]:10024, delay=2.4, delays=0.06/0/0.04/2.3, dsn=2.5.0, status=sent (250 2.5.0 OK (C019B64958FE7DD4C6))
+2023-06-23T14:28:26.242140-02:00 pmg1 postfix/qmgr[1136]: C4EC9C0192: removed
+2023-06-23T14:28:30.738265-02:00 pmg1 pmgpolicy[891]: starting policy database maintenance (greylist, rbl)
+2023-06-23T14:28:30.762153-02:00 pmg1 pmgpolicy[891]: end policy database maintenance (21 ms, 0 ms)
+2023-06-23T14:28:42.463301-02:00 pmg1 postfix/smtpd[1274]: connect from localhost.localdomain[127.0.0.1]
+2023-06-23T14:28:42.463813-02:00 pmg1 postfix/smtpd[1274]: 71386C0192: client=localhost.localdomain[127.0.0.1]
+2023-06-23T14:28:42.465704-02:00 pmg1 postfix/cleanup[1184]: 71386C0192: message-id=<redacted:msgid>
+2023-06-23T14:28:42.478211-02:00 pmg1 postfix/qmgr[1136]: 71386C0192: from=<postmaster@pmghost.mydomain.tld>, size=129347, nrcpt=1 (queue active)
+2023-06-23T14:28:42.478483-02:00 pmg1 postfix/smtpd[1274]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 mail=1 rcpt=1 data=1 commands=4
+2023-06-23T14:28:42.480451-02:00 pmg1 pmgdaemon[927]: delivered quarantined mail 'C0R3T189970205' (/var/spool/pmg/spam/54/C01D364958FEA2A254)
+2023-06-23T14:28:49.391726-02:00 pmg1 postfix/smtp[1275]: 71386C0192: to=<user@domain2.tld>, relay=relay.domain3.tld[192.168.1.002]:25, delay=6.9, delays=0.01/0/1/5.9, dsn=2.5.0, status=sent (250 2.5.0 OK (42FC464958FFB88ED3))
+2023-06-23T14:28:49.391940-02:00 pmg1 postfix/qmgr[1136]: 71386C0192: removed
