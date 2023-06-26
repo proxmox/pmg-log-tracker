@@ -1,3 +1,13 @@
+rust-pmg-log-tracker (2.4.0) bookworm; urgency=medium
+
+  * rebuild for Proxmox Mail Gateway 8 based on Debian 12 Bookworm
+
+  * switch to native versioning
+
+  * add support for bookworm rfc3339 like syslog time format
+
+ -- Proxmox Support Team <support@proxmox.com>  Mon, 26 Jun 2023 18:03:19 +0200
+
 rust-pmg-log-tracker (2.3.2-1) bullseye; urgency=medium
 
   * re-build with updated rustc and dependencies
