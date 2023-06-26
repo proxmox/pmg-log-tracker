@@ -66,5 +66,5 @@ distclean: clean
 
 .PHONY: clean
 clean:
-	rm -rf *.deb $(PACKAGE)-* *.buildinfo *.changes *.dsc rust-$(PACKAGE)_*.tar.?z build/ *build
-	find . -name '*~' -exec rm {} ';'
+	rm -rf $(PACKAGE)-[0-9]*/ build/
+	rm -f *.deb *.buildinfo *.changes *.dsc rust-$(PACKAGE)*.tar* *build
