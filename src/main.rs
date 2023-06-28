@@ -1737,6 +1737,8 @@ struct Parser {
     string_match: bool,
 
     lines: u64,
+
+    timezone_offset: time_t,
 }
 
 impl Parser {
@@ -1762,6 +1764,7 @@ impl Parser {
             ctime: 0,
             string_match: false,
             lines: 0,
+            timezone_offset: ltime.tm_gmtoff,
         })
     }
 
@@ -1836,7 +1839,12 @@ impl Parser {
             let line = &buffer[0..size - 1];
             let complete_line = line;
 
-            let (time, line) = match parse_time(line, self.current_year, self.current_month) {
+            let (time, line) = match parse_time(
+                line,
+                self.current_year,
+                self.current_month,
+                self.timezone_offset,
+            ) {
                 Some(t) => t,
                 None => continue,
             };
@@ -1920,9 +1928,12 @@ impl Parser {
                         if size == 0 {
                             return count;
                         }
-                        if let Some((time, _)) =
-                            parse_time(&buffer[0..size], self.current_year, self.current_month)
-                        {
+                        if let Some((time, _)) = parse_time(
+                            &buffer[0..size],
+                            self.current_year,
+                            self.current_month,
+                            self.timezone_offset,
+                        ) {
                             // found the earliest file in the time frame
                             if time < self.options.start {
                                 break;
@@ -1937,9 +1948,12 @@ impl Parser {
                         if size == 0 {
                             return count;
                         }
-                        if let Some((time, _)) =
-                            parse_time(&buffer[0..size], self.current_year, self.current_month)
-                        {
+                        if let Some((time, _)) = parse_time(
+                            &buffer[0..size],
+                            self.current_year,
+                            self.current_month,
+                            self.timezone_offset,
+                        ) {
                             if time < self.options.start {
                                 break;
                             }
@@ -2235,11 +2249,17 @@ fn parse_number(data: &[u8], max_digits: usize) -> Option<(usize, &[u8])> {
 }
 
 /// Parse time. Returns a tuple of (parsed_time, remaining_text) or None.
-fn parse_time(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, &'_ [u8])> {
-    parse_time_with_year(data).or_else(|| parse_time_no_year(data, cur_year, cur_month))
+fn parse_time(
+    data: &'_ [u8],
+    cur_year: i64,
+    cur_month: i64,
+    timezone_offset: time_t,
+) -> Option<(time_t, &'_ [u8])> {
+    parse_time_with_year(data, timezone_offset)
+        .or_else(|| parse_time_no_year(data, cur_year, cur_month))
 }
 
-fn parse_time_with_year(data: &'_ [u8]) -> Option<(time_t, &'_ [u8])> {
+fn parse_time_with_year(data: &'_ [u8], timezone_offset: time_t) -> Option<(time_t, &'_ [u8])> {
     let mut timestamp_buffer = [0u8; 25];
 
     let count = data.iter().take_while(|b| **b != b' ').count();
@@ -2266,7 +2286,8 @@ fn parse_time_with_year(data: &'_ [u8]) -> Option<(time_t, &'_ [u8])> {
     match proxmox_time::parse_rfc3339(unsafe {
         std::str::from_utf8_unchecked(&timestamp_buffer[0..timestamp_len])
     }) {
-        Ok(ltime) => Some((ltime, data)),
+        // TODO handle timezone offset in old code path instead
+        Ok(ltime) => Some((ltime + timezone_offset, data)),
         Err(_err) => None,
     }
 }
