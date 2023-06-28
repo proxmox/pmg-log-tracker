@@ -6,7 +6,10 @@ mod utils;
 
 #[test]
 fn after_queue_time_rfc3339_mixed() {
-    let output = Command::new(utils::log_tracker_path())
+    let output = Command::new("faketime")
+        .env("TZ", "Europe/Vienna")
+        .arg("2023-06-28 23:59:59")
+        .arg(utils::log_tracker_path())
         .arg("-vv")
         .arg("-s")
         .arg("2023-06-23 00:00:00")
