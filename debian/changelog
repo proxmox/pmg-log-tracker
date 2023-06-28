@@ -1,3 +1,10 @@
+rust-pmg-log-tracker (2.4.1) bookworm; urgency=medium
+
+  * fix compatibility with API/Tracking Center, which assumes that the
+    timestamps are always in the local timezone rather than UTC.
+
+ -- Proxmox Support Team <support@proxmox.com>  Wed, 28 Jun 2023 12:33:06 +0200
+
 rust-pmg-log-tracker (2.4.0) bookworm; urgency=medium
 
   * rebuild for Proxmox Mail Gateway 8 based on Debian 12 Bookworm
