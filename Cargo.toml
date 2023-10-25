@@ -11,7 +11,7 @@ exclude = [ "build", "debian" ]
 
 [dependencies]
 anyhow = "1"
-clap = { version = "3.2.23", features = ["cargo"] }
 flate2 = "1.0"
 libc = "0.2"
 proxmox-time = "1.1"
+pico-args = { version = "0.4", features = ["combined-flags"] }

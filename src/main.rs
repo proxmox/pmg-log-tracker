@@ -13,111 +13,55 @@ use anyhow::{bail, Error};
 use flate2::read;
 use libc::time_t;
 
-use clap::{App, Arg};
-
 mod time;
 use time::{Tm, CAL_MTOD};
 
+fn print_usage() {
+    let pkg_version = env!("CARGO_PKG_VERSION");
+    println!(
+        "\
+pmg-log-tracker {pkg_version}
+Proxmox Mailgateway Log Tracker. Tool to scan mail logs.
+
+USAGE:
+    pmg-log-tracker [OPTIONS]
+
+OPTIONS:
+    -e, --endtime <TIME>            End time (YYYY-MM-DD HH:MM:SS) or seconds since epoch
+    -f, --from <SENDER>             Mails from SENDER
+    -g, --exclude-greylist          Exclude greylist entries
+    -h, --host <HOST>               Hostname or Server IP
+        --help                      Print help information
+    -i, --inputfile <INPUTFILE>     Input file to use instead of /var/log/syslog, or '-' for stdin
+    -l, --limit <MAX>               Print MAX entries [default: 0]
+    -m, --message-id <MSGID>        Message ID (exact match)
+    -n, --exclude-ndr               Exclude NDR entries
+    -q, --queue-id <QID>            Queue ID (exact match), can be specified multiple times
+    -s, --starttime <TIME>          Start time (YYYY-MM-DD HH:MM:SS) or seconds since epoch
+    -t, --to <RECIPIENT>            Mails to RECIPIENT
+    -v, --verbose                   Verbose output, can be specified multiple times
+    -V, --version                   Print version information
+    -x, --search-string <STRING>    Search for string",
+    );
+}
+
 fn main() -> Result<(), Error> {
-    let matches = App::new(clap::crate_name!())
-        .version(clap::crate_version!())
-        .about(clap::crate_description!())
-        .arg(
-            Arg::with_name("verbose")
-                .short('v')
-                .long("verbose")
-                .help("Verbose output, can be specified multiple times")
-                .action(clap::ArgAction::Count),
-        )
-        .arg(
-            Arg::with_name("inputfile")
-                .short('i')
-                .long("inputfile")
-                .help("Input file to use instead of /var/log/syslog, or '-' for stdin")
-                .value_name("INPUTFILE"),
-        )
-        .arg(
-            Arg::with_name("host")
-                .short('h')
-                .long("host")
-                .help("Hostname or Server IP")
-                .value_name("HOST"),
-        )
-        .arg(
-            Arg::with_name("from")
-                .short('f')
-                .long("from")
-                .help("Mails from SENDER")
-                .value_name("SENDER"),
-        )
-        .arg(
-            Arg::with_name("to")
-                .short('t')
-                .long("to")
-                .help("Mails to RECIPIENT")
-                .value_name("RECIPIENT"),
-        )
-        .arg(
-            Arg::with_name("start")
-                .short('s')
-                .long("starttime")
-                .help("Start time (YYYY-MM-DD HH:MM:SS) or seconds since epoch")
-                .value_name("TIME"),
-        )
-        .arg(
-            Arg::with_name("end")
-                .short('e')
-                .long("endtime")
-                .help("End time (YYYY-MM-DD HH:MM:SS) or seconds since epoch")
-                .value_name("TIME"),
-        )
-        .arg(
-            Arg::with_name("msgid")
-                .short('m')
-                .long("message-id")
-                .help("Message ID (exact match)")
-                .value_name("MSGID"),
-        )
-        .arg(
-            Arg::with_name("qids")
-                .short('q')
-                .long("queue-id")
-                .help("Queue ID (exact match), can be specified multiple times")
-                .value_name("QID")
-                .multiple(true)
-                .number_of_values(1),
-        )
-        .arg(
-            Arg::with_name("search")
-                .short('x')
-                .long("search-string")
-                .help("Search for string")
-                .value_name("STRING"),
-        )
-        .arg(
-            Arg::with_name("limit")
-                .short('l')
-                .long("limit")
-                .help("Print MAX entries")
-                .value_name("MAX")
-                .default_value("0"),
-        )
-        .arg(
-            Arg::with_name("exclude_greylist")
-                .short('g')
-                .long("exclude-greylist")
-                .help("Exclude greylist entries"),
-        )
-        .arg(
-            Arg::with_name("exclude_ndr")
-                .short('n')
-                .long("exclude-ndr")
-                .help("Exclude NDR entries"),
-        )
-        .get_matches();
+    let mut args = pico_args::Arguments::from_env();
+    if args.contains("--help") {
+        print_usage();
+        return Ok(());
+    }
 
     let mut parser = Parser::new()?;
-    parser.handle_args(matches)?;
+    parser.handle_args(&mut args)?;
+
+    let remaining_options = args.finish();
+    if !remaining_options.is_empty() {
+        bail!(
+            "Found invalid arguments: {:?}",
+            remaining_options.join(", ".as_ref())
+        )
+    }
 
     println!("# LogReader: {}", std::process::id());
     println!("# Query options");
@@ -1970,16 +1914,16 @@ impl Parser {
         count + 1
     }
 
-    fn handle_args(&mut self, args: clap::ArgMatches) -> Result<(), Error> {
-        if let Some(inputfile) = args.value_of("inputfile") {
-            self.options.inputfile = inputfile.to_string();
+    fn handle_args(&mut self, args: &mut pico_args::Arguments) -> Result<(), Error> {
+        if let Some(inputfile) = args.opt_value_from_str(["-i", "--inputfile"])? {
+            self.options.inputfile = inputfile;
         }
 
-        if let Some(start) = args.value_of("start") {
-            if let Ok(res) = time::strptime(start, c_str!("%F %T")) {
+        if let Some(start) = args.opt_value_from_str::<_, String>(["-s", "--starttime"])? {
+            if let Ok(res) = time::strptime(&start, c_str!("%F %T")) {
                 self.options.start = res.as_utc_to_epoch();
                 self.start_tm = res;
-            } else if let Ok(res) = time::strptime(start, c_str!("%s")) {
+            } else if let Ok(res) = time::strptime(&start, c_str!("%s")) {
                 self.options.start = res.as_utc_to_epoch();
                 self.start_tm = res;
             } else {
@@ -1994,11 +1938,11 @@ impl Parser {
             self.start_tm = ltime;
         }
 
-        if let Some(end) = args.value_of("end") {
-            if let Ok(res) = time::strptime(end, c_str!("%F %T")) {
+        if let Some(end) = args.opt_value_from_str::<_, String>(["-e", "--endtime"])? {
+            if let Ok(res) = time::strptime(&end, c_str!("%F %T")) {
                 self.options.end = res.as_utc_to_epoch();
                 self.end_tm = res;
-            } else if let Ok(res) = time::strptime(end, c_str!("%s")) {
+            } else if let Ok(res) = time::strptime(&end, c_str!("%s")) {
                 self.options.end = res.as_utc_to_epoch();
                 self.end_tm = res;
             } else {
@@ -2013,53 +1957,50 @@ impl Parser {
             bail!("end time before start time");
         }
 
-        self.options.limit = match args.value_of("limit") {
+        self.options.limit = match args.opt_value_from_str::<_, String>(["-l", "--limit"])? {
             Some(l) => l.parse().unwrap(),
             None => 0,
         };
 
-        if let Some(qids) = args.values_of("qids") {
-            for q in qids {
-                let ltime: time_t = 0;
-                let rel_line_nr: libc::c_ulong = 0;
-                let input = CString::new(q)?;
-                let bytes = concat!("T%08lXL%08lX", "\0");
-                let format =
-                    unsafe { std::ffi::CStr::from_bytes_with_nul_unchecked(bytes.as_bytes()) };
-                if unsafe {
-                    libc::sscanf(input.as_ptr(), format.as_ptr(), &ltime, &rel_line_nr) == 2
-                } {
-                    self.options
-                        .match_list
-                        .push(Match::RelLineNr(ltime, rel_line_nr));
-                } else {
-                    self.options
-                        .match_list
-                        .push(Match::Qid(q.as_bytes().into()));
-                }
+        while let Some(q) = args.opt_value_from_str::<_, String>(["-q", "--queue-id"])? {
+            let ltime: time_t = 0;
+            let rel_line_nr: libc::c_ulong = 0;
+            let input = CString::new(q.as_str())?;
+            let bytes = concat!("T%08lXL%08lX", "\0");
+            let format = unsafe { std::ffi::CStr::from_bytes_with_nul_unchecked(bytes.as_bytes()) };
+            if unsafe { libc::sscanf(input.as_ptr(), format.as_ptr(), &ltime, &rel_line_nr) == 2 } {
+                self.options
+                    .match_list
+                    .push(Match::RelLineNr(ltime, rel_line_nr));
+            } else {
+                self.options
+                    .match_list
+                    .push(Match::Qid(q.as_bytes().into()));
             }
         }
 
-        if let Some(from) = args.value_of("from") {
-            self.options.from = from.to_string();
+        if let Some(from) = args.opt_value_from_str(["-f", "--from"])? {
+            self.options.from = from;
         }
-        if let Some(to) = args.value_of("to") {
-            self.options.to = to.to_string();
+        if let Some(to) = args.opt_value_from_str(["-t", "--to"])? {
+            self.options.to = to;
         }
-        if let Some(host) = args.value_of("host") {
-            self.options.host = host.to_string();
+        if let Some(host) = args.opt_value_from_str(["-h", "--host"])? {
+            self.options.host = host;
         }
-        if let Some(msgid) = args.value_of("msgid") {
-            self.options.msgid = msgid.to_string();
+        if let Some(msgid) = args.opt_value_from_str(["-m", "--msgid"])? {
+            self.options.msgid = msgid;
         }
 
-        self.options.exclude_greylist = args.is_present("exclude_greylist");
-        self.options.exclude_ndr = args.is_present("exclude_ndr");
+        self.options.exclude_greylist = args.contains(["-g", "--exclude-greylist"]);
+        self.options.exclude_ndr = args.contains(["-n", "--exclude-ndr"]);
 
-        self.options.verbose = args.get_count("verbose") as _;
+        while args.contains(["-v", "--verbose"]) {
+            self.options.verbose += 1;
+        }
 
-        if let Some(string_match) = args.value_of("search") {
-            self.options.string_match = string_match.to_string();
+        if let Some(string_match) = args.opt_value_from_str(["-x", "--search-string"])? {
+            self.options.string_match = string_match;
         }
 
         Ok(())
