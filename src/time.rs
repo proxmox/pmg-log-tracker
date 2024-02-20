@@ -149,7 +149,8 @@ pub fn strftime(format: &CStr, tm: &Tm) -> Result<String, Error> {
 
 /// Wrapper around `strptime(3)` to parse time strings.
 pub fn strptime(time: &str, format: &CStr) -> Result<Tm, Error> {
-    let mut out = MaybeUninit::<libc::tm>::uninit();
+    // zero memory because strptime does not necessarily initialize tm_isdst, tm_gmtoff and tm_zone
+    let mut out = MaybeUninit::<libc::tm>::zeroed();
 
     let time = CString::new(time).map_err(|_| format_err!("time string contains nul bytes"))?;
 
@@ -166,4 +167,24 @@ pub fn strptime(time: &str, format: &CStr) -> Result<Tm, Error> {
     }
 
     Ok(Tm(unsafe { out.assume_init() }))
+}
+
+pub fn date_to_rfc3339(date: &str) -> Result<String, Error> {
+    // parse the YYYY-MM-DD HH:MM:SS format for the timezone info
+    let ltime = strptime(date, c_str!("%F %T"))?;
+
+    // strptime assume it is in UTC, but we want to interpret it as local time and get the timezone
+    // offset (tm_gmtoff) which we can then append to be able to parse it as rfc3339
+    let ltime = Tm::at_local(ltime.as_utc_to_epoch())?;
+
+    let mut s = date.replacen(' ', "T", 1);
+    if ltime.tm_gmtoff != 0 {
+        let sign = if ltime.tm_gmtoff < 0 { '-' } else { '+' };
+        let minutes = (ltime.tm_gmtoff / 60) % 60;
+        let hours = ltime.tm_gmtoff / (60 * 60);
+        s.push_str(&format!("{}{:02}:{:02}", sign, hours, minutes));
+    } else {
+        s.push('Z');
+    }
+    Ok(s)
 }

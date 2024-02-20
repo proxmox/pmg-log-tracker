@@ -9,7 +9,7 @@ use std::io::BufReader;
 use std::io::BufWriter;
 use std::io::Write;
 
-use anyhow::{bail, Error};
+use anyhow::{bail, Context, Error};
 use flate2::read;
 use libc::time_t;
 
@@ -90,12 +90,12 @@ fn main() -> Result<(), Error> {
 
     println!(
         "# Start: {} ({})",
-        time::strftime(c_str!("%F %T"), &parser.start_tm)?,
+        proxmox_time::strftime_local("%F %T", parser.options.start)?,
         parser.options.start
     );
     println!(
         "# End: {} ({})",
-        time::strftime(c_str!("%F %T"), &parser.end_tm)?,
+        proxmox_time::strftime_local("%F %T", parser.options.end)?,
         parser.options.end
     );
 
@@ -1681,8 +1681,6 @@ struct Parser {
     string_match: bool,
 
     lines: u64,
-
-    timezone_offset: time_t,
 }
 
 impl Parser {
@@ -1708,7 +1706,6 @@ impl Parser {
             ctime: 0,
             string_match: false,
             lines: 0,
-            timezone_offset: ltime.tm_gmtoff,
         })
     }
 
@@ -1787,7 +1784,11 @@ impl Parser {
                 line,
                 self.current_year,
                 self.current_month,
-                self.timezone_offset,
+                // use start time for timezone offset in parse_time_no_year rather than the
+                // timezone offset of the current time
+                // this is required for cases where current time is in standard time, while start
+                // time is in summer time or the other way around
+                self.start_tm.tm_gmtoff,
             ) {
                 Some(t) => t,
                 None => continue,
@@ -1876,7 +1877,7 @@ impl Parser {
                             &buffer[0..size],
                             self.current_year,
                             self.current_month,
-                            self.timezone_offset,
+                            self.start_tm.tm_gmtoff,
                         ) {
                             // found the earliest file in the time frame
                             if time < self.options.start {
@@ -1896,7 +1897,7 @@ impl Parser {
                             &buffer[0..size],
                             self.current_year,
                             self.current_month,
-                            self.timezone_offset,
+                            self.start_tm.tm_gmtoff,
                         ) {
                             if time < self.options.start {
                                 break;
@@ -1920,12 +1921,14 @@ impl Parser {
         }
 
         if let Some(start) = args.opt_value_from_str::<_, String>(["-s", "--starttime"])? {
-            if let Ok(res) = time::strptime(&start, c_str!("%F %T")) {
-                self.options.start = res.as_utc_to_epoch();
-                self.start_tm = res;
-            } else if let Ok(res) = time::strptime(&start, c_str!("%s")) {
-                self.options.start = res.as_utc_to_epoch();
-                self.start_tm = res;
+            if let Ok(epoch) = proxmox_time::parse_rfc3339(&start).or_else(|_| {
+                time::date_to_rfc3339(&start).and_then(|s| proxmox_time::parse_rfc3339(&s))
+            }) {
+                self.options.start = epoch;
+                self.start_tm = time::Tm::at_local(epoch).context("failed to parse start time")?;
+            } else if let Ok(epoch) = start.parse::<time_t>() {
+                self.options.start = epoch;
+                self.start_tm = time::Tm::at_local(epoch).context("failed to parse start time")?;
             } else {
                 bail!("failed to parse start time");
             }
@@ -1939,12 +1942,14 @@ impl Parser {
         }
 
         if let Some(end) = args.opt_value_from_str::<_, String>(["-e", "--endtime"])? {
-            if let Ok(res) = time::strptime(&end, c_str!("%F %T")) {
-                self.options.end = res.as_utc_to_epoch();
-                self.end_tm = res;
-            } else if let Ok(res) = time::strptime(&end, c_str!("%s")) {
-                self.options.end = res.as_utc_to_epoch();
-                self.end_tm = res;
+            if let Ok(epoch) = proxmox_time::parse_rfc3339(&end).or_else(|_| {
+                time::date_to_rfc3339(&end).and_then(|s| proxmox_time::parse_rfc3339(&s))
+            }) {
+                self.options.end = epoch;
+                self.end_tm = time::Tm::at_local(epoch).context("failed to parse end time")?;
+            } else if let Ok(epoch) = end.parse::<time_t>() {
+                self.options.end = epoch;
+                self.end_tm = time::Tm::at_local(epoch).context("failed to parse end time")?;
             } else {
                 bail!("failed to parse end time");
             }
@@ -2196,11 +2201,11 @@ fn parse_time(
     cur_month: i64,
     timezone_offset: time_t,
 ) -> Option<(time_t, &'_ [u8])> {
-    parse_time_with_year(data, timezone_offset)
-        .or_else(|| parse_time_no_year(data, cur_year, cur_month))
+    parse_time_with_year(data)
+        .or_else(|| parse_time_no_year(data, cur_year, cur_month, timezone_offset))
 }
 
-fn parse_time_with_year(data: &'_ [u8], timezone_offset: time_t) -> Option<(time_t, &'_ [u8])> {
+fn parse_time_with_year(data: &'_ [u8]) -> Option<(time_t, &'_ [u8])> {
     let mut timestamp_buffer = [0u8; 25];
 
     let count = data.iter().take_while(|b| **b != b' ').count();
@@ -2227,13 +2232,17 @@ fn parse_time_with_year(data: &'_ [u8], timezone_offset: time_t) -> Option<(time
     match proxmox_time::parse_rfc3339(unsafe {
         std::str::from_utf8_unchecked(&timestamp_buffer[0..timestamp_len])
     }) {
-        // TODO handle timezone offset in old code path instead
-        Ok(ltime) => Some((ltime + timezone_offset, data)),
+        Ok(ltime) => Some((ltime, data)),
         Err(_err) => None,
     }
 }
 
-fn parse_time_no_year(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(time_t, &'_ [u8])> {
+fn parse_time_no_year(
+    data: &'_ [u8],
+    cur_year: i64,
+    cur_month: i64,
+    timezone_offset: time_t,
+) -> Option<(time_t, &'_ [u8])> {
     if data.len() < 15 {
         return None;
     }
@@ -2338,7 +2347,7 @@ fn parse_time_no_year(data: &'_ [u8], cur_year: i64, cur_month: i64) -> Option<(
         _ => &data[1..],
     };
 
-    Some((ltime, data))
+    Some((ltime - timezone_offset, data))
 }
 
 type ByteSlice<'a> = &'a [u8];
