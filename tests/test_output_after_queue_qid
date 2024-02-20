@@ -6,11 +6,11 @@
 # End Query Options
 
 QENTRY: 0022C3801B5
-CTIME: 5FDCD100
+CTIME: 5FDCC2F0
 SIZE: 2053
 CLIENT: pmg.localhost[192.168.22.40]
 MSGID: <dc730f87-0b1d-3ecf-b9a5-5b4d910be95f@localhost>
-TO:5FDCD100:0022C3801B5:B: from <mailtestsender2@localhost.localdomain> to <pmgtest@localhost> (none)
+TO:5FDCC2F0:0022C3801B5:B: from <mailtestsender2@localhost.localdomain> to <pmgtest@localhost> (none)
 SMTP:
 L0000002A Dec 18 15:55:43 pmg postfix/smtpd[29323]: connect from pmg.localhost[192.168.22.40]
 L0000002B Dec 18 15:55:44 pmg postfix/smtpd[29323]: 0022C3801B5: client=pmg.localhost[192.168.22.40]

@@ -4,10 +4,10 @@
 # End: 2020-08-27 14:05:00 (1598537100)
 # End Query Options
 
-SMTPD: T5F47BD58L00000000
-CTIME: 5F47BD58
+SMTPD: T5F47A138L00000000
+CTIME: 5F47A138
 CLIENT: pmgsender[192.168.22.40]
-TO:5F47BD58:T5F47BD58L00000000:N: from <test@pmgsender.local> to <test@pmgreceiver.local>
+TO:5F47A138:T5F47A138L00000000:N: from <test@pmgsender.local> to <test@pmgreceiver.local>
 LOGS:
 L00000001 Aug 27 14:04:08 pmg6 postfix/smtpd[7567]: connect from pmgsender[192.168.22.40]
 L00000002 Aug 27 14:04:08 pmg6 postfix/smtpd[7567]: Anonymous TLS connection established from pmgsender[192.168.22.40]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256

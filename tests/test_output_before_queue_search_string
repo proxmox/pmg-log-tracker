@@ -5,10 +5,10 @@
 # End: 2020-12-18 15:40:00 (1608306000)
 # End Query Options
 
-SMTPD: T5FDCC4EFL00000000
-CTIME: 5FDCC4EF
+SMTPD: T5FDCB6DFL00000000
+CTIME: 5FDCB6DF
 CLIENT: pmg.localhost[192.168.22.40]
-TO:5FDCC4EF:T5FDCC4EFL00000000:B: from <mailtestsender2@localhost.localdomain> to <pmgtest@localhost.localdomain>
+TO:5FDCB6DF:T5FDCB6DFL00000000:B: from <mailtestsender2@localhost.localdomain> to <pmgtest@localhost.localdomain>
 LOGS:
 L00000002 Dec 18 15:04:15 pmg postfix/smtpd[21842]: connect from pmg.localhost[192.168.22.40]
 L00000003 Dec 18 15:04:15 pmg postfix/smtpd[21842]: NOQUEUE: client=pmg.localhost[192.168.22.40]
@@ -18,10 +18,10 @@ L00000007 Dec 18 15:04:15 pmg pmg-smtp-filter[1565]: 381C4E5DFA31DF9E90F: proces
 L00000008 Dec 18 15:04:15 pmg postfix/smtpd[21842]: proxy-reject: END-OF-MESSAGE: 554 5.7.1 Rejected for policy reasons (381C4E5DFA31DF9E90F); from=<mailtestsender2@localhost.localdomain> to=<pmgtest@localhost.localdomain> proto=ESMTP helo=<localhost.localdomain>
 L00000009 Dec 18 15:04:15 pmg postfix/smtpd[21842]: disconnect from pmg.localhost[192.168.22.40] ehlo=1 mail=1 rcpt=1 data=0/1 commands=3/4
 
-SMTPD: T5FDCCD46L00000000
-CTIME: 5FDCCD46
+SMTPD: T5FDCBF36L00000000
+CTIME: 5FDCBF36
 CLIENT: 10.0.0.1
-TO:5FDCCD46:T5FDCCD46L00000000:N: from <rbl_reject_test@localhost.localdomain> to <test@reject.localhost.localdomain>
+TO:5FDCBF36:T5FDCBF36L00000000:N: from <rbl_reject_test@localhost.localdomain> to <test@reject.localhost.localdomain>
 LOGS:
 L0000003A Dec 18 15:39:50 proxmox-new postfix/postscreen[32700]: NOQUEUE: reject: RCPT from [10.0.0.1]:34453: 550 5.7.1 Service unavailable; client [10.0.0.1] blocked using zen.spamhaus.org; from=<rbl_reject_test@localhost.localdomain>, to=<test@reject.localhost.localdomain>, proto=ESMTP, helo=<localhost.localdomain>
 

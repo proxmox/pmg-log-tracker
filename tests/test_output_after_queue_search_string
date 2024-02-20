@@ -5,17 +5,17 @@
 # END:       2020-12-18 16:00:00 (1608307200)
 # End Query Options
 
-SMTPD: T5FDCCFDAL00000000
-CTIME: 5FDCCFDA
+SMTPD: T5FDCC1CAL00000000
+CTIME: 5FDCC1CA
 CLIENT: 10.0.0.1
-TO:5FDCCFDA:T5FDCCFDAL00000000:N: from <rbl_reject_test@localhost.localdomain> to <test@reject.localhost.localdomain>
+TO:5FDCC1CA:T5FDCC1CAL00000000:N: from <rbl_reject_test@localhost.localdomain> to <test@reject.localhost.localdomain>
 LOGS:
 L00000029 Dec 18 15:50:50 proxmox-new postfix/postscreen[32700]: NOQUEUE: reject: RCPT from [10.0.0.1]:34453: 550 5.7.1 Service unavailable; client [10.0.0.1] blocked using zen.spamhaus.org; from=<rbl_reject_test@localhost.localdomain>, to=<test@reject.localhost.localdomain>, proto=ESMTP, helo=<localhost.localdomain>
 
-SMTPD: T5FDCD200L00000001
-CTIME: 5FDCD200
+SMTPD: T5FDCC3F0L00000001
+CTIME: 5FDCC3F0
 CLIENT: 192.0.2.0
-TO:5FDCD200:T5FDCD200L00000001:N: from <info@test.example> to <>
+TO:5FDCC3F0:T5FDCC3F0L00000001:N: from <info@test.example> to <>
 LOGS:
 L00000037 Dec 18 16:00:00 pmg postfix/postscreen[42055]: NOQUEUE: reject: RCPT from [192.0.2.0]:38834: 550 5.7.1 Service unavailable; client [192.0.2.0] blocked using testbl.example; from=<info@test.example>, to=<>, proto=ESMTP, helo=<testhost.example>
 
