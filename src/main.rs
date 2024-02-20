@@ -748,8 +748,9 @@ impl Default for ToEntry {
     }
 }
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialEq, Copy, Clone, Default)]
 enum DStatus {
+    #[default]
     Invalid,
     Accept,
     Quarantine,
@@ -760,12 +761,6 @@ enum DStatus {
     BqDefer,
     BqReject,
     Dsn(u32),
-}
-
-impl Default for DStatus {
-    fn default() -> Self {
-        DStatus::Invalid
-    }
 }
 
 impl std::fmt::Display for DStatus {
@@ -1314,6 +1309,7 @@ impl QEntry {
         true
     }
 
+    #[allow(clippy::wrong_self_convention)]
     fn from_to_matches(&mut self, parser: &Parser) -> bool {
         if !parser.options.from.is_empty() {
             if self.from.is_empty() {
@@ -2368,7 +2364,7 @@ fn parse_host_service_pid(data: &[u8]) -> Option<(ByteSlice, ByteSlice, u64, Byt
         .count();
     let service = &data[0..service_count];
     let data = &data[service_count..];
-    if data.get(0) != Some(&b'[') {
+    if data.first() != Some(&b'[') {
         return None;
     }
     let data = &data[1..];
