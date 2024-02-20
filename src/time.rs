@@ -59,13 +59,6 @@ impl fmt::Debug for Tm {
 /// These are now exposed via `libc`, but they're part of glibc.
 mod imports {
     extern "C" {
-        pub fn strftime(
-            s: *mut libc::c_char,
-            max: libc::size_t,
-            format: *const libc::c_char,
-            tm: *const libc::tm,
-        ) -> libc::size_t;
-
         pub fn strptime(
             s: *const libc::c_char,
             format: *const libc::c_char,
@@ -121,30 +114,6 @@ impl Tm {
 
         res
     }
-}
-
-/// Wrapper around `strftime(3)` to format time strings.
-pub fn strftime(format: &CStr, tm: &Tm) -> Result<String, Error> {
-    let mut buf = MaybeUninit::<[u8; 64]>::uninit();
-
-    let size = unsafe {
-        imports::strftime(
-            buf.as_mut_ptr() as *mut libc::c_char,
-            64,
-            format.as_ptr(),
-            &tm.0,
-        )
-    };
-    if size == 0 {
-        bail!("failed to format time");
-    }
-    let size = size as usize;
-
-    let buf = unsafe { buf.assume_init() };
-
-    std::str::from_utf8(&buf[..size])
-        .map_err(|_| format_err!("formatted time was not valid utf-8"))
-        .map(str::to_string)
 }
 
 /// Wrapper around `strptime(3)` to parse time strings.
