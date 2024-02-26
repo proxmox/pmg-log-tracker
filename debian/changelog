@@ -1,3 +1,11 @@
+rust-pmg-log-tracker (2.4.2) UNRELEASED; urgency=medium
+
+  * use pico-args instead of clap for command line argument parsing
+
+  * rfc3339: move timezone offset compatibility code to old time parser
+
+ -- Proxmox Support Team <support@proxmox.com>  Mon, 26 Feb 2024 15:15:21 +0100
+
 rust-pmg-log-tracker (2.4.1) bookworm; urgency=medium
 
   * fix compatibility with API/Tracking Center, which assumes that the
