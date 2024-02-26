@@ -7,14 +7,14 @@ Build-Depends: debhelper (>= 12),
  rustc:native,
  libstd-rust-dev,
  librust-anyhow-1+default-dev,
- librust-clap-3+cargo-dev (>= 3.2.23-~~),
- librust-clap-3+default-dev (>= 3.2.23-~~),
  librust-flate2-1+default-dev,
  librust-libc-0.2+default-dev,
+ librust-pico-args-0.4+combined-flags-dev,
+ librust-pico-args-0.4+default-dev,
  librust-proxmox-time-1+default-dev (>= 1.1-~~),
  faketime
 Maintainer: Proxmox Support Team <support@proxmox.com>
-Standards-Version: 4.6.1
+Standards-Version: 4.6.2
 Vcs-Git: git://git.proxmox.com/git/pmg-log-tracker.git
 Vcs-Browser: https://git.proxmox.com/?p=pmg-log-tracker.git;a=summary
 Homepage: https://www.proxmox.com
