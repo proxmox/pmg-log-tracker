@@ -9,8 +9,8 @@ Build-Depends: debhelper (>= 12),
  librust-anyhow-1+default-dev,
  librust-flate2-1+default-dev,
  librust-libc-0.2+default-dev,
- librust-pico-args-0.4+combined-flags-dev,
- librust-pico-args-0.4+default-dev,
+ librust-pico-args-0.5+combined-flags-dev,
+ librust-pico-args-0.5+default-dev,
  librust-proxmox-time-1+default-dev (>= 1.1-~~),
  faketime
 Maintainer: Proxmox Support Team <support@proxmox.com>
