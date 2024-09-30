@@ -1,2 +1,8 @@
 /target
 /Cargo.lock
+/build
+/pmg-log-tracker-[0-9]*
+/rust-pmg-log-tracker_[0-9]*
+*.deb
+*.buildinfo
+*.changes
