@@ -1,3 +1,9 @@
+rust-pmg-log-tracker (3.0.0) trixie; urgency=medium
+
+  * re-build for Proxmox Mail Gateway 9 based on Debian 13 Trixie.
+
+ -- Proxmox Support Team <support@proxmox.com>  Thu, 10 Jul 2025 14:53:51 +0200
+
 rust-pmg-log-tracker (2.5.0) bookworm; urgency=medium
 
   * switch from clap to pico-args for CLI argument handling
