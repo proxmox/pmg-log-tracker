@@ -1,20 +1,20 @@
 Source: rust-pmg-log-tracker
 Section: admin
 Priority: optional
-Build-Depends: debhelper (>= 12),
- dh-cargo (>= 25),
- cargo:native,
+Build-Depends: debhelper-compat (= 13),
+ dh-sequence-cargo,
+ faketime
+Build-Depends-Arch: cargo:native,
  rustc:native,
  libstd-rust-dev,
  librust-anyhow-1+default-dev,
- librust-flate2-1+default-dev,
+ librust-flate2-1+default-dev (>= 1.1-~~),
  librust-libc-0.2+default-dev,
  librust-pico-args-0.5+combined-flags-dev,
  librust-pico-args-0.5+default-dev,
- librust-proxmox-time-2+default-dev,
- faketime
+ librust-proxmox-time-2+default-dev (>= 2.1-~~)
 Maintainer: Proxmox Support Team <support@proxmox.com>
-Standards-Version: 4.6.2
+Standards-Version: 4.7.0
 Vcs-Git: git://git.proxmox.com/git/pmg-log-tracker.git
 Vcs-Browser: https://git.proxmox.com/?p=pmg-log-tracker.git;a=summary
 Homepage: https://www.proxmox.com
@@ -23,7 +23,6 @@ Rules-Requires-Root: no
 
 Package: pmg-log-tracker
 Architecture: any
-Multi-Arch: allowed
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},
@@ -35,7 +34,7 @@ Suggests:
 Provides:
  ${cargo:Provides}
 Built-Using: ${cargo:Built-Using}
-XB-X-Cargo-Built-Using: ${cargo:X-Cargo-Built-Using}
+Static-Built-Using: ${cargo:Static-Built-Using}
 Description: Proxmox Mailgateway Log Tracker
  Tool to scan mail logs.
  .

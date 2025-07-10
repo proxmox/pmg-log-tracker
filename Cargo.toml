@@ -11,7 +11,7 @@ exclude = [ "build", "debian" ]
 
 [dependencies]
 anyhow = "1"
-flate2 = "1.0"
+flate2 = "1.1"
 libc = "0.2"
-proxmox-time = "2"
+proxmox-time = "2.1"
 pico-args = { version = "0.5", features = ["combined-flags"] }
