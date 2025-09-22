@@ -1964,12 +1964,19 @@ impl Parser {
         };
 
         while let Some(q) = args.opt_value_from_str::<_, String>(["-q", "--queue-id"])? {
-            let ltime: time_t = 0;
-            let rel_line_nr: libc::c_ulong = 0;
+            let mut ltime: time_t = 0;
+            let mut rel_line_nr: libc::c_ulong = 0;
             let input = CString::new(q.as_str())?;
             let bytes = concat!("T%08lXL%08lX", "\0");
             let format = unsafe { std::ffi::CStr::from_bytes_with_nul_unchecked(bytes.as_bytes()) };
-            if unsafe { libc::sscanf(input.as_ptr(), format.as_ptr(), &ltime, &rel_line_nr) == 2 } {
+            if unsafe {
+                libc::sscanf(
+                    input.as_ptr(),
+                    format.as_ptr(),
+                    &mut ltime,
+                    &mut rel_line_nr,
+                ) == 2
+            } {
                 self.options
                     .match_list
                     .push(Match::RelLineNr(ltime, rel_line_nr));
