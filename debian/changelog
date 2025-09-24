@@ -1,3 +1,9 @@
+rust-pmg-log-tracker (3.0.1) trixie; urgency=medium
+
+  * fix recent regression with QID argument handling.
+
+ -- Proxmox Support Team <support@proxmox.com>  Wed, 24 Sep 2025 16:56:05 +0200
+
 rust-pmg-log-tracker (3.0.0) trixie; urgency=medium
 
   * re-build for Proxmox Mail Gateway 9 based on Debian 13 Trixie.
