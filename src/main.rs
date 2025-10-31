@@ -2355,7 +2355,7 @@ fn parse_time_no_year(
 
 type ByteSlice<'a> = &'a [u8];
 /// Parse Host, Service and PID at the beginning of data. Returns a tuple of (host, service, pid, remaining_text).
-fn parse_host_service_pid(data: &[u8]) -> Option<(ByteSlice, ByteSlice, u64, ByteSlice)> {
+fn parse_host_service_pid(data: &[u8]) -> Option<(ByteSlice<'_>, ByteSlice<'_>, u64, ByteSlice<'_>)> {
     let host_count = data
         .iter()
         .take_while(|b| !(**b as char).is_ascii_whitespace())
