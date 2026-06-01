@@ -9,12 +9,12 @@ use std::io::BufReader;
 use std::io::BufWriter;
 use std::io::Write;
 
-use anyhow::{bail, Context, Error};
+use anyhow::{Context, Error, bail};
 use flate2::read;
 use libc::time_t;
 
 mod time;
-use time::{Tm, CAL_MTOD};
+use time::{CAL_MTOD, Tm};
 
 fn print_usage() {
     let pkg_version = env!("CARGO_PKG_VERSION");
@@ -2372,7 +2372,9 @@ fn parse_time_no_year(
 
 type ByteSlice<'a> = &'a [u8];
 /// Parse Host, Service and PID at the beginning of data. Returns a tuple of (host, service, pid, remaining_text).
-fn parse_host_service_pid(data: &[u8]) -> Option<(ByteSlice<'_>, ByteSlice<'_>, u64, ByteSlice<'_>)> {
+fn parse_host_service_pid(
+    data: &[u8],
+) -> Option<(ByteSlice<'_>, ByteSlice<'_>, u64, ByteSlice<'_>)> {
     let host_count = data
         .iter()
         .take_while(|b| !(**b as char).is_ascii_whitespace())
@@ -2426,7 +2428,7 @@ fn find_lowercase(data: &[u8], needle: &[u8]) -> Option<usize> {
 
 #[cfg(test)]
 mod tests {
-    use super::{parse_qid, POSTFIX_QID_MAX_LEN};
+    use super::{POSTFIX_QID_MAX_LEN, parse_qid};
 
     #[test]
     fn parse_short_hex_qid() {

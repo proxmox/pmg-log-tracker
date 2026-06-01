@@ -6,7 +6,7 @@ use std::ffi::{CStr, CString};
 use std::fmt;
 use std::mem::MaybeUninit;
 
-use anyhow::{bail, format_err, Error};
+use anyhow::{Error, bail, format_err};
 
 /// Calender month index to *non-leap-year* day-of-the-year.
 pub const CAL_MTOD: [i64; 12] = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
