@@ -2153,19 +2153,19 @@ const LOGFILES: [&str; 32] = [
 ];
 
 /// Maximum length of a postfix queue ID. With `enable_long_queue_ids = yes`
-/// (see http://www.postfix.org/postconf.5.html#enable_long_queue_ids) postfix
-/// encodes queue IDs in a base-52 alphabet, making them longer than the legacy
-/// short hexadecimal IDs. The value leaves headroom over the ~12-16 characters
-/// such an ID actually occupies; the trailing delimiter bounds the match anyway.
-const POSTFIX_QID_MAX_LEN: usize = 20;
+/// (see http://www.postfix.org/postconf.5.html#enable_long_queue_ids) the ID is
+/// the Unix-epoch seconds (6 base-52 chars, a 7th from year 2596+), 4 for the
+/// microseconds, a 'z', and the inode in base-51 (up to 12 chars for a 64-bit
+/// inode), so up to 24 chars; 25 has headroom and the delimiter ends it first.
+const POSTFIX_QID_MAX_LEN: usize = 25;
 
 /// Parse a queue ID and return a tuple of (qid, remaining_text) or None.
 ///
 /// Queue IDs are alphanumeric (`[0-9A-Za-z]`): legacy postfix queue IDs are
 /// hexadecimal, postfix long queue IDs (`enable_long_queue_ids`) use a base-52
 /// alphabet, and pmg-smtp-filter IDs are likewise alphanumeric. The scan stops at
-/// the first non-alphanumeric byte, which is the `:` or `)` delimiter that always
-/// follows a queue ID in a log line.
+/// the first non-alphanumeric byte (the `:` or `)` delimiter that normally follows
+/// the queue ID); a run longer than `max` with no delimiter is truncated to `max`.
 fn parse_qid(data: &[u8], max: usize) -> Option<(&[u8], &[u8])> {
     // to simplify limit max to data.len()
     let max = max.min(data.len());
@@ -2434,6 +2434,16 @@ mod tests {
         assert_eq!(
             parse_qid(b"4Zk8mP2gqRz: removed", POSTFIX_QID_MAX_LEN),
             Some((&b"4Zk8mP2gqRz"[..], &b": removed"[..])),
+        );
+    }
+
+    #[test]
+    fn parse_max_length_long_qid() {
+        // worst case long queue ID: 7 sec + 4 usec + 'z' + 12-char base-51 inode
+        // (64-bit) = 24 chars; it must not be truncated by POSTFIX_QID_MAX_LEN
+        assert_eq!(
+            parse_qid(b"4Zk8mP72gqRzLp7Wn3Yt8Kc5: removed", POSTFIX_QID_MAX_LEN),
+            Some((&b"4Zk8mP72gqRzLp7Wn3Yt8Kc5"[..], &b": removed"[..])),
         );
     }
 
