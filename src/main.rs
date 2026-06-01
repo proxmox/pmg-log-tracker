@@ -2304,10 +2304,7 @@ fn parse_time_no_year(
     let whitespace_count = data.iter().take_while(|b| b.is_ascii_whitespace()).count();
     let data = &data[whitespace_count..];
 
-    let (mday, data) = match parse_number(data, 2) {
-        Some(t) => t,
-        None => return None,
-    };
+    let (mday, data) = parse_number(data, 2)?;
     if mday == 0 {
         return None;
     }
@@ -2320,10 +2317,7 @@ fn parse_time_no_year(
 
     let data = &data[1..];
 
-    let (hour, data) = match parse_number(data, 2) {
-        Some(t) => t,
-        None => return None,
-    };
+    let (hour, data) = parse_number(data, 2)?;
 
     ltime *= 24;
     ltime += hour as i64;
@@ -2337,10 +2331,7 @@ fn parse_time_no_year(
     }
     let data = &data[1..];
 
-    let (min, data) = match parse_number(data, 2) {
-        Some(t) => t,
-        None => return None,
-    };
+    let (min, data) = parse_number(data, 2)?;
 
     ltime *= 60;
     ltime += min as i64;
@@ -2354,10 +2345,7 @@ fn parse_time_no_year(
     }
     let data = &data[1..];
 
-    let (sec, data) = match parse_number(data, 2) {
-        Some(t) => t,
-        None => return None,
-    };
+    let (sec, data) = parse_number(data, 2)?;
 
     ltime *= 60;
     ltime += sec as i64;
