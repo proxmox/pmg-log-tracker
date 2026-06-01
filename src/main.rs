@@ -269,7 +269,7 @@ fn handle_postscreen_message(msg: &[u8], parser: &mut Parser, complete_line: &[u
 // these only appear in the 'after-queue filter' case or when the mail is
 // 'accepted' in the 'before-queue filter' case
 fn handle_qmgr_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
-    let (qid, data) = match parse_qid(msg, 15) {
+    let (qid, data) = match parse_qid(msg, POSTFIX_QID_MAX_LEN) {
         Some(t) => t,
         None => return,
     };
@@ -330,7 +330,7 @@ fn handle_lmtp_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
         return;
     }
 
-    let (qid, data) = match parse_qid(msg, 15) {
+    let (qid, data) = match parse_qid(msg, POSTFIX_QID_MAX_LEN) {
         Some((q, t)) => (q, t),
         None => return,
     };
@@ -640,7 +640,7 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
 
     // with none of the other messages matching, we try for a QID to match the
     // corresponding QEntry to the SEntry
-    let (qid, data) = match parse_qid(msg, 15) {
+    let (qid, data) = match parse_qid(msg, POSTFIX_QID_MAX_LEN) {
         Some(t) => t,
         None => return,
     };
@@ -671,7 +671,7 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
 // happens before the mail is passed to qmgr (after-queue or before-queue
 // accepted only)
 fn handle_cleanup_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
-    let (qid, data) = match parse_qid(msg, 15) {
+    let (qid, data) = match parse_qid(msg, POSTFIX_QID_MAX_LEN) {
         Some(t) => t,
         None => return,
     };
@@ -2152,19 +2152,36 @@ const LOGFILES: [&str; 32] = [
     "/var/log/syslog.31.gz",
 ];
 
-/// Parse a QID ([A-Z]+). Returns a tuple of (qid, remaining_text) or None.
+/// Maximum length of a postfix queue ID. With `enable_long_queue_ids = yes`
+/// (see http://www.postfix.org/postconf.5.html#enable_long_queue_ids) postfix
+/// encodes queue IDs in a base-52 alphabet, making them longer than the legacy
+/// short hexadecimal IDs. The value leaves headroom over the ~12-16 characters
+/// such an ID actually occupies; the trailing delimiter bounds the match anyway.
+const POSTFIX_QID_MAX_LEN: usize = 20;
+
+/// Parse a queue ID and return a tuple of (qid, remaining_text) or None.
+///
+/// Queue IDs are alphanumeric (`[0-9A-Za-z]`): legacy postfix queue IDs are
+/// hexadecimal, postfix long queue IDs (`enable_long_queue_ids`) use a base-52
+/// alphabet, and pmg-smtp-filter IDs are likewise alphanumeric. The scan stops at
+/// the first non-alphanumeric byte, which is the `:` or `)` delimiter that always
+/// follows a queue ID in a log line.
 fn parse_qid(data: &[u8], max: usize) -> Option<(&[u8], &[u8])> {
     // to simplify limit max to data.len()
     let max = max.min(data.len());
-    // take at most max, find the first non-hex-digit
-    match data.iter().take(max).position(|b| !b.is_ascii_hexdigit()) {
+    // take at most max, find the first non-alphanumeric byte
+    match data
+        .iter()
+        .take(max)
+        .position(|b| !b.is_ascii_alphanumeric())
+    {
         // if there were less than 5 return nothing
         // the QID always has at least 5 characters for the microseconds (see
         // http://www.postfix.org/postconf.5.html#enable_long_queue_ids)
         Some(n) if n < 5 => None,
-        // otherwise split at the first non-hex-digit
+        // otherwise split at the first non-alphanumeric byte
         Some(n) => Some(data.split_at(n)),
-        // or return 'max' length QID if no non-hex-digit is found
+        // or return 'max' length QID if no non-alphanumeric byte is found
         None => Some(data.split_at(max)),
     }
 }
@@ -2405,4 +2422,43 @@ fn find_lowercase(data: &[u8], needle: &[u8]) -> Option<usize> {
     let data = data.to_ascii_lowercase();
     let needle = needle.to_ascii_lowercase();
     data.windows(needle.len()).position(|d| d == &needle[..])
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{parse_qid, POSTFIX_QID_MAX_LEN};
+
+    #[test]
+    fn parse_short_hex_qid() {
+        // legacy, short hexadecimal postfix queue ID
+        assert_eq!(
+            parse_qid(b"0022C3801B5: removed", POSTFIX_QID_MAX_LEN),
+            Some((&b"0022C3801B5"[..], &b": removed"[..])),
+        );
+    }
+
+    #[test]
+    fn parse_long_base52_qid() {
+        // postfix long queue ID (enable_long_queue_ids = yes) drawn from the
+        // base-52 alphabet, i.e. containing non-hex letters
+        assert_eq!(
+            parse_qid(b"4Zk8mP2gqRz: removed", POSTFIX_QID_MAX_LEN),
+            Some((&b"4Zk8mP2gqRz"[..], &b": removed"[..])),
+        );
+    }
+
+    #[test]
+    fn parse_filter_id_terminated_by_paren() {
+        // pmg-smtp-filter ID, terminated by ')'
+        assert_eq!(
+            parse_qid(b"3802E45DFA503808B06)", 25),
+            Some((&b"3802E45DFA503808B06"[..], &b")"[..])),
+        );
+    }
+
+    #[test]
+    fn reject_too_short_qid() {
+        // fewer than 5 leading queue-id characters is not a valid queue ID
+        assert_eq!(parse_qid(b"ab: x", POSTFIX_QID_MAX_LEN), None);
+    }
 }
