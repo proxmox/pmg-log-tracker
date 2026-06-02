@@ -1,3 +1,17 @@
+rust-pmg-log-tracker (3.1.0) trixie; urgency=medium
+
+  * fix #2091: parser: support the longer, base-52 encoded queue IDs that
+    postfix generates with its `enable_long_queue_ids` option, so that the
+    Tracking Center can show the affected mails.
+
+  * fix #3657: add an --input-base option to scan a rotated log file series
+    with a configurable base path, so that setups logging mail events to a
+    dedicated file, like /var/log/mail.log, can be analyzed too. Gzip
+    compression of rotated files is detected per file to cope with custom
+    logrotate configurations.
+
+ -- Proxmox Support Team <support@proxmox.com>  Wed, 03 Jun 2026 00:20:50 +0200
+
 rust-pmg-log-tracker (3.0.1) trixie; urgency=medium
 
   * fix recent regression with QID argument handling.
