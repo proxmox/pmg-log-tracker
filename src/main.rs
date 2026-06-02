@@ -8,6 +8,7 @@ use std::io::BufRead;
 use std::io::BufReader;
 use std::io::BufWriter;
 use std::io::Write;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Error, bail};
 use flate2::read;
@@ -32,7 +33,8 @@ OPTIONS:
     -g, --exclude-greylist          Exclude greylist entries
     -h, --host <HOST>               Hostname or Server IP
         --help                      Print help information
-    -i, --inputfile <INPUTFILE>     Input file to use instead of /var/log/syslog, or '-' for stdin
+    -i, --inputfile <INPUTFILE>     Single input file to scan instead of the log series, or '-' for stdin
+        --input-base <BASE>         Base path of the rotated log series to scan [default: /var/log/syslog]
     -l, --limit <MAX>               Print MAX entries [default: 0]
     -m, --message-id <MSGID>        Message ID (exact match)
     -n, --exclude-ndr               Exclude NDR entries
@@ -1739,14 +1741,9 @@ impl Parser {
         } else {
             let filecount = self.count_files_in_time_range();
             for i in (0..filecount).rev() {
-                if let Ok(file) = File::open(LOGFILES[i]) {
+                if let Some(path) = rotated_logfile(&self.options.input_base, i) {
                     self.current_file_index = i;
-                    if i > 1 {
-                        let gzdecoder = read::GzDecoder::new(file);
-                        let mut reader = BufReader::new(gzdecoder);
-                        self.handle_input_by_line(&mut reader)?;
-                    } else {
-                        let mut reader = BufReader::new(file);
+                    if let Ok(mut reader) = open_logfile(&path) {
                         self.handle_input_by_line(&mut reader)?;
                     }
                 }
@@ -1856,55 +1853,32 @@ impl Parser {
         let mut count = 0;
         let mut buffer = Vec::new();
 
-        for (i, item) in LOGFILES.iter().enumerate() {
+        for i in 0..MAX_LOGFILES {
             count = i;
-            if let Ok(file) = File::open(item) {
-                self.current_file_index = i;
-                buffer.clear();
-                if i > 1 {
-                    let gzdecoder = read::GzDecoder::new(file);
-                    let mut reader = BufReader::new(gzdecoder);
-                    // check the first line
-                    if let Ok(size) = reader.read_until(b'\n', &mut buffer) {
-                        if size == 0 {
-                            return count;
+            let Some(path) = rotated_logfile(&self.options.input_base, i) else {
+                return count;
+            };
+            self.current_file_index = i;
+            buffer.clear();
+            let Ok(mut reader) = open_logfile(&path) else {
+                return count;
+            };
+            // check the first line
+            match reader.read_until(b'\n', &mut buffer) {
+                Ok(0) | Err(_) => return count,
+                Ok(size) => {
+                    if let Some((time, _)) = parse_time(
+                        &buffer[0..size],
+                        self.current_year,
+                        self.current_month,
+                        self.start_tm.tm_gmtoff,
+                    ) {
+                        // found the earliest file in the time frame
+                        if time < self.options.start {
+                            break;
                         }
-                        if let Some((time, _)) = parse_time(
-                            &buffer[0..size],
-                            self.current_year,
-                            self.current_month,
-                            self.start_tm.tm_gmtoff,
-                        ) {
-                            // found the earliest file in the time frame
-                            if time < self.options.start {
-                                break;
-                            }
-                        }
-                    } else {
-                        return count;
-                    }
-                } else {
-                    let mut reader = BufReader::new(file);
-                    if let Ok(size) = reader.read_until(b'\n', &mut buffer) {
-                        if size == 0 {
-                            return count;
-                        }
-                        if let Some((time, _)) = parse_time(
-                            &buffer[0..size],
-                            self.current_year,
-                            self.current_month,
-                            self.start_tm.tm_gmtoff,
-                        ) {
-                            if time < self.options.start {
-                                break;
-                            }
-                        }
-                    } else {
-                        return count;
                     }
                 }
-            } else {
-                return count;
             }
         }
 
@@ -1915,6 +1889,10 @@ impl Parser {
         if let Some(inputfile) = args.opt_value_from_str(["-i", "--inputfile"])? {
             self.options.inputfile = inputfile;
         }
+
+        self.options.input_base = args
+            .opt_value_from_str::<_, String>("--input-base")?
+            .unwrap_or_else(|| "/var/log/syslog".to_string());
 
         if let Some(start) = args.opt_value_from_str::<_, String>(["-s", "--starttime"])? {
             if let Ok(epoch) = proxmox_time::parse_rfc3339(&start).or_else(|_| {
@@ -2045,6 +2023,7 @@ impl Drop for Parser {
 struct Options {
     match_list: Vec<Match>,
     inputfile: String,
+    input_base: String,
     string_match: String,
     host: String,
     msgid: String,
@@ -2117,40 +2096,38 @@ fn get_or_create_fentry(
     }
 }
 
-const LOGFILES: [&str; 32] = [
-    "/var/log/syslog",
-    "/var/log/syslog.1",
-    "/var/log/syslog.2.gz",
-    "/var/log/syslog.3.gz",
-    "/var/log/syslog.4.gz",
-    "/var/log/syslog.5.gz",
-    "/var/log/syslog.6.gz",
-    "/var/log/syslog.7.gz",
-    "/var/log/syslog.8.gz",
-    "/var/log/syslog.9.gz",
-    "/var/log/syslog.10.gz",
-    "/var/log/syslog.11.gz",
-    "/var/log/syslog.12.gz",
-    "/var/log/syslog.13.gz",
-    "/var/log/syslog.14.gz",
-    "/var/log/syslog.15.gz",
-    "/var/log/syslog.16.gz",
-    "/var/log/syslog.17.gz",
-    "/var/log/syslog.18.gz",
-    "/var/log/syslog.19.gz",
-    "/var/log/syslog.20.gz",
-    "/var/log/syslog.21.gz",
-    "/var/log/syslog.22.gz",
-    "/var/log/syslog.23.gz",
-    "/var/log/syslog.24.gz",
-    "/var/log/syslog.25.gz",
-    "/var/log/syslog.26.gz",
-    "/var/log/syslog.27.gz",
-    "/var/log/syslog.28.gz",
-    "/var/log/syslog.29.gz",
-    "/var/log/syslog.30.gz",
-    "/var/log/syslog.31.gz",
-];
+/// Number of rotated log files to consider for a base path: the live log plus
+/// up to 31 rotations, matching the usual logrotate retention.
+const MAX_LOGFILES: usize = 32;
+
+/// Path of the rotated log file at `index` for `base`: index 0 is the base file
+/// itself, index N the `<base>.N` rotation. Returns the plain file if present,
+/// else its gzipped `.gz` variant, or None if neither exists, so a series that
+/// is compressed at an arbitrary rotation (custom logrotate) still works.
+fn rotated_logfile(base: &str, index: usize) -> Option<PathBuf> {
+    let plain = if index == 0 {
+        PathBuf::from(base)
+    } else {
+        PathBuf::from(format!("{base}.{index}"))
+    };
+    if plain.is_file() {
+        return Some(plain);
+    }
+    let mut gz = plain.into_os_string();
+    gz.push(".gz");
+    let gz = PathBuf::from(gz);
+    gz.is_file().then_some(gz)
+}
+
+/// Open a log file, transparently decompressing it when its name ends in `.gz`.
+fn open_logfile(path: &Path) -> std::io::Result<Box<dyn BufRead>> {
+    let file = File::open(path)?;
+    if path.extension().and_then(|ext| ext.to_str()) == Some("gz") {
+        Ok(Box::new(BufReader::new(read::GzDecoder::new(file))))
+    } else {
+        Ok(Box::new(BufReader::new(file)))
+    }
+}
 
 /// Maximum length of a postfix queue ID. With `enable_long_queue_ids = yes`
 /// (see http://www.postfix.org/postconf.5.html#enable_long_queue_ids) the ID is
@@ -2416,7 +2393,7 @@ fn find_lowercase(data: &[u8], needle: &[u8]) -> Option<usize> {
 
 #[cfg(test)]
 mod tests {
-    use super::{POSTFIX_QID_MAX_LEN, parse_qid};
+    use super::{POSTFIX_QID_MAX_LEN, parse_qid, rotated_logfile};
 
     #[test]
     fn parse_short_hex_qid() {
@@ -2460,5 +2437,36 @@ mod tests {
     fn reject_too_short_qid() {
         // fewer than 5 leading queue-id characters is not a valid queue ID
         assert_eq!(parse_qid(b"ab: x", POSTFIX_QID_MAX_LEN), None);
+    }
+
+    #[test]
+    fn rotated_logfile_prefers_plain_then_gz() {
+        use std::fs;
+        use std::path::PathBuf;
+
+        let dir = std::env::temp_dir().join(format!("pmg-log-tracker-test-{}", std::process::id()));
+        fs::create_dir_all(&dir).unwrap();
+        let base = dir.join("syslog");
+        let base = base.to_str().unwrap();
+
+        // index 0 is the live file, index 1 a plain rotation, index 2 gzipped
+        fs::write(base, b"").unwrap();
+        fs::write(format!("{base}.1"), b"").unwrap();
+        fs::write(format!("{base}.2.gz"), b"").unwrap();
+
+        assert_eq!(rotated_logfile(base, 0), Some(PathBuf::from(base)));
+        assert_eq!(
+            rotated_logfile(base, 1),
+            Some(PathBuf::from(format!("{base}.1")))
+        );
+        // no plain file for index 2, so the .gz variant must be picked up
+        assert_eq!(
+            rotated_logfile(base, 2),
+            Some(PathBuf::from(format!("{base}.2.gz")))
+        );
+        // nothing exists for index 3
+        assert_eq!(rotated_logfile(base, 3), None);
+
+        fs::remove_dir_all(&dir).unwrap();
     }
 }
