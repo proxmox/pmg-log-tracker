@@ -1,0 +1,24 @@
+# LogReader: 4087740
+# Query options
+# Start: 2020-12-18 15:00:00 (1608300000)
+# End: 2020-12-18 15:40:00 (1608302400)
+# End Query Options
+
+SMTPD: T5FDCB6DFL00000000
+CTIME: 5FDCB6E1
+CLIENT: pmg.localhost[192.168.22.40]
+TO:5FDCB6E1:T5FDCB6DFL00000000:B: from <mailtestsender2@localhost.localdomain> to <pmgtest@localhost.localdomain>
+LOGS:
+L00000001 Dec 18 15:04:15 pmg postfix/smtpd[21842]: connect from pmg.localhost[192.168.22.40]
+L00000002 Dec 18 15:04:15 pmg postfix/smtpd[21842]: NOQUEUE: client=pmg.localhost[192.168.22.40]
+L00000003 Dec 18 15:04:15 pmg pmg-smtp-filter[1565]: 381C4E5DFA31DF9E90F: new mail message-id=<xyz>
+L0000000D Dec 18 15:04:17 pmg pmg-smtp-filter[1565]: 381C4E5DFA31DF9E90F: block mail to <pmgtest@localhost.localdomain> (rule: block all)
+L0000000E Dec 18 15:04:17 pmg pmg-smtp-filter[1565]: 381C4E5DFA31DF9E90F: processing time: 0.034 seconds (0, 0.021, 0)
+L0000000F Dec 18 15:04:17 pmg postfix/smtpd[21842]: proxy-reject: END-OF-MESSAGE: 554 5.7.1 Rejected for policy reasons (381C4E5DFA31DF9E90F); from=<mailtestsender2@localhost.localdomain> to=<pmgtest@localhost.localdomain> proto=ESMTP helo=<localhost.localdomain>
+L00000010 Dec 18 15:04:17 pmg postfix/smtpd[21842]: disconnect from pmg.localhost[192.168.22.40]
+
+SMTPD: T5FDCB6E0L00000008
+CTIME: 5FDCB6E1
+LOGS:
+L0000000C Dec 18 15:04:16 pmg postfix/smtpd[99999]: FOOBAR99:
+

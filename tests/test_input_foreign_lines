@@ -1,0 +1,16 @@
+Dec 18 15:04:15 pmg postfix/smtpd[21842]: connect from pmg.localhost[192.168.22.40]
+Dec 18 15:04:15 pmg postfix/smtpd[21842]: NOQUEUE: client=pmg.localhost[192.168.22.40]
+Dec 18 15:04:15 pmg pmg-smtp-filter[1565]: 381C4E5DFA31DF9E90F: new mail message-id=<xyz>
+Dec 18 15:04:16 pmg pmg-smtp-filter[1565]: DEBUG:
+Dec 18 15:04:16 pmg pmg-smtp-filter[1565]: DEBUG:ECLS Command-line scanner, version 1.6.0.0
+Dec 18 15:04:16 pmg pmg-smtp-filter[1565]: DEBUG:Scan started at:   Fri Dec 18 15:04:16 2020
+Dec 18 15:04:16 pmg pmg-smtp-filter[1565]: DEBUGOUTPUT
+Dec 18 15:04:16 pmg pmg-smtp-filter[1565]: pmg-custom-check OK /var/spool/pmg/active/381C4E5DFA31DF9E90F
+Dec 18 15:04:16 pmg postfix/qmgr[2226]: STATISTICS1:
+Dec 18 15:04:16 pmg postfix/cleanup[2229]: CLEANUP99:
+Dec 18 15:04:16 pmg postfix/lmtp[2231]: DELIVERY1:
+Dec 18 15:04:16 pmg postfix/smtpd[99999]: FOOBAR99:
+Dec 18 15:04:17 pmg pmg-smtp-filter[1565]: 381C4E5DFA31DF9E90F: block mail to <pmgtest@localhost.localdomain> (rule: block all)
+Dec 18 15:04:17 pmg pmg-smtp-filter[1565]: 381C4E5DFA31DF9E90F: processing time: 0.034 seconds (0, 0.021, 0)
+Dec 18 15:04:17 pmg postfix/smtpd[21842]: proxy-reject: END-OF-MESSAGE: 554 5.7.1 Rejected for policy reasons (381C4E5DFA31DF9E90F); from=<mailtestsender2@localhost.localdomain> to=<pmgtest@localhost.localdomain> proto=ESMTP helo=<localhost.localdomain>
+Dec 18 15:04:17 pmg postfix/smtpd[21842]: disconnect from pmg.localhost[192.168.22.40]
