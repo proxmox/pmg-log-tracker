@@ -1,3 +1,12 @@
+rust-pmg-log-tracker (3.1.1) trixie; urgency=medium
+
+  * parser: robustly ignore foreign log lines, like the output a custom check
+    script logs under the pmg-smtp-filter syslog identifier; such lines could
+    crash the log tracker, breaking the Tracking Center, or accumulate as
+    bogus mail transaction entries.
+
+ -- Proxmox Support Team <support@proxmox.com>  Wed, 10 Jun 2026 16:47:13 +0200
+
 rust-pmg-log-tracker (3.1.0) trixie; urgency=medium
 
   * fix #2091: parser: support the longer, base-52 encoded queue IDs that
