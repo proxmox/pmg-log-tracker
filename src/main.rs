@@ -2174,7 +2174,7 @@ fn parse_number(data: &[u8], max_digits: usize) -> Option<(usize, &[u8])> {
     }
 
     match data.iter().take(max).position(|b| !b.is_ascii_digit()) {
-        Some(n) if n == 0 => None,
+        Some(0) => None,
         Some(n) => {
             let (number, data) = data.split_at(n);
             // number only contains ascii digits
