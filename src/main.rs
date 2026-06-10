@@ -116,9 +116,7 @@ fn handle_pmg_smtp_filter_message(msg: &[u8], parser: &mut Parser, complete_line
         None => return,
     };
     if data.len() < 2 {
-        // after the QID there is no separator and space, so it can't be a proper smtp-filter
-        // message. It's possibly output from a custom check script or a malformed log line.
-        return;
+        return; // not even the ": " delimiter fits after the QID, the skip below would panic
     }
     // skip ': ' following the QID
     let data = &data[2..];
