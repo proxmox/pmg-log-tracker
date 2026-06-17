@@ -269,7 +269,7 @@ fn handle_postscreen_message(msg: &[u8], parser: &mut Parser, complete_line: &[u
 // these only appear in the 'after-queue filter' case or when the mail is
 // 'accepted' in the 'before-queue filter' case
 fn handle_qmgr_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
-    let (qid, data) = match parse_qid_prefix(msg, POSTFIX_QID_MAX_LEN) {
+    let (qid, data) = match parse_qid_prefix(msg) {
         Some(t) => t,
         None => return,
     };
@@ -329,7 +329,7 @@ fn handle_lmtp_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
         return;
     }
 
-    let (qid, data) = match parse_qid_prefix(msg, POSTFIX_QID_MAX_LEN) {
+    let (qid, data) = match parse_qid_prefix(msg) {
         Some((q, t)) => (q, t),
         None => return,
     };
@@ -638,7 +638,7 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
 
     // with none of the other messages matching, we try for a QID to match the
     // corresponding QEntry to the SEntry
-    let (qid, data) = match parse_qid_prefix(msg, POSTFIX_QID_MAX_LEN) {
+    let (qid, data) = match parse_qid_prefix(msg) {
         Some(t) => t,
         None => return,
     };
@@ -668,7 +668,7 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
 // happens before the mail is passed to qmgr (after-queue or before-queue
 // accepted only)
 fn handle_cleanup_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
-    let (qid, data) = match parse_qid_prefix(msg, POSTFIX_QID_MAX_LEN) {
+    let (qid, data) = match parse_qid_prefix(msg) {
         Some(t) => t,
         None => return,
     };
@@ -2137,9 +2137,9 @@ const POSTFIX_QID_MAX_LEN: usize = 25;
 /// alphabet, and pmg-smtp-filter IDs are likewise alphanumeric. The scan stops at
 /// the first non-alphanumeric byte (the `:` or `)` delimiter that normally follows
 /// the queue ID); a run longer than `max` with no delimiter is truncated to `max`.
-fn parse_qid(data: &[u8], max: usize) -> Option<(&[u8], &[u8])> {
+fn parse_qid(data: &[u8]) -> Option<(&[u8], &[u8])> {
     // to simplify limit max to data.len()
-    let max = max.min(data.len());
+    let max = POSTFIX_QID_MAX_LEN.min(data.len());
     // take at most max, find the first non-alphanumeric byte
     match data
         .iter()
@@ -2161,8 +2161,8 @@ fn parse_qid(data: &[u8], max: usize) -> Option<(&[u8], &[u8])> {
 ///
 /// Requiring the delimiter keeps foreign lines, like the output a custom check script logs under
 /// the pmg-smtp-filter identifier, from panicking the parser or being recorded under a bogus ID.
-fn parse_qid_prefix(msg: &[u8], max: usize) -> Option<(&[u8], &[u8])> {
-    let (qid, data) = parse_qid(msg, max)?;
+fn parse_qid_prefix(msg: &[u8]) -> Option<(&[u8], &[u8])> {
+    let (qid, data) = parse_qid(msg)?;
     Some((qid, data.strip_prefix(b": ")?))
 }
 
@@ -2434,13 +2434,13 @@ fn find_lowercase(data: &[u8], needle: &[u8]) -> Option<usize> {
 mod tests {
     use crate::parse_pmg_smtp_filter_qid;
 
-    use super::{POSTFIX_QID_MAX_LEN, parse_qid, parse_qid_prefix, rotated_logfile};
+    use super::{parse_qid, parse_qid_prefix, rotated_logfile};
 
     #[test]
     fn parse_short_hex_qid() {
         // legacy, short hexadecimal postfix queue ID
         assert_eq!(
-            parse_qid(b"0022C3801B5: removed", POSTFIX_QID_MAX_LEN),
+            parse_qid(b"0022C3801B5: removed"),
             Some((&b"0022C3801B5"[..], &b": removed"[..])),
         );
     }
@@ -2450,7 +2450,7 @@ mod tests {
         // postfix long queue ID (enable_long_queue_ids = yes) drawn from the
         // base-52 alphabet, i.e. containing non-hex letters
         assert_eq!(
-            parse_qid(b"4Zk8mP2gqRz: removed", POSTFIX_QID_MAX_LEN),
+            parse_qid(b"4Zk8mP2gqRz: removed"),
             Some((&b"4Zk8mP2gqRz"[..], &b": removed"[..])),
         );
     }
@@ -2460,7 +2460,7 @@ mod tests {
         // worst case long queue ID: 7 sec + 4 usec + 'z' + 12-char base-51 inode
         // (64-bit) = 24 chars; it must not be truncated by POSTFIX_QID_MAX_LEN
         assert_eq!(
-            parse_qid(b"4Zk8mP72gqRzLp7Wn3Yt8Kc5: removed", POSTFIX_QID_MAX_LEN),
+            parse_qid(b"4Zk8mP72gqRzLp7Wn3Yt8Kc5: removed"),
             Some((&b"4Zk8mP72gqRzLp7Wn3Yt8Kc5"[..], &b": removed"[..])),
         );
     }
@@ -2494,13 +2494,13 @@ mod tests {
     #[test]
     fn reject_too_short_qid() {
         // fewer than 5 leading queue-id characters is not a valid queue ID
-        assert_eq!(parse_qid(b"ab: x", POSTFIX_QID_MAX_LEN), None);
+        assert_eq!(parse_qid(b"ab: x"), None);
     }
 
     #[test]
     fn qid_prefix_parses_regular_entries() {
         assert_eq!(
-            parse_qid_prefix(b"0022C3801B5: removed", POSTFIX_QID_MAX_LEN),
+            parse_qid_prefix(b"0022C3801B5: removed"),
             Some((&b"0022C3801B5"[..], &b"removed"[..])),
         );
     }
@@ -2509,14 +2509,11 @@ mod tests {
     fn qid_prefix_rejects_lines_without_delimiter() {
         // foreign lines under a matched syslog identifier, like the output of a custom check
         // script, must not be mistaken for an entry: a bare delimiter at the end of the line ...
-        assert_eq!(parse_qid_prefix(b"DEBUG:", 25), None);
+        assert_eq!(parse_qid_prefix(b"DEBUG:"), None);
         // ... a delimiter without the following space ...
-        assert_eq!(
-            parse_qid_prefix(b"DEBUG:Module loader, version 1088", 25),
-            None
-        );
+        assert_eq!(parse_qid_prefix(b"DEBUG:Module loader, version 1088"), None);
         // ... and no delimiter at all
-        assert_eq!(parse_qid_prefix(b"DEBUGOUTPUT", 25), None);
+        assert_eq!(parse_qid_prefix(b"DEBUGOUTPUT"), None);
     }
 
     #[test]
