@@ -1,6 +1,7 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::ffi::CString;
+use std::ops::RangeInclusive;
 use std::rc::{Rc, Weak};
 
 use std::fs::File;
@@ -2123,6 +2124,26 @@ fn open_logfile(path: &Path) -> std::io::Result<Box<dyn BufRead>> {
     }
 }
 
+fn is_vowel(c: u8) -> bool {
+    c == b'A'
+        || c == b'E'
+        || c == b'a'
+        || c == b'e'
+        || c == b'I'
+        || c == b'i'
+        || c == b'O'
+        || c == b'o'
+        || c == b'U'
+        || c == b'u'
+}
+
+enum QidVariant {
+    Unknown,
+    Short,
+    Long,
+    Invalid,
+}
+
 /// Maximum length of a postfix queue ID. With `enable_long_queue_ids = yes`
 /// (see http://www.postfix.org/postconf.5.html#enable_long_queue_ids) the ID is
 /// the Unix-epoch seconds (6 base-52 chars, a 7th from year 2596+), 4 for the
@@ -2130,31 +2151,111 @@ fn open_logfile(path: &Path) -> std::io::Result<Box<dyn BufRead>> {
 /// inode), so up to 24 chars; 25 has headroom and the delimiter ends it first.
 const POSTFIX_QID_MAX_LEN: usize = 25;
 
-/// Parse a queue ID and return a tuple of (qid, remaining_text) or None.
+/// A short postfix QID can only have between 6 and 21 characters, 5 from usec of the timestamp and
+/// between 1 and 16 from the inode nr printed as '%lX'
+const SHORT_QID_RANGE: RangeInclusive<usize> = 6..=21;
+
+/// A long postfix QID must be at least 12 characters: time in seconds -> 6+ chars + time in
+/// microseconds -> 4 chars + 'z' + at least one char for the inode
+const LONG_QID_MIN: usize = 12;
+
+/// Parse a queue ID from postfix and return a tuple of (qid, remaining_text) or None.
 ///
 /// Queue IDs are alphanumeric (`[0-9A-Za-z]`): legacy postfix queue IDs are
 /// hexadecimal, postfix long queue IDs (`enable_long_queue_ids`) use a base-52
-/// alphabet, and pmg-smtp-filter IDs are likewise alphanumeric. The scan stops at
-/// the first non-alphanumeric byte (the `:` or `)` delimiter that normally follows
-/// the queue ID); a run longer than `max` with no delimiter is truncated to `max`.
+/// alphabet. The scan tries to determine if it's a short or long QID and cancels
+/// the scan if it detects either the end or an invalid state. (e.g. a vowel in a
+/// long QID). It assumes that only non alphanumeric characters are the delimiter,
+/// so e.g. a long QID followed by a vowel would be detected as invalid.
 fn parse_qid(data: &[u8]) -> Option<(&[u8], &[u8])> {
+    // check the minimum length first
+    if data.len() < *SHORT_QID_RANGE.start() {
+        return None;
+    }
+
     // to simplify limit max to data.len()
     let max = POSTFIX_QID_MAX_LEN.min(data.len());
-    // take at most max, find the first non-alphanumeric byte
-    match data
-        .iter()
-        .take(max)
-        .position(|b| !b.is_ascii_alphanumeric())
-    {
-        // if there were less than 5 return nothing
-        // the QID always has at least 5 characters for the microseconds (see
-        // http://www.postfix.org/postconf.5.html#enable_long_queue_ids)
-        Some(n) if n < 5 => None,
-        // otherwise split at the first non-alphanumeric byte
-        Some(n) => Some(data.split_at(n)),
-        // or return 'max' length QID if no non-alphanumeric byte is found
-        None => Some(data.split_at(max)),
-    }
+
+    let mut z_seen = false;
+    let mut variant = QidVariant::Unknown;
+
+    let position = data.iter().take(max).position(|b| match variant {
+        QidVariant::Unknown => {
+            if b.is_ascii_hexdigit() {
+                if is_vowel(*b) {
+                    // since vowels are forbidden in long qids, it must be a short one
+                    variant = QidVariant::Short;
+                }
+                return false;
+            }
+
+            if b.is_ascii_alphanumeric() {
+                if is_vowel(*b) {
+                    // it's a non hexadecimal vowel, so it can't be a short or a long qid
+                    variant = QidVariant::Invalid;
+                    return true;
+                }
+
+                if *b == b'z' {
+                    z_seen = true;
+                }
+
+                variant = QidVariant::Long;
+                return false;
+            }
+
+            true
+        }
+        QidVariant::Short => !b.is_ascii_hexdigit(),
+        QidVariant::Long => {
+            if !b.is_ascii_alphanumeric() {
+                return true;
+            }
+
+            if is_vowel(*b) {
+                // vowel detected in a long qid, must be invalid
+                variant = QidVariant::Invalid;
+                return true;
+            }
+
+            if *b == b'z' {
+                z_seen = true;
+            }
+
+            false
+        }
+        QidVariant::Invalid => true,
+    });
+
+    let pos = match (variant, z_seen, position) {
+        // these must be short variants that don't have any vowels in them
+        (QidVariant::Unknown, false, None) if SHORT_QID_RANGE.contains(&max) => Some(max),
+        (QidVariant::Unknown, false, Some(n)) if SHORT_QID_RANGE.contains(&n) => Some(n),
+
+        // short variants
+        (QidVariant::Short, false, None) if SHORT_QID_RANGE.contains(&max) => Some(max),
+        (QidVariant::Short, false, Some(n)) if SHORT_QID_RANGE.contains(&n) => Some(n),
+
+        (QidVariant::Long, true, None) if max >= LONG_QID_MIN => Some(max),
+        (QidVariant::Long, true, Some(n)) if n >= LONG_QID_MIN => Some(n),
+
+        // short variant can't have z -> invalid
+        (QidVariant::Short, true, _) => None,
+
+        // long variant without z is invalid
+        (QidVariant::Long, false, _) => None,
+
+        // this can't happen since we can have only a z_seen in Long or when changing to Long
+        (QidVariant::Unknown, true, _) => {
+            eprintln!("internal error, unknown QID variant with 'z'");
+            None
+        }
+
+        // everything else is also invalid
+        _ => None,
+    };
+
+    pos.map(|pos| data.split_at(pos))
 }
 
 /// Parse a queue ID followed by the `": "` delimiter, returning (qid, remaining_text) or None.
@@ -2450,8 +2551,8 @@ mod tests {
         // postfix long queue ID (enable_long_queue_ids = yes) drawn from the
         // base-52 alphabet, i.e. containing non-hex letters
         assert_eq!(
-            parse_qid(b"4Zk8mP2gqRz: removed"),
-            Some((&b"4Zk8mP2gqRz"[..], &b": removed"[..])),
+            parse_qid(b"4Zk8mP2gqRz1: removed"),
+            Some((&b"4Zk8mP2gqRz1"[..], &b": removed"[..])),
         );
     }
 

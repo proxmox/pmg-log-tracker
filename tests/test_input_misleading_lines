@@ -1,0 +1,20 @@
+2026-06-16T02:26:09.196080+02:00 pmg postfix/smtpd[3971220]: warning: hostname example.com does not resolve to address 1.2.3.4
+2026-06-16T02:26:09.196262+02:00 pmg postfix/smtpd[3971220]: connect from unknown[1.2.3.4]
+2026-06-16T02:26:10.026205+02:00 pmg postfix/smtpd[3971220]: Anonymous TLS connection established from unknown[1.2.3.4]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256
+2026-06-16T02:26:10.464588+02:00 pmg postfix/smtpd[3971220]: 123412341234: client=unknown[1.2.3.4]
+2026-06-16T02:26:10.588801+02:00 pmg postfix/postscreen[407424]: CONNECT from [1.2.3.4]:44340 to [10.10.10.10]:25
+2026-06-16T02:26:10.589017+02:00 pmg postfix/postscreen[407424]: PASS OLD [1.2.3.4]:44340
+2026-06-16T02:26:10.591164+02:00 pmg postfix/smtpd[3894722]: warning: hostname example.com does not resolve to address 1.2.3.4
+2026-06-16T02:26:10.591339+02:00 pmg postfix/smtpd[3894722]: connect from unknown[1.2.3.4]
+2026-06-16T02:26:10.662240+02:00 pmg postfix/cleanup[3949936]: 123412341234: message-id=<xyz>
+2026-06-16T02:26:10.672845+02:00 pmg postfix/qmgr[407346]: 123412341234: from=<test@pmg.local>, size=1337, nrcpt=1 (queue active)
+2026-06-16T02:26:10.673044+02:00 pmg postfix/smtpd[3971220]: disconnect from unknown[1.2.3.4] ehlo=2 starttls=1 mail=1 rcpt=1 bdat=2 quit=1 commands=8
+2026-06-16T02:26:10.673820+02:00 pmg pmg-smtp-filter[4049085]: 2026/06/16-02:26:10 CONNECT TCP Peer: "[127.0.0.1]:33030" Local: "[127.0.0.1]:10024"
+2026-06-16T02:26:10.727199+02:00 pmg pmg-smtp-filter[4049085]: 123412341234: new mail message-id=<xyz>
+2026-06-16T02:26:11.460707+02:00 pmg postfix/smtpd[3894722]: Anonymous TLS connection established from unknown[1.2.3.4]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256
+2026-06-16T02:26:11.753241+02:00 pmg pmg-smtp-filter[4049085]: 123412341234: SA score=9999/5 time=0.328 bayes=undefined autolearn=disabled hits=SOME_RULE(9999)
+2026-06-16T02:26:11.767261+02:00 pmg pmg-smtp-filter[4049085]: 123412341234: moved mail for <test@pmg.local> to spam quarantine - 432143214321 (rule: Quarantine)
+2026-06-16T02:26:11.770191+02:00 pmg pmg-smtp-filter[4049085]: 123412341234: processing time: 2.054 seconds (0.908, 0.079, 0)
+2026-06-16T02:26:11.770749+02:00 pmg postfix/lmtp[3918143]: 123412341234: to=<test@pmg.local>, relay=127.0.0.1[127.0.0.1]:10024, delay=1.3, delays=0.21/0/0.04/1.1, dsn=2.5.0, status=sent (250 2.5.0 OK (123412341234))
+2026-06-16T02:26:11.771119+02:00 pmg postfix/qmgr[407346]: 123412341234: removed
+2026-06-16T02:26:12.123422+02:00 pmg postfix/smtpd[3894722]: disconnect from unknown[1.2.3.4] ehlo=2 starttls=1 mail=1 rcpt=1 bdat=2 quit=1 commands=8

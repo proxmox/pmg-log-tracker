@@ -1,0 +1,38 @@
+# LogReader: 3647914
+# Query options
+# Start: 2020-12-18 15:00:00 (1608300000)
+# End: 2026-06-16 15:40:00 (1781617200)
+# End Query Options
+
+QENTRY: 123412341234
+CTIME: 6A309823
+SIZE: 1337
+CLIENT: unknown[1.2.3.4]
+MSGID: <xyz>
+TO:6A309823:123412341234:Q: from <test@pmg.local> to <test@pmg.local> (432143214321)
+SMTP:
+L00000001 2026-06-16T02:26:09.196080+02:00 pmg postfix/smtpd[3971220]: warning: hostname example.com does not resolve to address 1.2.3.4
+L00000002 2026-06-16T02:26:09.196262+02:00 pmg postfix/smtpd[3971220]: connect from unknown[1.2.3.4]
+L00000003 2026-06-16T02:26:10.026205+02:00 pmg postfix/smtpd[3971220]: Anonymous TLS connection established from unknown[1.2.3.4]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256
+L00000004 2026-06-16T02:26:10.464588+02:00 pmg postfix/smtpd[3971220]: 123412341234: client=unknown[1.2.3.4]
+L0000000B 2026-06-16T02:26:10.673044+02:00 pmg postfix/smtpd[3971220]: disconnect from unknown[1.2.3.4] ehlo=2 starttls=1 mail=1 rcpt=1 bdat=2 quit=1 commands=8
+FILTER: 123412341234
+L0000000D 2026-06-16T02:26:10.727199+02:00 pmg pmg-smtp-filter[4049085]: 123412341234: new mail message-id=<xyz>
+L0000000F 2026-06-16T02:26:11.753241+02:00 pmg pmg-smtp-filter[4049085]: 123412341234: SA score=9999/5 time=0.328 bayes=undefined autolearn=disabled hits=SOME_RULE(9999)
+L00000010 2026-06-16T02:26:11.767261+02:00 pmg pmg-smtp-filter[4049085]: 123412341234: moved mail for <test@pmg.local> to spam quarantine - 432143214321 (rule: Quarantine)
+L00000011 2026-06-16T02:26:11.770191+02:00 pmg pmg-smtp-filter[4049085]: 123412341234: processing time: 2.054 seconds (0.908, 0.079, 0)
+QMGR:
+L00000009 2026-06-16T02:26:10.662240+02:00 pmg postfix/cleanup[3949936]: 123412341234: message-id=<xyz>
+L0000000A 2026-06-16T02:26:10.672845+02:00 pmg postfix/qmgr[407346]: 123412341234: from=<test@pmg.local>, size=1337, nrcpt=1 (queue active)
+L00000012 2026-06-16T02:26:11.770749+02:00 pmg postfix/lmtp[3918143]: 123412341234: to=<test@pmg.local>, relay=127.0.0.1[127.0.0.1]:10024, delay=1.3, delays=0.21/0/0.04/1.1, dsn=2.5.0, status=sent (250 2.5.0 OK (123412341234))
+L00000013 2026-06-16T02:26:11.771119+02:00 pmg postfix/qmgr[407346]: 123412341234: removed
+
+SMTPD: T6A309822L00000004
+CTIME: 6A309824
+CLIENT: unknown[1.2.3.4]
+LOGS:
+L00000007 2026-06-16T02:26:10.591164+02:00 pmg postfix/smtpd[3894722]: warning: hostname example.com does not resolve to address 1.2.3.4
+L00000008 2026-06-16T02:26:10.591339+02:00 pmg postfix/smtpd[3894722]: connect from unknown[1.2.3.4]
+L0000000E 2026-06-16T02:26:11.460707+02:00 pmg postfix/smtpd[3894722]: Anonymous TLS connection established from unknown[1.2.3.4]: TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256
+L00000014 2026-06-16T02:26:12.123422+02:00 pmg postfix/smtpd[3894722]: disconnect from unknown[1.2.3.4] ehlo=2 starttls=1 mail=1 rcpt=1 bdat=2 quit=1 commands=8
+
