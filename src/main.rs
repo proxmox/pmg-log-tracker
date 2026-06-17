@@ -111,7 +111,7 @@ fn main() -> Result<(), Error> {
 // we match 4 entries, all beginning with a QID
 // accept mail, move mail, block mail and the processing time
 fn handle_pmg_smtp_filter_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
-    let (qid, data) = match parse_qid_prefix(msg, 25) {
+    let (qid, data) = match parse_pmg_smtp_filter_qid_prefix(msg) {
         Some((q, m)) => (q, m),
         None => return,
     };
@@ -167,7 +167,7 @@ fn handle_pmg_smtp_filter_message(msg: &[u8], parser: &mut Parser, complete_line
             None => return,
         };
         let data = &data[qid_index + 13..];
-        let (qid, _) = match parse_qid(data, 25) {
+        let (qid, _) = match parse_pmg_smtp_filter_qid(data) {
             Some(t) => t,
             None => return,
         };
@@ -407,7 +407,7 @@ fn handle_lmtp_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
         }
 
         // this is the QID of the associated pmg-smtp-filter
-        let (qid, _) = match parse_qid(data, 25) {
+        let (qid, _) = match parse_pmg_smtp_filter_qid(data) {
             Some(t) => t,
             None => return,
         };
@@ -543,7 +543,7 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
             return;
         }
         let data = &data[14..];
-        if let Some((qid, data)) = parse_qid(data, 25) {
+        if let Some((qid, data)) = parse_pmg_smtp_filter_qid(data) {
             let fe = get_or_create_fentry(&mut parser.fentries, qid);
             // set the FEntry to before-queue filtered
             fe.borrow_mut().is_bq = true;
@@ -597,7 +597,7 @@ fn handle_smtpd_message(msg: &[u8], parser: &mut Parser, complete_line: &[u8]) {
 
         if let Some(qid_index) = find(data, b"(") {
             let data = &data[qid_index + 1..];
-            if let Some((qid, _)) = parse_qid(data, 25) {
+            if let Some((qid, _)) = parse_pmg_smtp_filter_qid(data) {
                 let fe = get_or_create_fentry(&mut parser.fentries, qid);
                 // set the FEntry to before-queue filtered
                 fe.borrow_mut().is_bq = true;
@@ -2194,6 +2194,42 @@ fn parse_number(data: &[u8], max_digits: usize) -> Option<(usize, &[u8])> {
     }
 }
 
+/// pmg-smtp-filter QIDs must be at least 7 hex characters (see src/PMG/MailQueue.pm in pmg-api)
+const PMG_SMTP_FILTER_QID_MIN_LEN: usize = 7;
+
+const PMG_SMTP_FILTER_QID_MAX_LEN: usize = 25;
+
+/// Parse a queue ID followed by the `": "` delimiter, returning (qid, remaining_text) or None.
+///
+/// Requiring the delimiter keeps foreign lines, like the output a custom check script logs under
+/// the pmg-smtp-filter identifier, from panicking the parser or being recorded under a bogus ID.
+fn parse_pmg_smtp_filter_qid_prefix(msg: &[u8]) -> Option<(&[u8], &[u8])> {
+    let (qid, data) = parse_pmg_smtp_filter_qid(msg)?;
+    Some((qid, data.strip_prefix(b": ")?))
+}
+
+/// Parse a queue ID from pmg-smtp-filter and return a tuple of (qid, remaining_text) or None.
+///
+/// Queue IDs are hexadecimal (`[0-9A-Fa-f]`) so only parse until the first non-hexadecimal
+/// character is encountered.
+fn parse_pmg_smtp_filter_qid(data: &[u8]) -> Option<(&[u8], &[u8])> {
+    // to simplify limit max to data.len()
+    let max = PMG_SMTP_FILTER_QID_MAX_LEN.min(data.len());
+
+    if max < PMG_SMTP_FILTER_QID_MIN_LEN {
+        return None;
+    }
+    // take at most max, find the first non-hexdigit byte
+    match data.iter().take(max).position(|b| !b.is_ascii_hexdigit()) {
+        // too short
+        Some(n) if n < PMG_SMTP_FILTER_QID_MIN_LEN => None,
+        // otherwise split at the first non-hexadecimal character
+        Some(n) => Some(data.split_at(n)),
+        // or return 'max' length QID if no non-hexadecimal character is found
+        None => Some(data.split_at(max)),
+    }
+}
+
 /// Parse time. Returns a tuple of (parsed_time, remaining_text) or None.
 fn parse_time(
     data: &'_ [u8],
@@ -2396,6 +2432,8 @@ fn find_lowercase(data: &[u8], needle: &[u8]) -> Option<usize> {
 
 #[cfg(test)]
 mod tests {
+    use crate::parse_pmg_smtp_filter_qid;
+
     use super::{POSTFIX_QID_MAX_LEN, parse_qid, parse_qid_prefix, rotated_logfile};
 
     #[test]
@@ -2428,10 +2466,27 @@ mod tests {
     }
 
     #[test]
+    fn parse_filter_ids() {
+        assert_eq!(
+            parse_pmg_smtp_filter_qid(b"3802E45DFA503808B06"),
+            Some((&b"3802E45DFA503808B06"[..], &b""[..])),
+        );
+    }
+
+    #[test]
+    fn parse_filter_id_failing() {
+        // these tests should all return None so not parsing
+        assert_eq!(parse_pmg_smtp_filter_qid(b"3"), None);
+        assert_eq!(parse_pmg_smtp_filter_qid(b""), None);
+        assert_eq!(parse_pmg_smtp_filter_qid(b"Warning"), None);
+        assert_eq!(parse_pmg_smtp_filter_qid(b"ThisIsAtest"), None);
+    }
+
+    #[test]
     fn parse_filter_id_terminated_by_paren() {
         // pmg-smtp-filter ID, terminated by ')'
         assert_eq!(
-            parse_qid(b"3802E45DFA503808B06)", 25),
+            parse_pmg_smtp_filter_qid(b"3802E45DFA503808B06)"),
             Some((&b"3802E45DFA503808B06"[..], &b")"[..])),
         );
     }
