@@ -1,3 +1,10 @@
+rust-pmg-log-tracker (3.1.2) trixie; urgency=medium
+
+  * fix #7702: make postfix QID parsing more robust against false-positives to
+    address a regression from adding support for base-52 encoded queue IDs.
+
+ -- Proxmox Support Team <support@proxmox.com>  Thu, 18 Jun 2026 10:50:12 +0200
+
 rust-pmg-log-tracker (3.1.1) trixie; urgency=medium
 
   * parser: robustly ignore foreign log lines, like the output a custom check
